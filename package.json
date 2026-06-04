@@ -98,7 +98,7 @@
     "otplib": "^13.4.1",
     "parse-domain": "^8.3.0",
     "properties-parser": "0.6.0",
-    "puppeteer": "^24.6.1",
+    "puppeteer": "^25.1.0",
     "rate-limiter-flexible": "^11.0.0",
     "sass": "1.100.0",
     "semver": "^7.7.1",
