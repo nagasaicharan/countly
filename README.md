@@ -118,11 +118,13 @@ Start the dashboard server in another terminal:
 node frontend/express/app.js
 ```
 
-Open the dashboard:
+Open the website:
 
 ```text
-http://localhost:6001/login
+http://localhost:6001/
 ```
+
+The root URL always opens the Userovo landing page first. Click **Log in** or **Get started** from the landing page to continue to the login screen.
 
 The API runs at:
 
@@ -144,6 +146,20 @@ node bin/commands/scripts/user_mgmt.js register admin@userovo.com Userovo@123
 ```
 
 If the dashboard appears stale after branding or asset changes, hard refresh the browser with `Cmd + Shift + R` on macOS or `Ctrl + Shift + R` on Windows/Linux.
+
+### Local application flow
+
+Landing page:
+
+![Userovo landing page](docs/screenshots/userovo-landing.png)
+
+Login page:
+
+![Userovo login page](docs/screenshots/userovo-login.png)
+
+Dashboard:
+
+![Userovo dashboard](docs/screenshots/userovo-dashboard.png)
 
 ## 🧩 API, extensibility and plugins
 
