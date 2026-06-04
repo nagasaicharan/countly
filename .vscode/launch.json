@@ -25,7 +25,7 @@
             ],
             "internalConsoleOptions": "openOnSessionStart",
             "env": {
-                "COUNTLY_CONFIG_HOSTNAME": "localhost:3001"
+                "USEROVO_CONFIG_HOSTNAME": "localhost:3001"
             }
         },
         {
@@ -41,8 +41,8 @@
                 "<node_internals>/**/*.js"
             ],
             "env": {
-                "COUNTLY_CONFIG_API_API_WORKERS": "2",
-                "COUNTLY_CONFIG__SYMLINKED": "true"
+                "USEROVO_CONFIG_API_API_WORKERS": "2",
+                "USEROVO_CONFIG__SYMLINKED": "true"
             }
         },
         {
@@ -61,7 +61,7 @@
                 "${workspaceFolder}/plugins/*/frontend/public/**/*.js"
             ],
             "env": {
-                // "COUNTLY_CONFIG__API-URL" : "http://localhost:3001"
+                // "USEROVO_CONFIG__API-URL" : "http://localhost:3001"
             }
         },
         {

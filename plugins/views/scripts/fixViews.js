@@ -1,12 +1,12 @@
 /**
-Path to file: {COUNTLY DIR}/plugins/views/scripts/fixViews.js
+Path to file: {USEROVO DIR}/plugins/views/scripts/fixViews.js
 Script fixes indexes for views collections and merges views if there are  views marked to be merged.
 **/
 
 var pluginManager = require('../../pluginManager.js'),
     crypto = require('crypto'),
     Promise = require("bluebird"),
-    countlyDb;
+    userovoDb;
 
 console.log("Checking if name index is set");
 var badIndexes = 0;
@@ -15,7 +15,7 @@ var rerun = false;
 
 function fixCollection(collection, mergeIN, mergeTo, appID, done) {
     var failed = 0;
-    countlyDb.collection(collection).find({"vw": {$in: mergeIN}}).toArray(function(err, res) {
+    userovoDb.collection(collection).find({"vw": {$in: mergeIN}}).toArray(function(err, res) {
         if (res && res.length > 0) {
             Promise.each(res, function(doc) {
                 return new Promise(function(resolve/*, reject*/) {
@@ -85,7 +85,7 @@ function fixCollection(collection, mergeIN, mergeTo, appID, done) {
                     new_id = new_id.join("_");
 
                     update['$set']["_id"] = new_id;
-                    update['$set']["vw"] = countlyDb.ObjectID(mergeTo);
+                    update['$set']["vw"] = userovoDb.ObjectID(mergeTo);
                     update['$set']["s"] = doc["s"];
                     update['$set']["m"] = doc["m"];
                     update['$set']["a"] = appID;
@@ -98,14 +98,14 @@ function fixCollection(collection, mergeIN, mergeTo, appID, done) {
                         delete update["$inc"];
                     }
 
-                    countlyDb.collection(collection).update({"_id": new_id}, update, {upsert: true}, function(err/*, res*/) {
+                    userovoDb.collection(collection).update({"_id": new_id}, update, {upsert: true}, function(err/*, res*/) {
                         if (err) {
                             console.log(err);
                             resolve();
                             failed++;
                         }
                         else {
-                            countlyDb.collection(collection).remove({_id: doc["_id"]}, function() {
+                            userovoDb.collection(collection).remove({_id: doc["_id"]}, function() {
                                 resolve();
                             });
                         }
@@ -130,18 +130,18 @@ function fixViews(viewBase, appID, views, done) {
     var mergeIn = [];
 
     for (var k = 1; k < views.viewids.length; k++) {
-        mergeIn.push(countlyDb.ObjectID(views.viewids[k]));
+        mergeIn.push(userovoDb.ObjectID(views.viewids[k]));
     }
 
     var ob = {_id: views._id + "_" + appID, "view": views._id, "base": base, mergeIn: mergeIn, "appID": appID, "segments": viewBase.segments};
-    countlyDb.collection('app_viewsmeta_merges').insert(ob, function(err) {
+    userovoDb.collection('app_viewsmeta_merges').insert(ob, function(err) {
         if (err) {
             rerun = true;
             if (err.code !== 11000) {
                 console.log(err);
             }
         }
-        countlyDb.collection('app_viewsmeta' + appID).remove({_id: {$in: mergeIn}}, {multi: true}, function(err) {
+        userovoDb.collection('app_viewsmeta' + appID).remove({_id: {$in: mergeIn}}, {multi: true}, function(err) {
             if (err) {
                 console.log(err);
             }
@@ -152,7 +152,7 @@ function fixViews(viewBase, appID, views, done) {
 }
 
 function check_and_fix_data(appID, done) {
-    countlyDb.collection('app_viewsmeta' + appID).ensureIndex({"view": 1}, {'unique': 1}, function(err, res) {
+    userovoDb.collection('app_viewsmeta' + appID).ensureIndex({"view": 1}, {'unique': 1}, function(err, res) {
         if (err) {
             console.log(appID + ": INDEX ERROR");
             badIndexes++;
@@ -161,7 +161,7 @@ function check_and_fix_data(appID, done) {
             console.log(appID + ": INDEX OK");
         }
 
-        countlyDb.collection('app_viewsmeta' + appID).aggregate([{$group: {_id: "$view", viewids: {$addToSet: "$_id"}, count: {$sum: 1}}}, {$match: {count: {$gt: 1}}}], function(err, res) {
+        userovoDb.collection('app_viewsmeta' + appID).aggregate([{$group: {_id: "$view", viewids: {$addToSet: "$_id"}, count: {$sum: 1}}}, {$match: {count: {$gt: 1}}}], function(err, res) {
             if (err) {
                 console.log(err);
                 done();
@@ -177,7 +177,7 @@ function check_and_fix_data(appID, done) {
                     console.log("Merging duplicate views");
                     badViews++;
 
-                    countlyDb.collection('views').find({_id: countlyDb.ObjectID(appID)}).toArray(function(err, viewBase) {
+                    userovoDb.collection('views').find({_id: userovoDb.ObjectID(appID)}).toArray(function(err, viewBase) {
                         if (err) {
                             console.log(err);
                         }
@@ -192,7 +192,7 @@ function check_and_fix_data(appID, done) {
                                 });
                             });
                         }).then(function() {
-                            countlyDb.collection('app_viewsmeta' + appID).ensureIndex({"view": 1}, {'unique': 1}, function(err) {
+                            userovoDb.collection('app_viewsmeta' + appID).ensureIndex({"view": 1}, {'unique': 1}, function(err) {
                                 if (err) {
                                     rerun = true;
                                 }
@@ -220,7 +220,7 @@ function merge_data(data, done) {
     Promise.each(collectionsToUpdate, function(colName) {
         return new Promise(function(resolve/*, reject*/) {
             fixCollection(colName, data.mergeIn, data.base, data.appID, function(failed) {
-                countlyDb.collection('app_viewsmeta' + data.appID).remove({_id: {$in: data.mergeIn}}, {multi: true}, function(err) {
+                userovoDb.collection('app_viewsmeta' + data.appID).remove({_id: {$in: data.mergeIn}}, {multi: true}, function(err) {
                     if (err) {
                         console.log(err);
                     }
@@ -237,7 +237,7 @@ function merge_data(data, done) {
             done();
         }
         else {
-            countlyDb.collection('app_viewsmeta_merges').remove({_id: data._id}, function(err) {
+            userovoDb.collection('app_viewsmeta_merges').remove({_id: data._id}, function(err) {
                 if (err) {
                     console.log(err);
                 }
@@ -250,7 +250,7 @@ function merge_data(data, done) {
 }
 function check_merges(done) {
     console.log("Check if there are not unfinished merges");
-    countlyDb.collection('app_viewsmeta_merges').find({}).toArray(function(err, merges) {
+    userovoDb.collection('app_viewsmeta_merges').find({}).toArray(function(err, merges) {
         if (merges.length === 0) {
             done();
         }
@@ -271,9 +271,9 @@ function check_merges(done) {
 
 
 pluginManager.dbConnection().then((db) => {
-    countlyDb = db;
+    userovoDb = db;
     check_merges(function() {
-        countlyDb.collection('apps').find({}).toArray(function(err, apps) {
+        userovoDb.collection('apps').find({}).toArray(function(err, apps) {
             var appIds = [];
             for (var z = 0; z < apps.length; z++) {
                 appIds.push(apps[z]._id + "");
@@ -296,7 +296,7 @@ pluginManager.dbConnection().then((db) => {
                 if (rerun) {
                     console.log("There was errors during merging. please rerun script!!");
                 }
-                countlyDb.close();
+                userovoDb.close();
             });
         });
     });

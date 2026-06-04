@@ -1,8 +1,8 @@
 /*
  *  Removing older data for specific collections
  *  If DRY_RUN is false, will delete the data
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/data-cleanup
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/data-cleanup
  *  Command: node remove_old_data.js
  */
 

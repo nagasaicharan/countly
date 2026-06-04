@@ -1,7 +1,7 @@
 // NTLM support: https://github.com/nodemailer/nodemailer-ntlm-auth
 // Steps:
-//      1) run "npm install nodemailer-ntlm-auth" in "echo $(countly dir)"
-//      2) rename or copy this file to countly/extend/mail.js
+//      1) run "npm install nodemailer-ntlm-auth" in "echo $(userovo dir)"
+//      2) rename or copy this file to userovo/extend/mail.js
 
 var nodemailer = require("nodemailer");
 var nodemailerNTLMAuth = require("nodemailer-ntlm-auth");
@@ -23,7 +23,7 @@ module.exports = function(mail) {
     });
 
     mail.sendMail = function(message, callback) {
-        message.from = "<countly@yourcompany.com>";
+        message.from = "<userovo@yourcompany.com>";
         mail.smtpTransport.sendMail(message, function(error) {
             if (error) {
                 console.log("Error sending email");

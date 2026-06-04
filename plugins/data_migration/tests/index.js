@@ -46,7 +46,7 @@ function validate_log(exportid, callback) {
         if (err) {
             callback(err);
         }
-        var good_errors = ["Failed: error counting countly_out.: Invalid namespace specified 'countly_out.", "Exited with error code: 1", "Failed: error counting countly.: Invalid namespace specified 'countly.'", "Failed: error counting countly_drill.: Invalid namespace specified 'countly_drill.'"];
+        var good_errors = ["Failed: error counting userovo_out.: Invalid namespace specified 'userovo_out.", "Exited with error code: 1", "Failed: error counting userovo.: Invalid namespace specified 'userovo.'", "Failed: error counting userovo_drill.: Invalid namespace specified 'userovo_drill.'"];
 
         const lines = data.split(/\r?\n/);
         var badErrors = [];
@@ -103,7 +103,7 @@ function validate_files(exportid, apps, export_path, callback) {
             while (fs.existsSync(target + "/" + apps[i])) {
                 target = target + "/" + apps[i];
             }
-            target = target + "/countly";
+            target = target + "/userovo";
 
             var pp = target;
             for (var j = 0; j < simpleDocs.length; j++) {
@@ -665,7 +665,7 @@ describe("Testing data migration plugin", function() {
         it("Invalid token", function(done) {
             request
                 .post('/i/datamigration/import')
-                .set('countly-token', '000000000000')
+                .set('userovo-token', '000000000000')
                 .expect(400)
                 .end(function(err, res) {
                     if (err) {
@@ -697,7 +697,7 @@ describe("Testing data migration plugin", function() {
         it("Sending without file", function(done) {
             request
                 .post('/i/datamigration/import')
-                .set('countly-token', mytoken)
+                .set('userovo-token', mytoken)
                 .expect(404)
                 .end(function(err, res) {
                     if (err) {
@@ -743,7 +743,7 @@ describe("Testing data migration plugin", function() {
         it("Validate token ", function(done) {
             request
                 .post('/i/datamigration/import?test_con=1')
-                .set('countly-token', mytoken)
+                .set('userovo-token', mytoken)
                 .expect(200)
                 .end(function(err, res) {
                     if (err) {
@@ -766,7 +766,7 @@ describe("Testing data migration plugin", function() {
             request
                 .post('/i/datamigration/import?ts=000000&exportid=' + tt)
                 .attach('import_file', dir)
-                .set('countly-token', mytoken)
+                .set('userovo-token', mytoken)
                 .expect(200)
                 .end(function(err, res) {
                     if (err) {
@@ -854,7 +854,7 @@ describe("Testing data migration plugin", function() {
                 });
         });
         it("rejects path traversal in import delete exportid", function(done) {
-            var traversalTarget = path.join(os.tmpdir(), "countly_data_migration_path_traversal_test_" + Date.now());
+            var traversalTarget = path.join(os.tmpdir(), "userovo_data_migration_path_traversal_test_" + Date.now());
             var traversalExportId = "../../../../../../../../.." + traversalTarget;
 
             fs.writeFileSync(traversalTarget, "test");
@@ -942,7 +942,7 @@ describe("Testing data migration plugin", function() {
         it("Try invalid path", function(done) {
             request
                 .post('/i/datamigration/import?ts=000000&existing_file=var/jsfjkasbfkja/asjghaogha/asjkgfakjbgjka/alsgaklgnl')
-                .set('countly-token', mytoken)
+                .set('userovo-token', mytoken)
                 .expect(404)
                 .end(function(err, res) {
                     if (err) {
@@ -966,7 +966,7 @@ describe("Testing data migration plugin", function() {
             fs.copyFileSync(sourcePath, importPath);
             request
                 .post('/i/datamigration/import?ts=000000&existing_file=' + tt)
-                .set('countly-token', mytoken)
+                .set('userovo-token', mytoken)
                 .expect(200)
                 .end(function(err, res) {
                     if (err) {
@@ -1037,7 +1037,7 @@ describe("Testing data migration plugin", function() {
 						var dir = path.resolve(__dirname, './' + tt + '.tar.gz');
 						request
 						.post('/i/datamigration/import?ts=000000&existing_file=' + dir)
-						.set('countly-token', ob.result)
+						.set('userovo-token', ob.result)
 						.expect(200)
 						.end(function(err, res) {
 							if (err) {
@@ -1188,8 +1188,8 @@ describe("Testing data migration plugin", function() {
                 var missing_files = [];
                 var apps = ["5f589b9e8df39d7b85474921"];
                 for (var i = 0; i < apps.length; i++) {
-                    var pp = path.resolve(__dirname, './compare_export'+'/' + exportid + '/' + apps[i] + '/countly');
-                    var files = fs.readdirSync(path.resolve(__dirname, "./"+"f9b35d90be5f2240eafced7c6bfdf130856cd0a7"+"/" + apps[i] + "/countly"));
+                    var pp = path.resolve(__dirname, './compare_export'+'/' + exportid + '/' + apps[i] + '/userovo');
+                    var files = fs.readdirSync(path.resolve(__dirname, "./"+"f9b35d90be5f2240eafced7c6bfdf130856cd0a7"+"/" + apps[i] + "/userovo"));
                     for (var j = 0; j < files.length; j++) {
                         var dir = path.resolve(pp,"./"+files[j]);
                         if (!fs.existsSync(dir)) {

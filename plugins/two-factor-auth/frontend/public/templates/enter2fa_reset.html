@@ -14,14 +14,14 @@
     <meta http-equiv="Expires" content="0" />
     <meta name="referrer" content="no-referrer">
 	<link href='../stylesheets/pre-login/main.css' rel='stylesheet' type='text/css'>
-	<link rel="icon" type="image/png" href="../<%- countlyFavicon %>">
+	<link rel="icon" type="image/png" href="../<%- userovoFavicon %>">
     <% if (themeFiles && themeFiles.css) { %>
         <% for(var i=0, l=themeFiles.css.length; i<l; i++) {%>
     <link href='<%= themeFiles.css[i]%>' rel='stylesheet' type='text/css'>
         <% } %>
     <% } %>
-	<title><%- countlyTitle %></title>
-	<script>window.countlyGlobal = window.countlyGlobal || {}; countlyGlobal["cdn"] = "<%- cdn %>../";</script>
+	<title><%- userovoTitle %></title>
+	<script>window.userovoGlobal = window.userovoGlobal || {}; userovoGlobal["cdn"] = "<%- cdn %>../";</script>
     <% if (typeof inject_template.css != 'undefined') { %>
 	<style><%- inject_template.css %></style>
 	<% } %>
@@ -53,8 +53,8 @@
 		<div id="message"></div>
 	 <% } %>
 	<div id="top-container">
-		<% if (countlyPage){ %>
-		<a class="top-button" href="<%- countlyPage %>"><%- countlyTitle %></a>
+		<% if (userovoPage){ %>
+		<a class="top-button" href="<%- userovoPage %>"><%- userovoTitle %></a>
         <% } %>
 		<div class="top-button" id="select-lang">
 			<div id="active-lang">EN</div>
@@ -102,26 +102,26 @@
 	<script language="javascript" type="text/javascript" src="../javascripts/utils/jquery.xss.js"></script>
 	<script language="javascript" type="text/javascript" src="../javascripts/pre-login.js"></script>
 	<script>
-        var countlyTitle = "<%- countlyTitle %>";
+        var userovoTitle = "<%- userovoTitle %>";
 		$(document).ready(function() {
 			<% if (message && message.length > 0){ %>
 				showMessage("<%= message %>");
 			<% } %>
 			if (jQuery.i18n.map["forgot.title"]) {
-                document.title = countlyTitle + " | " + jQuery.i18n.map["forgot.title"];
+                document.title = userovoTitle + " | " + jQuery.i18n.map["forgot.title"];
             }
 		});
 		
 		$(document).bind('clyLangChange', function() {
 			if (jQuery.i18n.map["forgot.title"]) {
-                document.title = countlyTitle + " | " + jQuery.i18n.map["forgot.title"];
+                document.title = userovoTitle + " | " + jQuery.i18n.map["forgot.title"];
             }
 		});
 	</script>
 	<% if (typeof inject_template.js != 'undefined') { %>
 	<script><%- inject_template.js %></script>
     <script>
-        addLocalization('two-factor-auth', countlyGlobal['cdn'] + 'two-factor-auth/localization/');
+        addLocalization('two-factor-auth', userovoGlobal['cdn'] + 'two-factor-auth/localization/');
     </script>
 	<% } %>
      <% if (themeFiles && themeFiles.js) { %>

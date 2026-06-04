@@ -1,7 +1,7 @@
 /**
  *  Modifies all occurances of 0days to last 12 months for flows
- *  Server: countly
- *  Path: countly dir/bin/scripts/fix-data/flows_update_0days_period
+ *  Server: userovo
+ *  Path: userovo dir/bin/scripts/fix-data/flows_update_0days_period
  *  Command: node flows_update_0days_period.js
  */
 
@@ -33,18 +33,18 @@ function getAppList(options, callback) {
 }
 
 async function context() {
-    const countlyDb = await pluginManager.dbConnection("countly");
-    getAppList({db: countlyDb}, async function(err, apps) {
+    const userovoDb = await pluginManager.dbConnection("userovo");
+    getAppList({db: userovoDb}, async function(err, apps) {
         await Promise.allSettled(apps.map(async(appId) => {
             try {
-                const dbResult = await countlyDb.collection("flowSchema" + appId).updateMany({"period": "0days"}, {$set: {"period": "12months"}});
+                const dbResult = await userovoDb.collection("flowSchema" + appId).updateMany({"period": "0days"}, {$set: {"period": "12months"}});
                 console.log(dbResult.modifiedCount + " records updated for " + appId, " application");
             }
             catch (err) {
                 console.log('Error occured: ', err, ' for ', appId, ' application.');
             }
         }));
-        countlyDb.close();
+        userovoDb.close();
         console.log('All done!');
     });
 }

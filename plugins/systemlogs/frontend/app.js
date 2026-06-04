@@ -3,7 +3,7 @@ var exported = {},
     plugins = require('../../../plugins/pluginManager');
 
 (function(plugin) {
-    var countlyDb;
+    var userovoDb;
     /**
      * Function to get timestamp
      * @returns {number} timestamp
@@ -13,7 +13,7 @@ var exported = {},
     }
 
     plugin.init = function(app, db) {
-        countlyDb = db;
+        userovoDb = db;
     };
 
     plugin.userLogout = function(ob) {
@@ -212,7 +212,7 @@ var exported = {},
         }
         if (user._id) {
             log.user_id = user._id + "";
-            countlyDb.collection('systemlogs').insert(log, function() {});
+            userovoDb.collection('systemlogs').insert(log, function() {});
         }
         else {
             var query = {};
@@ -223,23 +223,23 @@ var exported = {},
                 query.email = user.email;
             }
             if (Object.keys(query).length) {
-                countlyDb.collection('members').findOne(query, function(err, res) {
+                userovoDb.collection('members').findOne(query, function(err, res) {
                     if (!err && res) {
                         log.user_id = res._id + "";
                         if (log.u === "") {
                             log.u = res.email || res.username;
                         }
                     }
-                    countlyDb.collection('systemlogs').insert(log, function() {});
+                    userovoDb.collection('systemlogs').insert(log, function() {});
                 });
             }
             else {
-                countlyDb.collection('systemlogs').insert(log, function() {});
+                userovoDb.collection('systemlogs').insert(log, function() {});
             }
         }
         var update = {};
-        update["action." + countlyDb.encode(action)] = true;
-        countlyDb.collection("systemlogs").update({_id: "meta_v2"}, {$set: update}, {upsert: true}, function() {});
+        update["action." + userovoDb.encode(action)] = true;
+        userovoDb.collection("systemlogs").update({_id: "meta_v2"}, {$set: update}, {upsert: true}, function() {});
     }
 
 }(exported));

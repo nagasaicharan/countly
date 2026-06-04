@@ -126,13 +126,13 @@ describe('Create New Custom Dashboard', () => {
         cy.task("verifyPdf", {
             filePath: "cypress/downloads/generated-report.pdf",
             options: {
-                referenceLogoPath: "cypress/fixtures/testFiles/countly-logo.png",
+                referenceLogoPath: "cypress/fixtures/testFiles/userovo-logo.png",
                 checkText: true
             }
         }).then((result) => {
             expect(result.logoFound).to.be.true;
             expect(result.hasImage).to.be.true;
-            expect(result.text).to.include("Sent by   Countly   |   Unsubscribe");
+            expect(result.text).to.include("Sent by   Userovo   |   Unsubscribe");
             expect(result.text).to.include("Report settings   |   Get help");
         });
     });

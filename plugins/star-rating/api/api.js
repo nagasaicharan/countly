@@ -3,10 +3,10 @@ var exported = {},
     common = require('../../../api/utils/common.js'),
     crypto = require('crypto'),
     log = common.log('star-rating:api'),
-    countlyCommon = require('../../../api/lib/countly.common.js'),
+    userovoCommon = require('../../../api/lib/userovo.common.js'),
     plugins = require('../../pluginManager.js'),
     { validateCreate, validateRead, validateUpdate, validateDelete, validateGlobalAdmin, validateAppAdmin } = require('../../../api/utils/rights.js'),
-    countlyFs = require('../../../api/utils/countlyFs.js'),
+    userovoFs = require('../../../api/utils/userovoFs.js'),
     imageUtils = require('./image-utils.js');
 var fetch = require('../../../api/parts/data/fetch.js');
 var ejs = require("ejs"),
@@ -286,7 +286,7 @@ function uploadFile(myfile, id, callback) {
             }
             try {
                 var pp = path.resolve(__dirname, './../images/' + id + "." + detectedExt);
-                countlyFs.saveData("star-rating", pp, data, { id: "" + id + "." + detectedExt, writeMode: "overwrite" }, function(err3) {
+                userovoFs.saveData("star-rating", pp, data, { id: "" + id + "." + detectedExt, writeMode: "overwrite" }, function(err3) {
                     fs.unlink(tmp_path, function() { });
                     if (err3) {
                         callback("Failed to upload image");
@@ -316,7 +316,7 @@ function uploadFile(myfile, id, callback) {
      *
      * @apiDescription Return feedback widgets as array, only works when surveys plugin disabled
      * @apiQuery {String} method which kind feedback widgets requested, it should be 'feedback'
-     * @apiQuery {String} app_key app key value for related app that can be obtain from countly dashboard
+     * @apiQuery {String} app_key app key value for related app that can be obtain from userovo dashboard
      * @apiQuery {String} device_id unique identifier for related device
      * 
      * @apiSuccessExample {json} Success-Response:
@@ -395,7 +395,7 @@ function uploadFile(myfile, id, callback) {
                     try {
                         var data_uri_prefix = "data:" + detectedType + ";base64,";
                         var image = data_uri_prefix + buf.toString('base64');
-                        countlyFs.gridfs.saveData("feedback", myname, image, {id: myname, writeMode: "overwrite"}, function(err2) {
+                        userovoFs.gridfs.saveData("feedback", myname, image, {id: myname, writeMode: "overwrite"}, function(err2) {
                             fs.unlink(tmp_path, function() {});
                             if (err2) {
                                 return reject(err2);
@@ -418,7 +418,7 @@ function uploadFile(myfile, id, callback) {
      * @apiName Upload Image
      * @apiGroup feedback
      *
-     * @apiDescription Changes in Countly user interfaces logo
+     * @apiDescription Changes in Userovo user interfaces logo
      * @apiBody {File} logo
      * 
      * @apiSuccessExample {json} Success-Response:
@@ -875,7 +875,7 @@ function uploadFile(myfile, id, callback) {
     * @apiDescription Upload custom logo for feedback widget (Requires CREATE permission for Ratings)
     * @apiBody {String} logo Logo file
     * @apiQuery {String} identifier Identifier for file that will be uploaded
-    * @apiQuery {String} api_key' API Key that can be obtained from Countly dashboard
+    * @apiQuery {String} api_key' API Key that can be obtained from Userovo dashboard
     * 
     * @apiSuccessExample {json} Success-Response
     * HTTP/1.1 200 OK
@@ -1028,7 +1028,7 @@ function uploadFile(myfile, id, callback) {
      * @apiName CreateRatingsWidget
      * @apiGroup Ratings
      * 
-     * @apiDescription Create web feedback widget from Countly web application
+     * @apiDescription Create web feedback widget from Userovo web application
      * @apiBody {String} popup_header_text Header text of feedback popup
      * @apiBody {String} popup_email_callout "Contact me by e-mail" text of feedback popup
      * @apiBody {String} popup_comment_callout "Add comment" text of feedback popup
@@ -1087,7 +1087,7 @@ function uploadFile(myfile, id, callback) {
      * @apiName UpdateWidget
      * @apiGroup Ratings
      * 
-     * @apiDescription Edit web feedback widget settings from Countly web application
+     * @apiDescription Edit web feedback widget settings from Userovo web application
      * @apiBody {String} popup_header_text Header text of feedback popup
      * @apiBody {String} popup_email_callout "Contact me by e-mail" text of feedback popup
      * @apiBody {String} popup_comment_callout "Add comment" text of feedback popup
@@ -1199,7 +1199,7 @@ function uploadFile(myfile, id, callback) {
         }
 
         validateRead(params, FEATURE_NAME, function() {
-            query.ts = countlyCommon.getTimestampRangeQuery(params, true);
+            query.ts = userovoCommon.getTimestampRangeQuery(params, true);
             var cursor = common.db.collection(collectionName).find(query);
             cursor.count(function(err, total) {
                 if (!err) {
@@ -1347,7 +1347,7 @@ function uploadFile(myfile, id, callback) {
      * @apiGroup Ratings
      * 
      * @apiDescription Get feedback widget by id
-     * @apiQuery {String} api_key api_key that will be used for authentication, can be obtained from Countly server
+     * @apiQuery {String} api_key api_key that will be used for authentication, can be obtained from Userovo server
      * @apiQuery {String} app_id app_id of related application
      * @apiQuery {String} widget_id id of the widget
      * 
@@ -1508,8 +1508,8 @@ function uploadFile(myfile, id, callback) {
                 common.returnMessage(params, 400, 'Missing request parameter: period');
                 return true;
             }
-            countlyCommon.setPeriod(params.qstring.period, true);
-            var periodObj = countlyCommon.periodObj;
+            userovoCommon.setPeriod(params.qstring.period, true);
+            var periodObj = userovoCommon.periodObj;
             var collectionName = crypto.createHash('sha1').update('[CLY]_star_rating' + params.qstring.app_id).digest('hex');
             var id_prefix = params.qstring.app_id + "_" + collectionName + "_";
             var documents = [];
@@ -1811,7 +1811,7 @@ function uploadFile(myfile, id, callback) {
                         },
                         false,
                         function(result) {
-                            const periodObj = countlyCommon.getPeriodObj({qstring: {period: report.period}, app: app});
+                            const periodObj = userovoCommon.getPeriodObj({qstring: {period: report.period}, app: app});
                             const {currentPeriodArr, previousPeriodArr} = periodObj;
                             const currentData = calCumulativeData(result, currentPeriodArr);
                             const previousData = calCumulativeData(result, previousPeriodArr);

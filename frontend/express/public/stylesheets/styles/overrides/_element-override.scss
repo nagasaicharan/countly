@@ -126,7 +126,7 @@
         margin-left: 10px;
     }
     &.is-autosized.is-bordered {
-        border-color: #CFD6E4;
+        border-color: #CBD5E1;
         display: flex;
         align-items: center;
         .el-radio__input {
@@ -138,7 +138,7 @@
         }   
 
         &.is-checked {
-            border-color: #0166d6;
+            border-color: #2563eb;
         }
     }   
     &.is-autosized-vstack {
@@ -176,7 +176,7 @@
         margin-top: 7px;
     }
 	&.is-bordered {
-		border: 1px solid #CFD6E4;
+		border: 1px solid #CBD5E1;
 	}
     &:hover {
 		&:not(.is-disabled) {
@@ -226,7 +226,7 @@
 .el-switch {
 	&__label *{
 		font-weight: normal;
-		color: #A7AEB8;
+		color: #94A3B8;
 		font-size:12px;
 	}
 }
@@ -250,7 +250,7 @@
 .el-button {
     &.is-wireframe {
         background: transparent;
-        border: 1px dotted #0166D6;
+        border: 1px dotted #2563EB;
         box-sizing: border-box;
         box-shadow: 0px 2px 4px rgb(1 122 255 / 7%);
     }
@@ -270,7 +270,7 @@
             color: map.get(c.$colors, "blue-100");
             background-color: map.get(c.$colors, "light-blue-100");
             &:hover {
-                background-color: #CCE0F7;
+                background-color: #DBEAFE;
             }
         }
     }
@@ -362,7 +362,7 @@
 	}
 	
 	.el-tabs__item.is-active {
-		border-bottom-color: #0166d6;
+		border-bottom-color: #2563eb;
 		background-color:#ffffff;
 	}
 }
@@ -405,13 +405,13 @@
 .el-tiptap-editor {
     border-radius: 4px;
     .el-tiptap-editor__menu-bar {
-        border-color: #cfd6e4;
+        border-color: #cbd5e1;
     }
     .el-tiptap-editor__menu-bar::before {
-        background-color: #cfd6e4;
+        background-color: #cbd5e1;
     }
     >.el-tiptap-editor__content {
-        border: 1px solid #cfd6e4 !important;
+        border: 1px solid #cbd5e1 !important;
         border-top: 0 !important;
         border-bottom: 0 !important;
         pre {
@@ -421,7 +421,7 @@
         }
     }
     .el-tiptap-editor__footer {
-        border-color: #cfd6e4;
+        border-color: #cbd5e1;
     }
     .border-top-radius {
         border-top-left-radius: 4px !important;
@@ -432,7 +432,7 @@
         border-bottom-right-radius: 4px !important;
     }
     .fa-icon {
-        fill: #333C48; 
+        fill: #172554; 
     }
 }
 
@@ -456,8 +456,8 @@
                 border-radius: 4px;
             }
             &.el-button--primary {
-                border-color: #12AF51;
-                background-color: #12AF51;
+                border-color: #06B6D4;
+                background-color: #06B6D4;
             }
 
         }

@@ -4,7 +4,7 @@ var async = require('async'),
 
 console.log("Removing drill indexes");
 
-pluginManager.dbConnection("countly_drill").then((db) => {
+pluginManager.dbConnection("userovo_drill").then((db) => {
 
     db.collections(function(error, results) {
         if (error || !results) {

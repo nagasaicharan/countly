@@ -1,12 +1,12 @@
 const pluginManager = require('../../../../plugins/pluginManager.js');
 const OPERATION_BATCH_SIZE = 200;
 
-pluginManager.dbConnection("countly").then(async(countlyDb) => {
+pluginManager.dbConnection("userovo").then(async(userovoDb) => {
     try {
 
-        let apps = await countlyDb.collection('apps').find({}).project({_id: 1}).toArray();
+        let apps = await userovoDb.collection('apps').find({}).project({_id: 1}).toArray();
         let apmCollections = apps.flatMap(o=> ['apm_network' + o._id, 'apm_device' + o._id]);
-        let collections = await countlyDb.listCollections().toArray();
+        let collections = await userovoDb.listCollections().toArray();
         let collectionsList = collections.map(o => o.name);
         const intersection = apmCollections.filter(x => collectionsList.includes(x));
 
@@ -15,7 +15,7 @@ pluginManager.dbConnection("countly").then(async(countlyDb) => {
             let requests = [];
             let currentType = '';
             let appId = '';
-            const cursor = countlyDb.collection(colName).find({});
+            const cursor = userovoDb.collection(colName).find({});
             if (colName.startsWith('apm_network')) {
                 currentType = 'network';
                 appId = colName.split('apm_network')[1];
@@ -35,7 +35,7 @@ pluginManager.dbConnection("countly").then(async(countlyDb) => {
                 });
                 if (requests.length > OPERATION_BATCH_SIZE) {
                     try {
-                        await countlyDb.collection('apm').bulkWrite(requests, {ordered: false});
+                        await userovoDb.collection('apm').bulkWrite(requests, {ordered: false});
                     }
                     catch (e) {
                         if (e.code !== 11000) {
@@ -48,7 +48,7 @@ pluginManager.dbConnection("countly").then(async(countlyDb) => {
             }
             if (requests.length) {
                 try {
-                    await countlyDb.collection('apm').bulkWrite(requests, {ordered: false});
+                    await userovoDb.collection('apm').bulkWrite(requests, {ordered: false});
                 }
                 catch (e) {
                     if (e.code !== 11000) {
@@ -61,12 +61,12 @@ pluginManager.dbConnection("countly").then(async(countlyDb) => {
         }
 
         console.log("Script ran successfully!!!");
-        countlyDb.close();
+        userovoDb.close();
         return;
     }
     catch (e) {
         console.log("Error while running script ", e);
-        countlyDb.close();
+        userovoDb.close();
         return;
     }
 });

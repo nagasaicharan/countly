@@ -207,7 +207,7 @@ const openReportPreviewButton = (index = 0) => {
 
 const verifyReportPreviewPageImage = () => {
     cy.verifyElement({
-        element: reportsPreviewElements.COUNTLY_LOGO
+        element: reportsPreviewElements.USEROVO_LOGO
     });
 
     cy.verifyElement({

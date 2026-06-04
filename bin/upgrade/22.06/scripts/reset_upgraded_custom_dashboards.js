@@ -4,12 +4,12 @@ var path = require('path');
 
 console.log("Upgrading app_users data");
 
-pluginManager.dbConnection().then(async (countlyDb) => {
-    fs.readFile(path.resolve(__dirname, "../../../../countly_marked_version.json"), async function (err, data) {
+pluginManager.dbConnection().then(async (userovoDb) => {
+    fs.readFile(path.resolve(__dirname, "../../../../userovo_marked_version.json"), async function (err, data) {
         var olderVersions = [];
         if (err) {
             console.log(err);
-            countlyDb.close();
+            userovoDb.close();
             return;
         }
         try {
@@ -17,7 +17,7 @@ pluginManager.dbConnection().then(async (countlyDb) => {
         }
         catch (parseErr) {
             console.log(parseErr);
-            countlyDb.close();
+            userovoDb.close();
             return;
         }
         var doReset = false;
@@ -36,20 +36,20 @@ pluginManager.dbConnection().then(async (countlyDb) => {
              * The new script in 22.03 would not have run for users who are already on 22.03, 
              * so they would have gridsize 4 and need to unset the position
              */
-            await countlyDb.collection('widgets').updateMany(
+            await userovoDb.collection('widgets').updateMany(
                 { gridsize: { $ne: 4 } },
                 {
                     $mul: { 'size.0': 3 },
                     $unset: { position: 1 }
                 }
             );
-            await countlyDb.collection('widgets').updateMany(
+            await userovoDb.collection('widgets').updateMany(
                 { gridsize: 4 },
                 {
                     $set: { gridsize: 12 }
                 }
             );
         }
-        countlyDb.close();
+        userovoDb.close();
     });
 });

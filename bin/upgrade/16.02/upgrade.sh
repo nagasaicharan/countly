@@ -12,7 +12,7 @@ bash "$DIR/scripts/detect.init.sh"
 
 #uninstall mognodb
 #apt-get remove -y mongodb-org mongodb-org-mongos mongodb-org-server mongodb-org-shell mongodb-org-tools
-#rm /etc/apt/sources.list.d/mongodb-10gen-countly.list
+#rm /etc/apt/sources.list.d/mongodb-10gen-userovo.list
 
 #update repos
 #wget -qO- https://deb.nodesource.com/setup_5.x | bash -
@@ -37,8 +37,8 @@ bash "$DIR/scripts/detect.init.sh"
 #install new nodejs dependencies
 #apt-get install -y build-essential libkrb5-dev
 
-#stop countly
-#countly stop
+#stop userovo
+#userovo stop
 
 #install new mongodb
 #apt-get -y --force-yes install mongodb-org || (echo "Failed to install mongodb." ; exit)
@@ -46,23 +46,23 @@ bash "$DIR/scripts/detect.init.sh"
 #remove previous dependencies, as they need to be rebuild for new nodejs version
 #rm -rf $DIR/../node_modules
 
-#install dependencies, process files and restart countly
-countly upgrade
+#install dependencies, process files and restart userovo
+userovo upgrade
 
 #force mobile plugin for default mobile dashboard
-countly plugin enable mobile ;
+userovo plugin enable mobile ;
 
 #replace stores with sources
-STORESTATE=$(countly plugin status stores);
+STORESTATE=$(userovo plugin status stores);
 if [ "$STORESTATE" == "enabled" ]
 then
-    countly plugin disable stores ;
-    countly plugin enable sources ;
+    userovo plugin disable stores ;
+    userovo plugin enable sources ;
 fi
 
 #upgrade push plugin if it is installed
-countly plugin upgrade push
+userovo plugin upgrade push
 
-countly update sdk-web
-countly start
-countly upgrade
+userovo update sdk-web
+userovo start
+userovo upgrade

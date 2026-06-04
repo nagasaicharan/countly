@@ -3,17 +3,17 @@
   "title": "Remote Config",
   "version": "1.0.0",
   "description": "Change the behaviour and appearance of your application using server side parameters",
-  "author": "Countly",
+  "author": "Userovo",
   "homepage": "https://count.ly/plugins/remote-config",
   "repository": {
     "type": "git",
-    "url": "http://github.com/Countly/countly-server.git"
+    "url": "http://github.com/Userovo/userovo-server.git"
   },
   "bugs": {
-    "url": "http://github.com/Countly/countly-server/issues"
+    "url": "http://github.com/Userovo/userovo-server/issues"
   },
   "keywords": [
-    "countly",
+    "userovo",
     "analytics",
     "remote",
     "config"

@@ -1,8 +1,8 @@
 var pluginManager = require('../../../../plugins/pluginManager.js');
 
 console.log("Resetting Data Manager Settings");
-pluginManager.dbConnection().then((countlyDb) => {
-     countlyDb.collection('plugins').update(
+pluginManager.dbConnection().then((userovoDb) => {
+     userovoDb.collection('plugins').update(
                 {},
                 {
                     $unset: {
@@ -18,6 +18,6 @@ pluginManager.dbConnection().then((countlyDb) => {
                     if(err){
                         console.err(err)
                     }
-                    countlyDb.close();
+                    userovoDb.close();
                 });
 });

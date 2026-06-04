@@ -1,10 +1,10 @@
 /**
 Script for gradual deletion from drill collections.
 Script must be placed in :
-{countly dir}/bin/scripts/expire-data/
+{userovo dir}/bin/scripts/expire-data/
 
 to run:
-node countly_single_app_expireDataBatches.js
+node userovo_single_app_expireDataBatches.js
 
 Best would be to push output in some log file.
 At the end there will be text if there is any error:
@@ -258,7 +258,7 @@ function processDrillCollections(drill_db, callback) {
     }
 }
 
-Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_drill")]).spread(function(db, db_drill) {
+Promise.all([plugins.dbConnection("userovo"), plugins.dbConnection("userovo_drill")]).spread(function(db, db_drill) {
     if (!APP_ID) {
         console.log("APP ID is missing");
         console.log('exited');

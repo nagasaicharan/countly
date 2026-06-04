@@ -32,7 +32,7 @@ plugins.setConfigs("remote-config", {
      * @apiQuery {String} [country_code] ISO Country code for the user's country
      * @apiQuery {String} [location] Users lat, lng
      * @apiQuery {String} [tz] Users timezone
-     * @apiQuery {String} [ip_address]  IP address of user to determine user location, if not provided, countly will try to establish ip address based on connection data
+     * @apiQuery {String} [ip_address]  IP address of user to determine user location, if not provided, userovo will try to establish ip address based on connection data
      * @apiQuery {String[]} [keys] Only the values mentioned in the array will be fetched
      * @apiQuery {String[]} [omit_keys] Only the values mentioned in the array will not be fetched
      * @apiQuery {Object} [metrics] JSON object with key value pairs
@@ -72,7 +72,7 @@ plugins.setConfigs("remote-config", {
      * @apiQuery {String} [country_code] ISO Country code for the user's country
      * @apiQuery {String} [location] Users lat, lng
      * @apiQuery {String} [tz] Users timezone
-     * @apiQuery {String} [ip_address]  IP address of user to determine user location, if not provided, countly will try to establish ip address based on connection data
+     * @apiQuery {String} [ip_address]  IP address of user to determine user location, if not provided, userovo will try to establish ip address based on connection data
      * @apiQuery {String[]} [keys] Only the values mentioned in the array will be fetched
      * @apiQuery {Object} [metrics] JSON object with key value pairs
      *
@@ -155,7 +155,7 @@ plugins.setConfigs("remote-config", {
      * @apiQuery {String} [country_code] ISO Country code for the user's country
      * @apiQuery {String} [location] Users lat, lng
      * @apiQuery {String} [tz] Users timezone
-     * @apiQuery {String} [ip_address]  IP address of user to determine user location, if not provided, countly will try to establish ip address based on connection data
+     * @apiQuery {String} [ip_address]  IP address of user to determine user location, if not provided, userovo will try to establish ip address based on connection data
      * @apiQuery {String[]} [keys] Only the values mentioned in the array will be fetched
      * @apiQuery {String[]} [omit_keys] Only the values mentioned in the array will not be fetched
      * @apiQuery {Object} [metrics] JSON object with key value pairs

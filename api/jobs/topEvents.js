@@ -1,15 +1,15 @@
 const job = require("../parts/jobs/job.js");
 const crypto = require("crypto");
 const Promise = require("bluebird");
-const countlyApi = {
+const userovoApi = {
     data: {
         fetch: require("../parts/data/fetch.js"),
         lib: require("../lib/countly.model.js"),
-        common: require("../lib/countly.common.js")
+        common: require("../lib/userovo.common.js")
     }
 };
-const countlyEvents = countlyApi.data.lib.load("event");
-const countlyCommon = countlyApi.data.common;
+const userovoEvents = userovoApi.data.lib.load("event");
+const userovoCommon = userovoApi.data.common;
 const common = require('../utils/common.js');
 const log = require('../utils/log.js')('job:topEvents');
 
@@ -45,10 +45,10 @@ class TopEventsJob extends job.Job {
         let collectionName = "all";
         params.qstring.segmentation = "key";
         return await new Promise((resolve) => {
-            countlyApi.data.fetch.getTimeObjForEvents("events_data", params, {'id_prefix': params.app_id + "_" + collectionName + '_'}, function(doc) {
-                countlyEvents.setDb(doc || {});
+            userovoApi.data.fetch.getTimeObjForEvents("events_data", params, {'id_prefix': params.app_id + "_" + collectionName + '_'}, function(doc) {
+                userovoEvents.setDb(doc || {});
 
-                var dd = countlyEvents.getSegmentedData(params.qstring.segmentation);
+                var dd = userovoEvents.getSegmentedData(params.qstring.segmentation);
                 for (var z = 0; z < dd.length;z++) {
                     var key = dd[z]._id;
                     data[key] = data[key] || {};
@@ -77,7 +77,7 @@ class TopEventsJob extends job.Job {
                         data[key].data.duration.total = dd[z].dur;
                     }
                 }
-                //data.all = countlyEvents.getSegmentedData(params.qstring.segmentation);
+                //data.all = userovoEvents.getSegmentedData(params.qstring.segmentation);
                 resolve(true);
             });
         });
@@ -96,10 +96,10 @@ class TopEventsJob extends job.Job {
     async getSessionCount(params) {
         const { ob, sessionData, usersData, usersCollectionName } = params;
         return await new Promise((resolve) => {
-            countlyApi.data.fetch.getTimeObj(usersCollectionName, ob, (doc) => {
-                countlyEvents.setDb(doc || {});
-                const sessionProp = countlyEvents.getNumber("t", true);
-                const usersProp = countlyEvents.getNumber("u", true);
+            userovoApi.data.fetch.getTimeObj(usersCollectionName, ob, (doc) => {
+                userovoEvents.setDb(doc || {});
+                const sessionProp = userovoEvents.getNumber("t", true);
+                const usersProp = userovoEvents.getNumber("u", true);
                 sessionData.totalSessionCount = sessionProp.total;
                 sessionData.prevSessionCount = sessionProp["prev-total"];
                 usersData.totalUsersCount = usersProp.total;
@@ -117,7 +117,7 @@ class TopEventsJob extends job.Job {
     encodeEvents(data) {
         const _data = {};
         Object.keys(data).forEach(key => {
-            const encodeKey = countlyCommon.encode(key);
+            const encodeKey = userovoCommon.encode(key);
             _data[encodeKey] = data[key];
         });
         return _data;
@@ -216,7 +216,7 @@ class TopEventsJob extends job.Job {
 
                 //Fetching totals for this period
                 await this.fetchEventTotalCounts({ app_id: app._id, appTimezone: app.timezone, qstring: { period: period } }, data, false);
-                var period2 = countlyCommon.getPeriodObj({appTimezone: app.timezone, qstring: {}}, period);
+                var period2 = userovoCommon.getPeriodObj({appTimezone: app.timezone, qstring: {}}, period);
                 var newPeriod = [period2.start - (period2.end - period2.start), period2.start];
                 //Fetching totals for previous period
                 await this.fetchEventTotalCounts({ app_id: app._id, appTimezone: app.timezone, qstring: { period: newPeriod } }, data, true);
@@ -231,7 +231,7 @@ class TopEventsJob extends job.Job {
 
                 for (var event in data) {
                     //Calculating trend
-                    var trend = countlyCommon.getPercentChange(data[event].data.count["prev-total"], data[event].data.count.total);
+                    var trend = userovoCommon.getPercentChange(data[event].data.count["prev-total"], data[event].data.count.total);
                     data[event].data.count.change = trend.percent;
                     data[event].data.count.trend = trend.trend;
                     totalCount += data[event].data.count.total;

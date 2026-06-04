@@ -1,8 +1,8 @@
 /**
  *  Setup TTL indexes to delete older data for one specific app. This script should be run periodically, to create TTL indexes on new collections too, like new events, etc for specific app
- *  Server: countly
- *  Path: countly dir/bin/scripts/expire-data
- *  Command: node countly_single_app_expireData.js
+ *  Server: userovo
+ *  Path: userovo dir/bin/scripts/expire-data
+ *  Command: node userovo_single_app_expireData.js
  */
 
 var APP_ID = "5d68e5012257c30a2f409e0e";
@@ -14,10 +14,10 @@ var async = require('async'),
     Promise = require("bluebird"),
     plugins = require('../../../plugins/pluginManager.js');
 
-//var db = plugins.dbConnection("countly");
-//var db_drill = plugins.dbConnection("countly_drill");
+//var db = plugins.dbConnection("userovo");
+//var db_drill = plugins.dbConnection("userovo_drill");
 
-Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_drill")]).spread(function(db, db_drill) {
+Promise.all([plugins.dbConnection("userovo"), plugins.dbConnection("userovo_drill")]).spread(function(db, db_drill) {
     var collections = [];
     collections.push("drill_events" + crypto.createHash('sha1').update("[CLY]_session" + APP_ID).digest('hex'));
     collections.push("drill_events" + crypto.createHash('sha1').update("[CLY]_crash" + APP_ID).digest('hex'));

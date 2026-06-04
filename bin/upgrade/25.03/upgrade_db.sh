@@ -2,7 +2,7 @@
 
 VER="25.03"
 
-CONTINUE="$(countly check before upgrade db "$VER")"
+CONTINUE="$(userovo check before upgrade db "$VER")"
 
 if [ "$CONTINUE" != "1" ] && [ "$1" != "combined" ]
 then
@@ -22,8 +22,8 @@ then
 
     if [ "$1" != "combined" ]; then
         #upgrade plugins
-        countly plugin enable content;
-        countly plugin enable journey_engine;        
+        userovo plugin enable content;
+        userovo plugin enable journey_engine;        
         nodejs "$DIR/scripts/install_plugins.js"
     fi
     
@@ -35,11 +35,11 @@ then
 
 
     if [ "$1" != "combined" ]; then
-        countly upgrade;
+        userovo upgrade;
     fi
 
     #call after check
-    countly check after upgrade db "$VER"
+    userovo check after upgrade db "$VER"
 elif [ "$CONTINUE" == "0" ]
 then
     echo "Database is already upgraded to $VER"

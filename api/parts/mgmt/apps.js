@@ -13,7 +13,7 @@ var appsApi = {},
     jimp = require('jimp'),
     fs = require('fs'),
     { hasUpdateRight, hasDeleteRight, getUserApps, getAdminApps } = require('./../../utils/rights.js'),
-    countlyFs = require('./../../utils/countlyFs.js');
+    userovoFs = require('./../../utils/userovoFs.js');
 const taskmanager = require('./../../utils/taskmanager.js');
 const {timezoneValidation} = require('../../utils/timezones.js');
 const FEATURE_NAME = 'global_applications';
@@ -185,7 +185,7 @@ const iconUpload = async function(params) {
         try {
             const icon = await jimp.Jimp.read(tmp_path);
             const buffer = await icon.cover({h: 72, w: 72}).getBuffer(jimp.JimpMime.png);
-            countlyFs.saveData("appimages", target_path, buffer, {id: appId + ".png", writeMode: "overwrite"}, function(err3) {
+            userovoFs.saveData("appimages", target_path, buffer, {id: appId + ".png", writeMode: "overwrite"}, function(err3) {
                 if (err3) {
                     log.e(err3, err3.stack);
                 }
@@ -729,7 +729,7 @@ appsApi.deleteApp = function(params) {
             }
 
             var iconPath = __dirname + '/../../../frontend/express/public/appimages/' + appId + '.png';
-            countlyFs.deleteFile("appimages", iconPath, {id: appId + ".png"}, function() {});
+            userovoFs.deleteFile("appimages", iconPath, {id: appId + ".png"}, function() {});
 
             common.db.collection('members').update({}, {
                 $pull: {

@@ -1,6 +1,6 @@
 # UI Testing Guidelines
 
-This document covers UI testing practices for Countly Server, including Cypress testing and handling test failures.
+This document covers UI testing practices for Userovo Server, including Cypress testing and handling test failures.
 
 ## Table of Contents
 - [Running UI Tests](#running-ui-tests)
@@ -58,8 +58,8 @@ Tests run automatically on PRs:
 
 | Repository | Test Steps |
 |------------|------------|
-| countly-server | `ui-test-dashboard`, `ui-test-onboarding` |
-| countly-enterprise-plugins | `ui-test` |
+| userovo-server | `ui-test-dashboard`, `ui-test-onboarding` |
+| userovo-enterprise-plugins | `ui-test` |
 
 ---
 
@@ -189,7 +189,7 @@ Videos and screenshots are uploaded to Box tool for failed tests.
 **Accessing artifacts:**
 1. Log in to [Box](https://box.tools.count.ly)
 2. Find file by format: `{date}-{time}_{repo}_{action-id}.zip`
-   - Example: `20250324-21.42_countly-server_CI#3379.zip`
+   - Example: `20250324-21.42_userovo-server_CI#3379.zip`
 
 ![Box Tool Files](images/ui-testing/box-tool-files.png)
 3. Download and review video/screenshots

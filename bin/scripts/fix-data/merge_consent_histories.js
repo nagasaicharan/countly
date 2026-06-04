@@ -33,14 +33,14 @@ function mergeConsentHistoryCollections(collections, db) {
     return Promise.allSettled(processes);
 }
 
-pluginManager.dbConnection().then(async(countlyDb) => {
+pluginManager.dbConnection().then(async(userovoDb) => {
     try {
-        countlyDb.collection(TARGET_COLLECTION_NAME).ensureIndex({device_id: 1}, function() {});
-        countlyDb.collection(TARGET_COLLECTION_NAME).ensureIndex({uid: 1}, function() {});
-        countlyDb.collection(TARGET_COLLECTION_NAME).ensureIndex({type: 1}, function() {});
-        countlyDb.collection(TARGET_COLLECTION_NAME).ensureIndex({ts: 1}, function() {});
+        userovoDb.collection(TARGET_COLLECTION_NAME).ensureIndex({device_id: 1}, function() {});
+        userovoDb.collection(TARGET_COLLECTION_NAME).ensureIndex({uid: 1}, function() {});
+        userovoDb.collection(TARGET_COLLECTION_NAME).ensureIndex({type: 1}, function() {});
+        userovoDb.collection(TARGET_COLLECTION_NAME).ensureIndex({ts: 1}, function() {});
 
-        let consentCollections = await countlyDb.listCollections().toArray();
+        let consentCollections = await userovoDb.listCollections().toArray();
         let collectionNames = consentCollections.map(o => o.name);
         var consentHistoryCollections = collectionNames.filter(x => (x.startsWith('consent_history') && !x.endsWith('consent_history')));
 
@@ -56,7 +56,7 @@ pluginManager.dbConnection().then(async(countlyDb) => {
         console.log("Merging the following consent_historyAPPID collections: " + consentHistoryCollections.join(', '));
 
         try {
-            const result = await mergeConsentHistoryCollections(consentHistoryCollections, countlyDb);
+            const result = await mergeConsentHistoryCollections(consentHistoryCollections, userovoDb);
             const faileds = result.filter(x=>x.status === 'rejected');
             if (faileds.length) {
                 throw new Error(faileds.map(x=>x.reason).join('\n'));
@@ -71,6 +71,6 @@ pluginManager.dbConnection().then(async(countlyDb) => {
         console.log(`Error merging consent_historyAPPID collections: ${error}`);
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
     }
 });

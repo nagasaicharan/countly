@@ -285,7 +285,7 @@ plugins.register("/permissions/features", function(ob) {
                     fetch.getTotalUsersObj("sdks", paramsObj, function(dbTotalUsersObj) {
                         var formattedUserObj = fetch.formatTotalUsersObj(dbTotalUsersObj);
 
-                        var model = countlyModel.load("sdk");
+                        var model = userovoModel.load("sdk");
 
                         model.setPeriod(paramsObj.qstring.period);
                         model.setDb(data);

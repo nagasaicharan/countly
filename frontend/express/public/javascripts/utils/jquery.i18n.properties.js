@@ -288,7 +288,7 @@
 
   /** Load and parse .properties files */
   function loadAndParseFile(filename, settings) {
-    filename = settings.countlyVersion ? filename + "?" + settings.countlyVersion : filename;
+    filename = settings.userovoVersion ? filename + "?" + settings.userovoVersion : filename;
     $.ajax({
       url: filename,
       async: settings.async,

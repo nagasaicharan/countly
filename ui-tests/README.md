@@ -1,4 +1,4 @@
-# Countly UI Automation / CYPRESS
+# Userovo UI Automation / CYPRESS
 
 - Technology Used : JavaScript
 - Framework Used: Cypress

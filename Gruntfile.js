@@ -30,7 +30,7 @@ module.exports = function(grunt) {
                     'frontend/express/public/javascripts/dom/drop/tether.min.js',
                     'frontend/express/public/javascripts/dom/drop/drop.min.js'
                 ],
-                dest: 'frontend/express/public/javascripts/min/countly.dom.concat.js'
+                dest: 'frontend/express/public/javascripts/min/userovo.dom.concat.js'
             },
             utils: {
                 src: [
@@ -76,7 +76,7 @@ module.exports = function(grunt) {
                     'frontend/express/public/javascripts/utils/vue/vuescroll.min.js',
                     'frontend/express/public/javascripts/utils/vue/vue-json-pretty.min.js',
                     'frontend/express/public/javascripts/utils/jquery.xss.js',
-                    'frontend/express/public/javascripts/countly/countly.common.js',
+                    'frontend/express/public/javascripts/userovo/userovo.common.js',
                     'frontend/express/public/javascripts/utils/simpleUpload.min.js',
                     'frontend/express/public/javascripts/utils/jsoneditor/codemirror.js',
                     'frontend/express/public/javascripts/utils/jsoneditor/javascript.min.js',
@@ -86,11 +86,11 @@ module.exports = function(grunt) {
                     'frontend/express/public/javascripts/utils/jsoneditor/jsoneditor.js',
                     'frontend/express/public/javascripts/utils/Sortable.min.js',
                     'frontend/express/public/javascripts/utils/vue/vuedraggable.umd.min.js',
-                    'frontend/express/public/javascripts/utils/countly.checkbox.js',
+                    'frontend/express/public/javascripts/utils/userovo.checkbox.js',
                     'frontend/express/public/javascripts/utils/lodash.mergeWith.js',
                     'frontend/express/public/javascripts/utils/element-tiptap.umd.min.js'
                 ],
-                dest: 'frontend/express/public/javascripts/min/countly.utils.concat.js'
+                dest: 'frontend/express/public/javascripts/min/userovo.utils.concat.js'
             },
             visualization: {
                 src: [
@@ -110,115 +110,115 @@ module.exports = function(grunt) {
                     'frontend/express/public/javascripts/visualization/rickshaw/rickshaw.min.js',
                     'frontend/express/public/javascripts/visualization/rickshaw/rickshaw.x.axis.js'
                 ],
-                dest: 'frontend/express/public/javascripts/min/countly.visualization.concat.js'
+                dest: 'frontend/express/public/javascripts/min/userovo.visualization.concat.js'
             },
             lib: {
                 src: [
-                    'frontend/express/public/javascripts/countly/countly.auth.js',
-                    'frontend/express/public/javascripts/countly/countly.helpers.js',
-                    'frontend/express/public/javascripts/countly/countly.map.helper.js',
-                    'frontend/express/public/javascripts/countly/countly.event.js',
-                    'frontend/express/public/javascripts/countly/countly.session.js',
-                    'frontend/express/public/javascripts/countly/countly.city.js',
-                    'frontend/express/public/javascripts/countly/countly.location.js',
-                    'frontend/express/public/javascripts/countly/countly.device.list.js',
-                    'frontend/express/public/javascripts/countly/countly.device.osmapping.js',
-                    'frontend/express/public/javascripts/countly/countly.device.js',
-                    'frontend/express/public/javascripts/countly/countly.device.detail.js',
-                    'frontend/express/public/javascripts/countly/countly.app.version.js',
-                    'frontend/express/public/javascripts/countly/countly.carrier.js',
-                    'frontend/express/public/javascripts/countly/countly.total.users.js',
-                    'frontend/express/public/javascripts/countly/countly.app.users.js',
-                    'frontend/express/public/javascripts/countly/countly.view.js',
-                    'frontend/express/public/javascripts/countly/countly.cms.js',
-                    'frontend/express/public/javascripts/countly/vue/core.js',
-                    'frontend/express/public/javascripts/countly/vue/container.js',
-                    'frontend/express/public/javascripts/countly/countly.template.js',
-                    'frontend/express/public/javascripts/countly/vue/helpers.js',
-                    'frontend/express/public/javascripts/countly/vue/data/vuex.js',
-                    'frontend/express/public/javascripts/countly/countly.task.manager.js',
-                    'frontend/express/public/javascripts/countly/vue/imports.js',
-                    'frontend/express/public/javascripts/countly/vue/components/nav.js',
-                    'frontend/express/public/javascripts/countly/vue/components/layout.js',
-                    'frontend/express/public/javascripts/countly/vue/components/form.js',
-                    'frontend/express/public/javascripts/countly/vue/components/date.js',
-                    'frontend/express/public/javascripts/countly/vue/components/dropdown.js',
-                    'frontend/express/public/javascripts/countly/vue/components/input.js',
-                    'frontend/express/public/javascripts/countly/vue/components/content.js',
-                    'frontend/express/public/javascripts/countly/vue/datatable-legacy.js',
-                    'frontend/express/public/javascripts/countly/vue/components/datatable.js',
-                    'frontend/express/public/javascripts/countly/vue/components/dialog.js',
-                    'frontend/express/public/javascripts/countly/vue/components/drawer.js',
-                    'frontend/express/public/core/notes/javascripts/countly.models.js',
-                    'frontend/express/public/core/notes/javascripts/countly.common.notes.js',
-                    'frontend/express/public/core/date-presets/javascripts/countly.models.js',
-                    'frontend/express/public/core/date-presets/javascripts/countly.views.js',
-                    'frontend/express/public/javascripts/countly/vue/components/vis.js',
-                    'frontend/express/public/javascripts/countly/vue/components/helpers.js',
-                    'frontend/express/public/javascripts/countly/vue/components/sidebar.js',
-                    'frontend/express/public/javascripts/countly/vue/components/progress.js',
-                    'frontend/express/public/javascripts/countly/vue/directives/scroll-shadow.js',
-                    'frontend/express/public/javascripts/countly/vue/legacy.js',
-                    'frontend/express/public/javascripts/countly/countly.vue.legacy.js',
-                    'frontend/express/public/javascripts/countly/countly.token.manager.js',
-                    'frontend/express/public/javascripts/countly/countly.version.history.js',
-                    'frontend/express/public/javascripts/countly/countly.analytics.js',
-                    'frontend/express/public/javascripts/countly/countly.views.js',
-                    'frontend/express/public/core/device-and-type/javascripts/countly.models.js',
-                    'frontend/express/public/core/device-and-type/javascripts/countly.views.js',
-                    'frontend/express/public/core/user-activity/javascripts/countly.models.js',
-                    'frontend/express/public/core/user-activity/javascripts/countly.views.js',
-                    'frontend/express/public/core/session-overview/javascripts/countly.models.js',
-                    'frontend/express/public/core/session-overview/javascripts/countly.views.js',
-                    'frontend/express/public/core/session-durations/javascripts/countly.models.js',
-                    'frontend/express/public/core/session-durations/javascripts/countly.views.js',
-                    'frontend/express/public/core/session-frequency/javascripts/countly.models.js',
-                    'frontend/express/public/core/session-frequency/javascripts/countly.views.js',
-                    'frontend/express/public/core/app-version/javascripts/countly.views.js',
-                    'frontend/express/public/core/jobs/javascripts/countly.views.js',
-                    'frontend/express/public/core/report-manager/javascripts/countly.views.js',
-                    'frontend/express/public/core/app-resolution/javascripts/countly.views.js',
-                    'frontend/express/public/core/platform/javascripts/countly.views.js',
-                    'frontend/express/public/core/carrier/javascripts/countly.models.js',
-                    'frontend/express/public/core/carrier/javascripts/countly.views.js',
-                    'frontend/express/public/core/events/javascripts/countly.details.models.js',
-                    'frontend/express/public/core/events/javascripts/countly.details.views.js',
-                    'frontend/express/public/core/events/javascripts/countly.overview.models.js',
-                    'frontend/express/public/core/events/javascripts/countly.overview.views.js',
-                    'frontend/express/public/core/user-management/javascripts/countly.models.js',
-                    'frontend/express/public/core/user-management/javascripts/countly.views.js',
-                    'frontend/express/public/core/app-management/javascripts/countly.models.js',
-                    'frontend/express/public/core/app-management/javascripts/countly.views.js',
-                    'frontend/express/public/core/logs/javascripts/countly.views.js',
-                    'frontend/express/public/core/token-manager/javascripts/countly.views.js',
-                    'frontend/express/public/core/geo-countries/javascripts/countly.cities.models.js',
-                    'frontend/express/public/core/geo-countries/javascripts/countly.models.js',
-                    'frontend/express/public/core/user-analytics-overview/javascripts/countly.views.js',
-                    'frontend/express/public/core/geo-countries/javascripts/countly.views.js',
-                    'frontend/express/public/core/geo-countries/javascripts/countly.widgets.geo.js',
-                    'frontend/express/public/core/home/javascripts/countly.models.js',
-                    'frontend/express/public/core/home/javascripts/countly.views.js',
-                    'frontend/express/public/core/notes/javascripts/countly.views.js',
-                    'frontend/express/public/core/version-history/javascripts/countly.views.js',
-                    'frontend/express/public/core/onboarding/javascripts/countly.models.js',
-                    'frontend/express/public/core/onboarding/javascripts/countly.views.js'
+                    'frontend/express/public/javascripts/userovo/userovo.auth.js',
+                    'frontend/express/public/javascripts/userovo/userovo.helpers.js',
+                    'frontend/express/public/javascripts/userovo/userovo.map.helper.js',
+                    'frontend/express/public/javascripts/userovo/userovo.event.js',
+                    'frontend/express/public/javascripts/userovo/userovo.session.js',
+                    'frontend/express/public/javascripts/userovo/userovo.city.js',
+                    'frontend/express/public/javascripts/userovo/userovo.location.js',
+                    'frontend/express/public/javascripts/userovo/userovo.device.list.js',
+                    'frontend/express/public/javascripts/userovo/userovo.device.osmapping.js',
+                    'frontend/express/public/javascripts/userovo/userovo.device.js',
+                    'frontend/express/public/javascripts/userovo/userovo.device.detail.js',
+                    'frontend/express/public/javascripts/userovo/userovo.app.version.js',
+                    'frontend/express/public/javascripts/userovo/userovo.carrier.js',
+                    'frontend/express/public/javascripts/userovo/userovo.total.users.js',
+                    'frontend/express/public/javascripts/userovo/userovo.app.users.js',
+                    'frontend/express/public/javascripts/userovo/userovo.view.js',
+                    'frontend/express/public/javascripts/userovo/userovo.cms.js',
+                    'frontend/express/public/javascripts/userovo/vue/core.js',
+                    'frontend/express/public/javascripts/userovo/vue/container.js',
+                    'frontend/express/public/javascripts/userovo/userovo.template.js',
+                    'frontend/express/public/javascripts/userovo/vue/helpers.js',
+                    'frontend/express/public/javascripts/userovo/vue/data/vuex.js',
+                    'frontend/express/public/javascripts/userovo/userovo.task.manager.js',
+                    'frontend/express/public/javascripts/userovo/vue/imports.js',
+                    'frontend/express/public/javascripts/userovo/vue/components/nav.js',
+                    'frontend/express/public/javascripts/userovo/vue/components/layout.js',
+                    'frontend/express/public/javascripts/userovo/vue/components/form.js',
+                    'frontend/express/public/javascripts/userovo/vue/components/date.js',
+                    'frontend/express/public/javascripts/userovo/vue/components/dropdown.js',
+                    'frontend/express/public/javascripts/userovo/vue/components/input.js',
+                    'frontend/express/public/javascripts/userovo/vue/components/content.js',
+                    'frontend/express/public/javascripts/userovo/vue/datatable-legacy.js',
+                    'frontend/express/public/javascripts/userovo/vue/components/datatable.js',
+                    'frontend/express/public/javascripts/userovo/vue/components/dialog.js',
+                    'frontend/express/public/javascripts/userovo/vue/components/drawer.js',
+                    'frontend/express/public/core/notes/javascripts/userovo.models.js',
+                    'frontend/express/public/core/notes/javascripts/userovo.common.notes.js',
+                    'frontend/express/public/core/date-presets/javascripts/userovo.models.js',
+                    'frontend/express/public/core/date-presets/javascripts/userovo.views.js',
+                    'frontend/express/public/javascripts/userovo/vue/components/vis.js',
+                    'frontend/express/public/javascripts/userovo/vue/components/helpers.js',
+                    'frontend/express/public/javascripts/userovo/vue/components/sidebar.js',
+                    'frontend/express/public/javascripts/userovo/vue/components/progress.js',
+                    'frontend/express/public/javascripts/userovo/vue/directives/scroll-shadow.js',
+                    'frontend/express/public/javascripts/userovo/vue/legacy.js',
+                    'frontend/express/public/javascripts/userovo/userovo.vue.legacy.js',
+                    'frontend/express/public/javascripts/userovo/userovo.token.manager.js',
+                    'frontend/express/public/javascripts/userovo/userovo.version.history.js',
+                    'frontend/express/public/javascripts/userovo/userovo.analytics.js',
+                    'frontend/express/public/javascripts/userovo/userovo.views.js',
+                    'frontend/express/public/core/device-and-type/javascripts/userovo.models.js',
+                    'frontend/express/public/core/device-and-type/javascripts/userovo.views.js',
+                    'frontend/express/public/core/user-activity/javascripts/userovo.models.js',
+                    'frontend/express/public/core/user-activity/javascripts/userovo.views.js',
+                    'frontend/express/public/core/session-overview/javascripts/userovo.models.js',
+                    'frontend/express/public/core/session-overview/javascripts/userovo.views.js',
+                    'frontend/express/public/core/session-durations/javascripts/userovo.models.js',
+                    'frontend/express/public/core/session-durations/javascripts/userovo.views.js',
+                    'frontend/express/public/core/session-frequency/javascripts/userovo.models.js',
+                    'frontend/express/public/core/session-frequency/javascripts/userovo.views.js',
+                    'frontend/express/public/core/app-version/javascripts/userovo.views.js',
+                    'frontend/express/public/core/jobs/javascripts/userovo.views.js',
+                    'frontend/express/public/core/report-manager/javascripts/userovo.views.js',
+                    'frontend/express/public/core/app-resolution/javascripts/userovo.views.js',
+                    'frontend/express/public/core/platform/javascripts/userovo.views.js',
+                    'frontend/express/public/core/carrier/javascripts/userovo.models.js',
+                    'frontend/express/public/core/carrier/javascripts/userovo.views.js',
+                    'frontend/express/public/core/events/javascripts/userovo.details.models.js',
+                    'frontend/express/public/core/events/javascripts/userovo.details.views.js',
+                    'frontend/express/public/core/events/javascripts/userovo.overview.models.js',
+                    'frontend/express/public/core/events/javascripts/userovo.overview.views.js',
+                    'frontend/express/public/core/user-management/javascripts/userovo.models.js',
+                    'frontend/express/public/core/user-management/javascripts/userovo.views.js',
+                    'frontend/express/public/core/app-management/javascripts/userovo.models.js',
+                    'frontend/express/public/core/app-management/javascripts/userovo.views.js',
+                    'frontend/express/public/core/logs/javascripts/userovo.views.js',
+                    'frontend/express/public/core/token-manager/javascripts/userovo.views.js',
+                    'frontend/express/public/core/geo-countries/javascripts/userovo.cities.models.js',
+                    'frontend/express/public/core/geo-countries/javascripts/userovo.models.js',
+                    'frontend/express/public/core/user-analytics-overview/javascripts/userovo.views.js',
+                    'frontend/express/public/core/geo-countries/javascripts/userovo.views.js',
+                    'frontend/express/public/core/geo-countries/javascripts/userovo.widgets.geo.js',
+                    'frontend/express/public/core/home/javascripts/userovo.models.js',
+                    'frontend/express/public/core/home/javascripts/userovo.views.js',
+                    'frontend/express/public/core/notes/javascripts/userovo.views.js',
+                    'frontend/express/public/core/version-history/javascripts/userovo.views.js',
+                    'frontend/express/public/core/onboarding/javascripts/userovo.models.js',
+                    'frontend/express/public/core/onboarding/javascripts/userovo.views.js'
                 ],
-                dest: 'frontend/express/public/javascripts/min/countly.lib.concat.js'
+                dest: 'frontend/express/public/javascripts/min/userovo.lib.concat.js'
             }
         },
         uglify: {
             options: {
-                banner: '/*! Countly <%= grunt.template.today("dd-mm-yyyy") %> */\n',
+                banner: '/*! Userovo <%= grunt.template.today("dd-mm-yyyy") %> */\n',
                 mangle: {
                     reserved: ["$super"]
                 }
             },
             dist: {
                 files: {
-                    'frontend/express/public/javascripts/min/countly.dom.js': 'frontend/express/public/javascripts/min/countly.dom.concat.js',
-                    'frontend/express/public/javascripts/min/countly.utils.js': 'frontend/express/public/javascripts/min/countly.utils.concat.js',
-                    'frontend/express/public/javascripts/min/countly.visualization.js': 'frontend/express/public/javascripts/min/countly.visualization.concat.js',
-                    'frontend/express/public/javascripts/min/countly.lib.js': 'frontend/express/public/javascripts/min/countly.lib.concat.js'
+                    'frontend/express/public/javascripts/min/userovo.dom.js': 'frontend/express/public/javascripts/min/userovo.dom.concat.js',
+                    'frontend/express/public/javascripts/min/userovo.utils.js': 'frontend/express/public/javascripts/min/userovo.utils.concat.js',
+                    'frontend/express/public/javascripts/min/userovo.visualization.js': 'frontend/express/public/javascripts/min/userovo.visualization.concat.js',
+                    'frontend/express/public/javascripts/min/userovo.lib.js': 'frontend/express/public/javascripts/min/userovo.lib.concat.js'
                 }
             }
         },
@@ -234,12 +234,12 @@ module.exports = function(grunt) {
                         'frontend/express/public/stylesheets/selectize/selectize.css',
                         'frontend/express/public/stylesheets/leaflet/leaflet.css',
                         'frontend/express/public/stylesheets/jsoneditor/codemirror.css',
-                        'frontend/express/public/stylesheets/countly-checkbox/countly.checkbox.css',
+                        'frontend/express/public/stylesheets/userovo-checkbox/userovo.checkbox.css',
                         'frontend/express/public/javascripts/dom/tipsy/tipsy.css',
                         'frontend/express/public/javascripts/dom/gridstack/gridstack.css',
                         'frontend/express/public/javascripts/visualization/rickshaw/rickshaw.min.css',
                         'frontend/express/public/javascripts/dom/pace/pace-theme-flash.css',
-                        'frontend/express/public/javascripts/dom/drop/drop-theme-countly.min.css',
+                        'frontend/express/public/javascripts/dom/drop/drop-theme-userovo.min.css',
                         'frontend/express/public/javascripts/utils/tooltipster/tooltipster.bundle.min.css',
                         'frontend/express/public/stylesheets/bulma/bulma-custom.css',
                         'frontend/express/public/stylesheets/styles/manifest2.css',
@@ -406,17 +406,17 @@ module.exports = function(grunt) {
                 files = fs.readdirSync(javascripts);
                 if (files.length) {
                     // move models and views to the bottom
-                    if (files.indexOf('countly.models.js') !== -1) {
-                        files.splice(files.indexOf('countly.models.js'), 1);
-                        files.push('countly.models.js');
+                    if (files.indexOf('userovo.models.js') !== -1) {
+                        files.splice(files.indexOf('userovo.models.js'), 1);
+                        files.push('userovo.models.js');
                     }
-                    if (files.indexOf('countly.widgets.js') !== -1) {
-                        files.splice(files.indexOf('countly.widgets.js'), 1);
-                        files.push('countly.widgets.js');
+                    if (files.indexOf('userovo.widgets.js') !== -1) {
+                        files.splice(files.indexOf('userovo.widgets.js'), 1);
+                        files.push('userovo.widgets.js');
                     }
-                    if (files.indexOf('countly.views.js') !== -1) {
-                        files.splice(files.indexOf('countly.views.js'), 1);
-                        files.push('countly.views.js');
+                    if (files.indexOf('userovo.views.js') !== -1) {
+                        files.splice(files.indexOf('userovo.views.js'), 1);
+                        files.push('userovo.views.js');
                     }
                     files.forEach(function(name) {
                         var file = path.join(javascripts, name);
@@ -452,9 +452,9 @@ module.exports = function(grunt) {
         grunt.config('copy.plugins.files', img);
 
         grunt.config('concat.plugins.src', js);
-        grunt.config('concat.plugins.dest', 'frontend/express/public/javascripts/min/countly.plugins.concat.js');
+        grunt.config('concat.plugins.dest', 'frontend/express/public/javascripts/min/userovo.plugins.concat.js');
 
-        grunt.config('uglify.plugins.files.frontend/express/public/javascripts/min/countly\\.plugins\\.js', 'frontend/express/public/javascripts/min/countly.plugins.concat.js');
+        grunt.config('uglify.plugins.files.frontend/express/public/javascripts/min/userovo\\.plugins\\.js', 'frontend/express/public/javascripts/min/userovo.plugins.concat.js');
 
         grunt.config('cssmin.plugins.files.frontend/express/public/stylesheets/plugins\\.min\\.css', css);
 

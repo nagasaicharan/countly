@@ -2,7 +2,7 @@
 
 VER="22.06"
 
-CONTINUE="$(countly check before upgrade db "$VER")"
+CONTINUE="$(userovo check before upgrade db "$VER")"
 
 if [ "$CONTINUE" != "1" ] && [ "$1" != "combined" ]
 then
@@ -21,20 +21,20 @@ then
     CUR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
     
     #default setting for meta now
-    countly config "drill.record_meta" "false"
+    userovo config "drill.record_meta" "false"
 
     if [ "$1" != "combined" ]; then
         #upgrade plugins
         nodejs "$DIR/scripts/install_plugins.js"
         
         #enable new plugins
-        countly plugin enable data-manager
-        countly plugin enable heatmaps
+        userovo plugin enable data-manager
+        userovo plugin enable heatmaps
         
         #disable old plugins
-        countly plugin disable EChartMap
-        countly plugin disable restrict
-        countly plugin disable assistant
+        userovo plugin disable EChartMap
+        userovo plugin disable restrict
+        userovo plugin disable assistant
     fi
 
     #run upgrade scripts
@@ -43,19 +43,19 @@ then
     nodejs "$CUR/scripts/reset_upgraded_custom_dashboards.js"
     
     #change config settings
-    countly config "api.batch_on_master" null --force
-    countly config "api.batch_read_on_master" null --force
-    countly config "funnels.funnel_caching" true --force
+    userovo config "api.batch_on_master" null --force
+    userovo config "api.batch_read_on_master" null --force
+    userovo config "funnels.funnel_caching" true --force
     
     #add indexes
     nodejs "$DIR/scripts/add_indexes.js"
     
     if [ "$1" != "combined" ]; then
-        countly upgrade;
+        userovo upgrade;
     fi
 
     #call after check
-    countly check after upgrade db "$VER"
+    userovo check after upgrade db "$VER"
 elif [ "$CONTINUE" == "0" ]
 then
     echo "Database is already upgraded to $VER"

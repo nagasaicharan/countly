@@ -1,5 +1,5 @@
 /**
-* Module for processing data passed to Countly
+* Module for processing data passed to Userovo
 * @module api/utils/requestProcessor
 */
 
@@ -11,7 +11,7 @@
 const Promise = require('bluebird');
 const url = require('url');
 const common = require('./common.js');
-const countlyCommon = require('../lib/countly.common.js');
+const userovoCommon = require('../lib/userovo.common.js');
 const { validateAppAdmin, validateUser, validateRead, validateUserForRead, validateUserForWrite, validateGlobalAdmin, dbUserHasAccessToCollection, validateUpdate, validateDelete, validateCreate, getBaseAppFilter } = require('./rights.js');
 const authorize = require('./authorizer.js');
 const taskmanager = require('./taskmanager.js');
@@ -20,7 +20,7 @@ const versionInfo = require('../../frontend/express/version.info');
 const packageJson = require('./../../package.json');
 const log = require('./log.js')('core:api');
 const fs = require('fs');
-var countlyFs = require('./countlyFs.js');
+var userovoFs = require('./userovoFs.js');
 var path = require('path');
 var ssrfProtection = require('./ssrf-protection.js');
 const validateUserForWriteAPI = validateUser;
@@ -28,13 +28,13 @@ const validateUserForDataReadAPI = validateRead;
 const validateUserForDataWriteAPI = validateUserForWrite;
 const validateUserForGlobalAdmin = validateGlobalAdmin;
 const validateUserForMgmtReadAPI = validateUser;
-const request = require('countly-request')(plugins.getConfig("security"));
+const request = require('userovo-request')(plugins.getConfig("security"));
 const Handle = require('../../api/parts/jobs/index.js');
 const render = require('../../api/utils/render.js');
 
 var loaded_configs_time = 0;
 
-const countlyApi = {
+const userovoApi = {
     data: {
         usage: require('../parts/data/usage.js'),
         fetch: require('../parts/data/fetch.js'),
@@ -144,7 +144,7 @@ const processRequest = (params) => {
         return false;
     }
 
-    //remove countly path
+    //remove userovo path
     if (common.config.path === "/" + paths[1]) {
         paths.splice(1, 1);
     }
@@ -261,7 +261,7 @@ const processRequest = (params) => {
                  * }
                  */
                 case 'create':
-                    validateUserForGlobalAdmin(params, countlyApi.mgmt.users.createUser);
+                    validateUserForGlobalAdmin(params, userovoApi.mgmt.users.createUser);
                     break;
                 /**
                  * @api {get} /i/users/update Update user
@@ -290,7 +290,7 @@ const processRequest = (params) => {
                  * }
                  */
                 case 'update':
-                    validateUserForGlobalAdmin(params, countlyApi.mgmt.users.updateUser);
+                    validateUserForGlobalAdmin(params, userovoApi.mgmt.users.updateUser);
                     break;
                 /**
                  * @api {get} /i/users/delete Delete user
@@ -314,16 +314,16 @@ const processRequest = (params) => {
                  * }
                  */
                 case 'delete':
-                    validateUserForGlobalAdmin(params, countlyApi.mgmt.users.deleteUser);
+                    validateUserForGlobalAdmin(params, userovoApi.mgmt.users.deleteUser);
                     break;
                 case 'deleteOwnAccount':
-                    validateUserForGlobalAdmin(params, countlyApi.mgmt.users.deleteOwnAccount);
+                    validateUserForGlobalAdmin(params, userovoApi.mgmt.users.deleteOwnAccount);
                     break;
                 case 'updateHomeSettings':
-                    validateUserForGlobalAdmin(params, countlyApi.mgmt.users.updateHomeSettings);
+                    validateUserForGlobalAdmin(params, userovoApi.mgmt.users.updateHomeSettings);
                     break;
                 case 'ack':
-                    validateUserForWriteAPI(countlyApi.mgmt.users.ackNotification, params);
+                    validateUserForWriteAPI(userovoApi.mgmt.users.ackNotification, params);
                     break;
                 default:
                     if (!plugins.dispatch(apiPath, {
@@ -353,12 +353,12 @@ const processRequest = (params) => {
                 switch (paths[3]) {
                 case 'save':
                     validateCreate(params, 'core', () => {
-                        countlyApi.mgmt.users.saveNote(params);
+                        userovoApi.mgmt.users.saveNote(params);
                     });
                     break;
                 case 'delete':
                     validateDelete(params, 'core', () => {
-                        countlyApi.mgmt.users.deleteNote(params);
+                        userovoApi.mgmt.users.deleteNote(params);
                     });
                     break;
                 }
@@ -429,7 +429,7 @@ const processRequest = (params) => {
                         return false;
                     }
                     validateUserForWrite(params, function() {
-                        countlyApi.mgmt.appUsers.create(params.qstring.app_id, params.qstring.data, params, function(err, res) {
+                        userovoApi.mgmt.appUsers.create(params.qstring.app_id, params.qstring.data, params, function(err, res) {
                             if (err) {
                                 common.returnMessage(params, 400, err);
                             }
@@ -478,7 +478,7 @@ const processRequest = (params) => {
                         }
                     }
                     validateUserForWrite(params, function() {
-                        countlyApi.mgmt.appUsers.count(params.qstring.app_id, params.qstring.query, function(err, count) {
+                        userovoApi.mgmt.appUsers.count(params.qstring.app_id, params.qstring.query, function(err, count) {
                             if (err || count === 0) {
                                 common.returnMessage(params, 400, 'No users matching criteria');
                                 return false;
@@ -487,7 +487,7 @@ const processRequest = (params) => {
                                 common.returnMessage(params, 400, 'This query would update more than one user');
                                 return false;
                             }
-                            countlyApi.mgmt.appUsers.update(params.qstring.app_id, params.qstring.query, params.qstring.update, params, function(err2) {
+                            userovoApi.mgmt.appUsers.update(params.qstring.app_id, params.qstring.query, params.qstring.update, params, function(err2) {
                                 if (err2) {
                                     common.returnMessage(params, 400, err2);
                                 }
@@ -523,7 +523,7 @@ const processRequest = (params) => {
                         return false;
                     }
                     validateUserForWrite(params, function() {
-                        countlyApi.mgmt.appUsers.count(params.qstring.app_id, params.qstring.query, function(err, count) {
+                        userovoApi.mgmt.appUsers.count(params.qstring.app_id, params.qstring.query, function(err, count) {
                             if (err || count === 0) {
                                 common.returnMessage(params, 400, 'No users matching criteria');
                                 return false;
@@ -532,7 +532,7 @@ const processRequest = (params) => {
                                 common.returnMessage(params, 400, 'This query would delete more than one user');
                                 return false;
                             }
-                            countlyApi.mgmt.appUsers.delete(params.qstring.app_id, params.qstring.query, params, function(err2) {
+                            userovoApi.mgmt.appUsers.delete(params.qstring.app_id, params.qstring.query, params, function(err2) {
                                 if (err2) {
                                     common.returnMessage(params, 400, err2);
                                 }
@@ -567,7 +567,7 @@ const processRequest = (params) => {
                  */
                 case 'deleteExport': {
                     validateUserForWrite(params, function() {
-                        countlyApi.mgmt.appUsers.deleteExport(paths[4], params, function(err) {
+                        userovoApi.mgmt.appUsers.deleteExport(paths[4], params, function(err) {
                             if (err) {
                                 common.returnMessage(params, 400, err);
                             }
@@ -633,7 +633,7 @@ const processRequest = (params) => {
                                     my_name = JSON.stringify(params.qstring.query);
                                 }
 
-                                countlyApi.mgmt.appUsers.export(params.qstring.app_id, params.qstring.query || {}, params, taskmanager.longtask({
+                                userovoApi.mgmt.appUsers.export(params.qstring.app_id, params.qstring.query || {}, params, taskmanager.longtask({
                                     db: common.db,
                                     threshold: plugins.getConfig("api").request_threshold,
                                     force: false,
@@ -696,26 +696,26 @@ const processRequest = (params) => {
 
                 switch (paths[3]) {
                 case 'create':
-                    validateUserForGlobalAdmin(params, countlyApi.mgmt.apps.createApp);
+                    validateUserForGlobalAdmin(params, userovoApi.mgmt.apps.createApp);
                     break;
                 case 'update':
                     if (paths[4] === 'plugins') {
-                        validateAppAdmin(params, countlyApi.mgmt.apps.updateAppPlugins);
+                        validateAppAdmin(params, userovoApi.mgmt.apps.updateAppPlugins);
                     }
                     else {
                         if (params.qstring.app_id) {
-                            validateAppAdmin(params, countlyApi.mgmt.apps.updateApp);
+                            validateAppAdmin(params, userovoApi.mgmt.apps.updateApp);
                         }
                         else {
-                            validateUserForGlobalAdmin(params, countlyApi.mgmt.apps.updateApp);
+                            validateUserForGlobalAdmin(params, userovoApi.mgmt.apps.updateApp);
                         }
                     }
                     break;
                 case 'delete':
-                    validateUserForGlobalAdmin(params, countlyApi.mgmt.apps.deleteApp);
+                    validateUserForGlobalAdmin(params, userovoApi.mgmt.apps.deleteApp);
                     break;
                 case 'reset':
-                    validateUserForGlobalAdmin(params, countlyApi.mgmt.apps.resetApp);
+                    validateUserForGlobalAdmin(params, userovoApi.mgmt.apps.resetApp);
                     break;
                 default:
                     if (!plugins.dispatch(apiPath, {
@@ -736,13 +736,13 @@ const processRequest = (params) => {
             case '/i/event_groups':
                 switch (paths[3]) {
                 case 'create':
-                    validateCreate(params, 'core', countlyApi.mgmt.eventGroups.create);
+                    validateCreate(params, 'core', userovoApi.mgmt.eventGroups.create);
                     break;
                 case 'update':
-                    validateUpdate(params, 'core', countlyApi.mgmt.eventGroups.update);
+                    validateUpdate(params, 'core', userovoApi.mgmt.eventGroups.update);
                     break;
                 case 'delete':
-                    validateDelete(params, 'core', countlyApi.mgmt.eventGroups.remove);
+                    validateDelete(params, 'core', userovoApi.mgmt.eventGroups.remove);
                     break;
                 default:
                     break;
@@ -1586,16 +1586,16 @@ const processRequest = (params) => {
             case '/o/users': {
                 switch (paths[3]) {
                 case 'all':
-                    validateUserForGlobalAdmin(params, countlyApi.mgmt.users.getAllUsers);
+                    validateUserForGlobalAdmin(params, userovoApi.mgmt.users.getAllUsers);
                     break;
                 case 'me':
-                    validateUserForMgmtReadAPI(countlyApi.mgmt.users.getCurrentUser, params);
+                    validateUserForMgmtReadAPI(userovoApi.mgmt.users.getCurrentUser, params);
                     break;
                 case 'id':
-                    validateUserForGlobalAdmin(params, countlyApi.mgmt.users.getUserById);
+                    validateUserForGlobalAdmin(params, userovoApi.mgmt.users.getUserById);
                     break;
                 case 'reset_timeban':
-                    validateUserForGlobalAdmin(params, countlyApi.mgmt.users.resetTimeBan);
+                    validateUserForGlobalAdmin(params, userovoApi.mgmt.users.resetTimeBan);
                     break;
                 case 'permissions':
                     validateRead(params, 'core', function() {
@@ -1656,7 +1656,7 @@ const processRequest = (params) => {
                         common.returnMessage(params, 400, 'Missing parameter "app_id"');
                         return false;
                     }
-                    validateUserForRead(params, countlyApi.mgmt.appUsers.loyalty);
+                    validateUserForRead(params, userovoApi.mgmt.appUsers.loyalty);
                     break;
                 }
                 /**
@@ -1716,7 +1716,7 @@ const processRequest = (params) => {
                                 }
                             }).then(function() {
                                 var myfile = '../../export/AppUser/' + filename[0];
-                                countlyFs.gridfs.getSize("appUsers", myfile, {id: filename[0]}, function(error, size) {
+                                userovoFs.gridfs.getSize("appUsers", myfile, {id: filename[0]}, function(error, size) {
                                     if (error) {
                                         common.returnMessage(params, 400, error);
                                     }
@@ -1741,14 +1741,14 @@ const processRequest = (params) => {
                                         }
 
                                         options.output = options.output || function(stream) {
-                                            countlyApi.data.exports.stream(options.params, stream, options);
+                                            userovoApi.data.exports.stream(options.params, stream, options);
                                         };
                                         options.output(cursor);
 
 
                                     }
                                     else {
-                                        countlyFs.gridfs.getStream("appUsers", myfile, {id: filename[0]}, function(err, stream) {
+                                        userovoFs.gridfs.getStream("appUsers", myfile, {id: filename[0]}, function(err, stream) {
                                             if (err) {
                                                 common.returnMessage(params, 400, "Export doesn't exist");
                                             }
@@ -1798,16 +1798,16 @@ const processRequest = (params) => {
             case '/o/apps': {
                 switch (paths[3]) {
                 case 'all':
-                    validateUserForGlobalAdmin(params, countlyApi.mgmt.apps.getAllApps);
+                    validateUserForGlobalAdmin(params, userovoApi.mgmt.apps.getAllApps);
                     break;
                 case 'mine':
-                    validateUser(params, countlyApi.mgmt.apps.getCurrentUserApps);
+                    validateUser(params, userovoApi.mgmt.apps.getCurrentUserApps);
                     break;
                 case 'details':
-                    validateAppAdmin(params, countlyApi.mgmt.apps.getAppsDetails);
+                    validateAppAdmin(params, userovoApi.mgmt.apps.getAppsDetails);
                     break;
                 case 'plugins':
-                    validateUserForGlobalAdmin(params, countlyApi.mgmt.apps.getAppPlugins);
+                    validateUserForGlobalAdmin(params, userovoApi.mgmt.apps.getAppPlugins);
                     break;
                 default:
                     if (!plugins.dispatch(apiPath, {
@@ -1859,8 +1859,8 @@ const processRequest = (params) => {
                             }
                         }
                         if (params.qstring.period) {
-                            countlyCommon.getPeriodObj(params);
-                            params.qstring.query.ts = countlyCommon.getTimestampRangeQuery(params, false);
+                            userovoCommon.getPeriodObj(params);
+                            params.qstring.query.ts = userovoCommon.getTimestampRangeQuery(params, false);
                         }
                         taskmanager.getResults({
                             db: common.db,
@@ -1894,8 +1894,8 @@ const processRequest = (params) => {
                             params.qstring.query.$or = [{"global": {"$ne": false}}, {"creator": params.member._id + ""}];
                         }
                         if (params.qstring.period) {
-                            countlyCommon.getPeriodObj(params);
-                            params.qstring.query.ts = countlyCommon.getTimestampRangeQuery(params, false);
+                            userovoCommon.getPeriodObj(params);
+                            params.qstring.query.ts = userovoCommon.getTimestampRangeQuery(params, false);
                         }
                         taskmanager.getCounts({
                             db: common.db,
@@ -1941,8 +1941,8 @@ const processRequest = (params) => {
                         }
                         params.qstring.query.subtask = {$exists: false};
                         if (params.qstring.period) {
-                            countlyCommon.getPeriodObj(params);
-                            params.qstring.query.ts = countlyCommon.getTimestampRangeQuery(params, false);
+                            userovoCommon.getPeriodObj(params);
+                            params.qstring.query.ts = userovoCommon.getTimestampRangeQuery(params, false);
                         }
                         const skip = params.qstring.iDisplayStart;
                         const limit = params.qstring.iDisplayLength;
@@ -2137,8 +2137,8 @@ const processRequest = (params) => {
                         }
 
                         dbUserHasAccessToCollection(params, params.qstring.collection, (hasAccess) => {
-                            if (hasAccess || (params.qstring.db === "countly_drill" && params.qstring.collection === "drill_events") || (params.qstring.db === "countly" && params.qstring.collection === "events_data")) {
-                                var dbs = { countly: common.db, countly_drill: common.drillDb, countly_out: common.outDb, countly_fs: countlyFs.gridfs.getHandler() };
+                            if (hasAccess || (params.qstring.db === "userovo_drill" && params.qstring.collection === "drill_events") || (params.qstring.db === "userovo" && params.qstring.collection === "events_data")) {
+                                var dbs = { userovo: common.db, userovo_drill: common.drillDb, userovo_out: common.outDb, userovo_fs: userovoFs.gridfs.getHandler() };
                                 var db = "";
                                 if (params.qstring.db && dbs[params.qstring.db]) {
                                     db = dbs[params.qstring.db];
@@ -2163,7 +2163,7 @@ const processRequest = (params) => {
                                         }
                                     }
                                 }
-                                countlyApi.data.exports.fromDatabase({
+                                userovoApi.data.exports.fromDatabase({
                                     db: db,
                                     params: params,
                                     collection: params.qstring.collection,
@@ -2222,7 +2222,7 @@ const processRequest = (params) => {
                                 params.qstring.mapper = {};
                             }
                         }
-                        countlyApi.data.exports.fromRequest({
+                        userovoApi.data.exports.fromRequest({
                             params: params,
                             path: params.qstring.path,
                             data: params.qstring.data,
@@ -2287,8 +2287,8 @@ const processRequest = (params) => {
                             }
                         });
 
-                        countlyApi.data.exports.fromRequestQuery({
-                            db: (params.qstring.db === "countly_drill") ? common.drillDb : (params.qstring.dbs === "countly_drill") ? common.drillDb : common.db,
+                        userovoApi.data.exports.fromRequestQuery({
+                            db: (params.qstring.db === "userovo_drill") ? common.drillDb : (params.qstring.dbs === "userovo_drill") ? common.drillDb : common.db,
                             params: params,
                             path: params.qstring.path,
                             data: params.qstring.data,
@@ -2327,7 +2327,7 @@ const processRequest = (params) => {
                                     var myfile = paths[4];
                                     var headers = {};
 
-                                    countlyFs.gridfs.getSize("task_results", myfile, {id: paths[4]}, function(err2, size) {
+                                    userovoFs.gridfs.getSize("task_results", myfile, {id: paths[4]}, function(err2, size) {
                                         if (err2) {
                                             common.returnMessage(params, 400, err2);
                                         }
@@ -2335,12 +2335,12 @@ const processRequest = (params) => {
                                             if (data.type !== "dbviewer") {
                                                 common.returnMessage(params, 400, "Export size is 0");
                                             }
-                                            //handling older aggregations that aren't saved in countly_fs
+                                            //handling older aggregations that aren't saved in userovo_fs
                                             else if (!data.gridfs && data.data) {
                                                 type = "json";
                                                 filename = data.name + "." + type;
                                                 headers = {};
-                                                headers["Content-Type"] = countlyApi.data.exports.getType(type);
+                                                headers["Content-Type"] = userovoApi.data.exports.getType(type);
                                                 headers["Content-Disposition"] = "attachment;filename=" + encodeURIComponent(filename);
                                                 params.res.writeHead(200, headers);
                                                 params.res.write(data.data);
@@ -2348,7 +2348,7 @@ const processRequest = (params) => {
                                             }
                                         }
                                         else {
-                                            countlyFs.gridfs.getStream("task_results", myfile, {id: myfile}, function(err5, stream) {
+                                            userovoFs.gridfs.getStream("task_results", myfile, {id: myfile}, function(err5, stream) {
                                                 if (err5) {
                                                     common.returnMessage(params, 400, "Export stream does not exist");
                                                 }
@@ -2363,7 +2363,7 @@ const processRequest = (params) => {
                                                         }
                                                     });
                                                     headers = {};
-                                                    headers["Content-Type"] = countlyApi.data.exports.getType(type);
+                                                    headers["Content-Type"] = userovoApi.data.exports.getType(type);
                                                     headers["Content-Disposition"] = "attachment;filename=" + encodeURIComponent(filename);
                                                     params.res.writeHead(200, headers);
                                                     stream.pipe(params.res);
@@ -2395,7 +2395,7 @@ const processRequest = (params) => {
                                 return false;
                             }
                         }
-                        countlyApi.data.exports.fromData(params.qstring.data, {
+                        userovoApi.data.exports.fromData(params.qstring.data, {
                             params: params,
                             type: params.qstring.type,
                             filename: params.qstring.filename
@@ -2745,7 +2745,7 @@ const processRequest = (params) => {
                     * }
                     */
 
-                    validateUserForGlobalAdmin(params, countlyApi.data.fetch.fetchJobs, 'jobs');
+                    validateUserForGlobalAdmin(params, userovoApi.data.fetch.fetchJobs, 'jobs');
                     break;
                 case 'suspend_job': {
                     /**
@@ -2775,27 +2775,27 @@ const processRequest = (params) => {
                     break;
                 }
                 case 'total_users':
-                    validateUserForDataReadAPI(params, 'core', countlyApi.data.fetch.fetchTotalUsersObj, params.qstring.metric || 'users');
+                    validateUserForDataReadAPI(params, 'core', userovoApi.data.fetch.fetchTotalUsersObj, params.qstring.metric || 'users');
                     break;
                 case 'get_period_obj':
-                    validateUserForDataReadAPI(params, 'core', countlyApi.data.fetch.getPeriodObj, 'users');
+                    validateUserForDataReadAPI(params, 'core', userovoApi.data.fetch.getPeriodObj, 'users');
                     break;
                 case 'locations':
                 case 'sessions':
                 case 'users':
-                    validateUserForDataReadAPI(params, 'core', countlyApi.data.fetch.fetchTimeObj, 'users');
+                    validateUserForDataReadAPI(params, 'core', userovoApi.data.fetch.fetchTimeObj, 'users');
                     break;
                 case 'app_versions':
                 case 'device_details':
-                    validateUserForDataReadAPI(params, 'core', countlyApi.data.fetch.fetchTimeObj, 'device_details');
+                    validateUserForDataReadAPI(params, 'core', userovoApi.data.fetch.fetchTimeObj, 'device_details');
                     break;
                 case 'devices':
                 case 'carriers':
-                    validateUserForDataReadAPI(params, 'core', countlyApi.data.fetch.fetchTimeObj, params.qstring.method);
+                    validateUserForDataReadAPI(params, 'core', userovoApi.data.fetch.fetchTimeObj, params.qstring.method);
                     break;
                 case 'countries':
                     if (plugins.getConfig("api", params.app && params.app.plugins, true).country_data !== false) {
-                        validateUserForDataReadAPI(params, 'core', countlyApi.data.fetch.fetchTimeObj, params.qstring.method);
+                        validateUserForDataReadAPI(params, 'core', userovoApi.data.fetch.fetchTimeObj, params.qstring.method);
                     }
                     else {
                         common.returnOutput(params, {});
@@ -2803,7 +2803,7 @@ const processRequest = (params) => {
                     break;
                 case 'cities':
                     if (plugins.getConfig("api", params.app && params.app.plugins, true).city_data !== false) {
-                        validateUserForDataReadAPI(params, 'core', countlyApi.data.fetch.fetchTimeObj, params.qstring.method);
+                        validateUserForDataReadAPI(params, 'core', userovoApi.data.fetch.fetchTimeObj, params.qstring.method);
                     }
                     else {
                         common.returnOutput(params, {});
@@ -2812,7 +2812,7 @@ const processRequest = (params) => {
                 case 'geodata': {
                     validateRead(params, 'core', function() {
                         if (params.qstring.loadFor === "cities") {
-                            countlyApi.data.geoData.loadCityCoordiantes({"query": params.qstring.query}, function(err, data) {
+                            userovoApi.data.geoData.loadCityCoordiantes({"query": params.qstring.query}, function(err, data) {
                                 common.returnOutput(params, data);
                             });
                         }
@@ -2820,10 +2820,10 @@ const processRequest = (params) => {
                     break;
                 }
                 case 'get_event_groups':
-                    validateRead(params, 'core', countlyApi.data.fetch.fetchEventGroups);
+                    validateRead(params, 'core', userovoApi.data.fetch.fetchEventGroups);
                     break;
                 case 'get_event_group':
-                    validateRead(params, 'core', countlyApi.data.fetch.fetchEventGroupById);
+                    validateRead(params, 'core', userovoApi.data.fetch.fetchEventGroupById);
                     break;
                 case 'events':
                     if (params.qstring.events) {
@@ -2834,33 +2834,33 @@ const processRequest = (params) => {
                             console.log('Parse events array failed', params.qstring.events, params.req.url, params.req.body);
                         }
                         if (params.qstring.overview) {
-                            validateRead(params, 'core', countlyApi.data.fetch.fetchDataEventsOverview);
+                            validateRead(params, 'core', userovoApi.data.fetch.fetchDataEventsOverview);
                         }
                         else {
-                            validateRead(params, 'core', countlyApi.data.fetch.fetchMergedEventData);
+                            validateRead(params, 'core', userovoApi.data.fetch.fetchMergedEventData);
                         }
                     }
                     else {
                         if (params.qstring.event && params.qstring.event.startsWith('[CLY]_group_')) {
-                            validateRead(params, 'core', countlyApi.data.fetch.fetchMergedEventGroups);
+                            validateRead(params, 'core', userovoApi.data.fetch.fetchMergedEventGroups);
                         }
                         else {
                             params.truncateEventValuesList = true;
-                            validateRead(params, 'core', countlyApi.data.fetch.prefetchEventData, params.qstring.method);
+                            validateRead(params, 'core', userovoApi.data.fetch.prefetchEventData, params.qstring.method);
                         }
                     }
                     break;
                 case 'get_events':
-                    validateRead(params, 'core', countlyApi.data.fetch.fetchCollection, 'events');
+                    validateRead(params, 'core', userovoApi.data.fetch.fetchCollection, 'events');
                     break;
                 case 'top_events':
-                    validateRead(params, 'core', countlyApi.data.fetch.fetchDataTopEvents);
+                    validateRead(params, 'core', userovoApi.data.fetch.fetchDataTopEvents);
                     break;
                 case 'all_apps':
-                    validateUserForGlobalAdmin(params, countlyApi.data.fetch.fetchAllApps);
+                    validateUserForGlobalAdmin(params, userovoApi.data.fetch.fetchAllApps);
                     break;
                 case 'notes':
-                    validateRead(params, 'core', countlyApi.mgmt.users.fetchNotes);
+                    validateRead(params, 'core', userovoApi.mgmt.users.fetchNotes);
                     break;
                 default:
                     if (!plugins.dispatch(apiPath, {
@@ -2885,33 +2885,33 @@ const processRequest = (params) => {
 
                 switch (paths[3]) {
                 case 'dashboard':
-                    validateUserForDataReadAPI(params, 'core', countlyApi.data.fetch.fetchDashboard);
+                    validateUserForDataReadAPI(params, 'core', userovoApi.data.fetch.fetchDashboard);
                     break;
                 case 'countries':
-                    validateUserForDataReadAPI(params, 'core', countlyApi.data.fetch.fetchCountries);
+                    validateUserForDataReadAPI(params, 'core', userovoApi.data.fetch.fetchCountries);
                     break;
                 case 'sessions':
                     //takes also bucket=daily || monthly. extends period to full months if monthly
-                    validateUserForDataReadAPI(params, 'core', countlyApi.data.fetch.fetchSessions);
+                    validateUserForDataReadAPI(params, 'core', userovoApi.data.fetch.fetchSessions);
                     break;
                 case 'metric':
-                    validateUserForDataReadAPI(params, 'core', countlyApi.data.fetch.fetchMetric);
+                    validateUserForDataReadAPI(params, 'core', userovoApi.data.fetch.fetchMetric);
                     break;
                 case 'tops':
-                    validateUserForDataReadAPI(params, 'core', countlyApi.data.fetch.fetchTops);
+                    validateUserForDataReadAPI(params, 'core', userovoApi.data.fetch.fetchTops);
                     break;
                 case 'loyalty':
-                    validateUserForDataReadAPI(params, 'core', countlyApi.data.fetch.fetchLoyalty);
+                    validateUserForDataReadAPI(params, 'core', userovoApi.data.fetch.fetchLoyalty);
                     break;
                 case 'frequency':
-                    validateUserForDataReadAPI(params, 'core', countlyApi.data.fetch.fetchFrequency);
+                    validateUserForDataReadAPI(params, 'core', userovoApi.data.fetch.fetchFrequency);
                     break;
                 case 'durations':
-                    validateUserForDataReadAPI(params, 'core', countlyApi.data.fetch.fetchDurations);
+                    validateUserForDataReadAPI(params, 'core', userovoApi.data.fetch.fetchDurations);
                     break;
                 case 'events':
                     //takes also bucket=daily || monthly. extends period to full months if monthly
-                    validateUserForDataReadAPI(params, 'core', countlyApi.data.fetch.fetchEvents);
+                    validateUserForDataReadAPI(params, 'core', userovoApi.data.fetch.fetchEvents);
                     break;
                 default:
                     if (!plugins.dispatch(apiPath, {
@@ -2929,7 +2929,7 @@ const processRequest = (params) => {
 
                 break;
             }
-            case '/o/countly_version': {
+            case '/o/userovo_version': {
                 validateUser(params, () => {
                     //load previos version info if exist
                     loadFsVersionMarks(function(errFs, fsValues) {
@@ -3014,13 +3014,13 @@ const processRequest = (params) => {
                 break;
             }
             case '/o/notes': {
-                validateUserForDataReadAPI(params, 'core', countlyApi.mgmt.users.fetchNotes);
+                validateUserForDataReadAPI(params, 'core', userovoApi.mgmt.users.fetchNotes);
                 break;
             }
             case '/o/cms': {
                 switch (paths[3]) {
                 case 'entries':
-                    validateUserForMgmtReadAPI(countlyApi.mgmt.cms.getEntries, params);
+                    validateUserForMgmtReadAPI(userovoApi.mgmt.cms.getEntries, params);
                     break;
                 }
                 break;
@@ -3033,10 +3033,10 @@ const processRequest = (params) => {
                     // dashboard users; before this, validateUserForWrite (an
                     // alias of validateUser) allowed any logged-in user to
                     // pollute the cache.
-                    validateUserForGlobalAdmin(params, countlyApi.mgmt.cms.saveEntries);
+                    validateUserForGlobalAdmin(params, userovoApi.mgmt.cms.saveEntries);
                     break;
                 case 'clear':
-                    validateUserForWrite(countlyApi.mgmt.cms.clearCache, params);
+                    validateUserForWrite(userovoApi.mgmt.cms.clearCache, params);
                     break;
                 default:
                     if (!plugins.dispatch(apiPath, {
@@ -3056,10 +3056,10 @@ const processRequest = (params) => {
             case '/o/date_presets': {
                 switch (paths[3]) {
                 case 'getAll':
-                    validateUserForMgmtReadAPI(countlyApi.mgmt.datePresets.getAll, params);
+                    validateUserForMgmtReadAPI(userovoApi.mgmt.datePresets.getAll, params);
                     break;
                 case 'getById':
-                    validateUserForMgmtReadAPI(countlyApi.mgmt.datePresets.getById, params);
+                    validateUserForMgmtReadAPI(userovoApi.mgmt.datePresets.getById, params);
                     break;
                 default:
                     if (!plugins.dispatch(apiPath, {
@@ -3079,13 +3079,13 @@ const processRequest = (params) => {
             case '/i/date_presets': {
                 switch (paths[3]) {
                 case 'create':
-                    validateUserForWrite(params, countlyApi.mgmt.datePresets.create);
+                    validateUserForWrite(params, userovoApi.mgmt.datePresets.create);
                     break;
                 case 'update':
-                    validateUserForWrite(params, countlyApi.mgmt.datePresets.update);
+                    validateUserForWrite(params, userovoApi.mgmt.datePresets.update);
                     break;
                 case 'delete':
-                    validateUserForWrite(params, countlyApi.mgmt.datePresets.delete);
+                    validateUserForWrite(params, userovoApi.mgmt.datePresets.delete);
                     break;
                 default:
                     if (!plugins.dispatch(apiPath, {
@@ -3169,10 +3169,10 @@ const processRequestData = (params, app, done) => {
             }
             if (params.qstring.events) {
                 if (params.promises) {
-                    params.promises.push(countlyApi.data.events.processEvents(params));
+                    params.promises.push(userovoApi.data.events.processEvents(params));
                 }
                 else {
-                    countlyApi.data.events.processEvents(params);
+                    userovoApi.data.events.processEvents(params);
                 }
             }
             //process the rest of the plugins as usual
@@ -3215,7 +3215,7 @@ const processRequestData = (params, app, done) => {
 const processFetchRequest = (params, app, done) => {
     if (params.qstring.metrics) {
         try {
-            countlyApi.data.usage.returnAllProcessedMetrics(params);
+            userovoApi.data.usage.returnAllProcessedMetrics(params);
         }
         catch (ex) {
             console.log("Could not process metrics");
@@ -3654,7 +3654,7 @@ const validateAppForFetchAPI = (params, done, try_times) => {
             }
         }
 
-        var parallelTasks = [countlyApi.data.usage.setLocation(params)];
+        var parallelTasks = [userovoApi.data.usage.setLocation(params)];
 
         var processThisUser = true;
 
@@ -3728,7 +3728,7 @@ function processUser(params, initiator, done, try_times) {
     return new Promise((resolve) => {
         if (params && params.app_user && !params.app_user.uid) {
             //first time we see this user, we need to id him with uid
-            countlyApi.mgmt.appUsers.getUid(params.app_id, function(err, uid) {
+            userovoApi.mgmt.appUsers.getUid(params.app_id, function(err, uid) {
                 plugins.dispatch("/i/app_users/create", {
                     app_id: params.app_id,
                     user: {uid: uid, did: params.qstring.device_id, _id: params.app_user_id },
@@ -3790,7 +3790,7 @@ function processUser(params, initiator, done, try_times) {
                 .update(params.qstring.app_key + params.qstring.old_device_id + "")
                 .digest('hex');
 
-            countlyApi.mgmt.appUsers.merge(params.app_id, params.app_user, params.app_user_id, old_id, params.qstring.device_id, params.qstring.old_device_id, function(err) {
+            userovoApi.mgmt.appUsers.merge(params.app_id, params.app_user, params.app_user_id, old_id, params.qstring.device_id, params.qstring.old_device_id, function(err) {
                 if (err) {
                     return common.returnMessage(params, 400, 'Cannot update user');
                 }
@@ -3842,7 +3842,7 @@ const ignorePossibleDevices = (params) => {
  * @returns {void} void
  */
 function loadFsVersionMarks(callback) {
-    fs.readFile(path.resolve(__dirname, "./../../countly_marked_version.json"), function(err, data) {
+    fs.readFile(path.resolve(__dirname, "./../../userovo_marked_version.json"), function(err, data) {
         if (err) {
             callback(err, []);
         }

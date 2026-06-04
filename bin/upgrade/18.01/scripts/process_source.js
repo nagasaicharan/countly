@@ -1,10 +1,10 @@
 var pluginManager = require("../../../../plugins/pluginManager");
 var Promise = require("bluebird");
-var countlyCommon = require("../../../../api/lib/countly.common");
+var userovoCommon = require("../../../../api/lib/userovo.common");
 
-Promise.all([pluginManager.dbConnection("countly"),pluginManager.dbConnection("countly_drill")]).spread(function(countlyDB,countlyDrillDB){
+Promise.all([pluginManager.dbConnection("userovo"),pluginManager.dbConnection("userovo_drill")]).spread(function(userovoDB,userovoDrillDB){
     var webApps = [];
-    var countlyDrillDBCollections = [];
+    var userovoDrillDBCollections = [];
     var crypto = require('crypto');
     
     var fs = require("fs");
@@ -18,7 +18,7 @@ Promise.all([pluginManager.dbConnection("countly"),pluginManager.dbConnection("c
     
     var getExportCommand = function(collection) {
         fs.mkdir(dir, function() {
-            var params = pluginManager.getDbConnectionParams("countly_drill");
+            var params = pluginManager.getDbConnectionParams("userovo_drill");
             params.query = "'" + JSON.stringify({"_id": "meta_v2_up.src"}) + "'";
     
     
@@ -112,32 +112,32 @@ Promise.all([pluginManager.dbConnection("countly"),pluginManager.dbConnection("c
     var command = arguments && arguments[0];
     
     Promise.coroutine(function * () {
-        webApps = yield getWebApps(countlyDB);
+        webApps = yield getWebApps(userovoDB);
         for (var i = 0; i < webApps.length; i++) {
             var appID = webApps[i]._id;
-            var events = yield getAppEventList(countlyDB, appID);
+            var events = yield getAppEventList(userovoDB, appID);
             events.push("[CLY]_session");
             for (var k = 0; k < events.length; k++) {
                 collectionName = "drill_events" + crypto.createHash('sha1').update(events[k] + appID).digest('hex');
-                var doc = yield checkSource(countlyDrillDB, collectionName);
+                var doc = yield checkSource(userovoDrillDB, collectionName);
                 if (doc) {
                     var newDoc = {};
                     for (var key in doc) {
-                        var url = countlyCommon.decode(key);
+                        var url = userovoCommon.decode(key);
                         var newUrl = urlParser(url);
-                        var newKey = countlyCommon.encode(newUrl);
+                        var newKey = userovoCommon.encode(newUrl);
                         newDoc[newKey] = doc[key];
-                        yield updateDocs(countlyDrillDB, collectionName, key, newKey);
+                        yield updateDocs(userovoDrillDB, collectionName, key, newKey);
                     }
-                    yield updateNewMetaDoc(countlyDrillDB, collectionName, newDoc);
+                    yield updateNewMetaDoc(userovoDrillDB, collectionName, newDoc);
                     console.log(doc);
                     console.log("new doc", newDoc);
                 }
             }
         }
     
-        countlyDB.close();
-        countlyDrillDB.close();
+        userovoDB.close();
+        userovoDrillDB.close();
         return;
     })();
 });

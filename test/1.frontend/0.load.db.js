@@ -4,7 +4,7 @@ var testUtils = require("../testUtils");
 
 describe('Create DB connection for tests', function() {
     before('Open db connection', async function() {
-        testUtils.db = await plugins.dbConnection("countly");
+        testUtils.db = await plugins.dbConnection("userovo");
         testUtils.client = testUtils.db.client;
     });
     it('Check db Connection', function(done) {

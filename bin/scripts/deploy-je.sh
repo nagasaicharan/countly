@@ -4,8 +4,8 @@
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 LOG_FILE="deploy_$TIMESTAMP.log"
 
-# Check if the event is a push to the "next" branch in the "Countly/countly-server" repository
-if [ -z "$GITHUB_HEAD_REF" ] && [ "$GITHUB_REPOSITORY" == "Countly/countly-server" ]; then
+# Check if the event is a push to the "next" branch in the "Userovo/userovo-server" repository
+if [ -z "$GITHUB_HEAD_REF" ] && [ "$GITHUB_REPOSITORY" == "Userovo/userovo-server" ]; then
     GITHUB_BRANCH=${GITHUB_REF#refs/heads/}
     echo "$GITHUB_BRANCH"
     if [ "$GITHUB_BRANCH" == "next" ]; then

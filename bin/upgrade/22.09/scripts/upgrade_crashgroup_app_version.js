@@ -9,13 +9,13 @@ var versionUtils = require('../../../../plugins/crashes/api/parts/version.js');
 
 console.log('Upgrading crashgroup data');
 
-pluginManager.dbConnection().then(async (countlyDb) => {
+pluginManager.dbConnection().then(async (userovoDb) => {
     const BATCH_SIZE = 200;
-    const apps = await countlyDb.collection('apps').find({}).project({_id: 1}).toArray();
+    const apps = await userovoDb.collection('apps').find({}).project({_id: 1}).toArray();
 
     for (let idx = 0; idx < apps.length; idx += 1) {
         const crashgroupCollection = `app_crashgroups${apps[idx]._id}`;
-        const crashgroups = await countlyDb.collection(crashgroupCollection)
+        const crashgroups = await userovoDb.collection(crashgroupCollection)
             .find({ _id: { $ne: 'meta' } })
             .project({ _id: 1, latest_version: 1 })
             .toArray();
@@ -36,7 +36,7 @@ pluginManager.dbConnection().then(async (countlyDb) => {
 
             if (updates.length === BATCH_SIZE || idy === crashgroups.length - 1) {
                 try {
-                    await countlyDb.collection(crashgroupCollection).bulkWrite(updates, { ordered: false });
+                    await userovoDb.collection(crashgroupCollection).bulkWrite(updates, { ordered: false });
                 }
                 catch (err) {
                     errCount += 1;
@@ -50,7 +50,7 @@ pluginManager.dbConnection().then(async (countlyDb) => {
 
         if (errCount === 0) {
             try {
-                await countlyDb.collection(crashgroupCollection).updateOne(
+                await userovoDb.collection(crashgroupCollection).updateOne(
                     { _id: 'meta' },
                     { $set: { latest_version_sorter_added: true } },
                 );
@@ -64,6 +64,6 @@ pluginManager.dbConnection().then(async (countlyDb) => {
         }
     }
 
-    countlyDb.close();
+    userovoDb.close();
     console.log('Crashgroup upgrade done');
 });

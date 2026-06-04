@@ -1,6 +1,6 @@
 var pluginOb = {},
     common = require('../../../api/utils/common.js'),
-    countlyCommon = require('../../../api/lib/countly.common.js'),
+    userovoCommon = require('../../../api/lib/userovo.common.js'),
     plugins = require('../../pluginManager.js'),
     { validateGlobalAdmin } = require('../../../api/utils/rights.js');
 
@@ -117,8 +117,8 @@ plugins.setConfigs("systemlogs", {
                 //filter["$text"] = { "$search": "\""+params.qstring.sSearch+"\"" };
             }
             if (params.qstring.period) {
-                countlyCommon.getPeriodObj(params);
-                query.ts = countlyCommon.getTimestampRangeQuery(params, true);
+                userovoCommon.getPeriodObj(params);
+                query.ts = userovoCommon.getTimestampRangeQuery(params, true);
             }
             validateGlobalAdmin(params, function(paramsNew) {
                 var columns = [null, "ts", "u", "ip", "a", "i"];

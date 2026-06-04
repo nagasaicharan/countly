@@ -6,8 +6,8 @@ function printMessage(messageType, ...message) {
 }
 
 printMessage("log", "Started...");
-pluginManager.dbConnection().then((countlyDb) => {
-    countlyDb.collection('apps').find({}).toArray(function(appsErr, apps) {
+pluginManager.dbConnection().then((userovoDb) => {
+    userovoDb.collection('apps').find({}).toArray(function(appsErr, apps) {
     
         var hasAnyErrors = false;
     
@@ -21,12 +21,12 @@ pluginManager.dbConnection().then((countlyDb) => {
                 else {
                     printMessage("log", "Finished.");
                 }
-                countlyDb.close();
+                userovoDb.close();
             });
         }
         else {
             printMessage("error", "Error at app fetch. Stopped. ", appsErr);
-            countlyDb.close();
+            userovoDb.close();
             return;
         }
     
@@ -37,7 +37,7 @@ pluginManager.dbConnection().then((countlyDb) => {
             var fixedColId = "fixed_app_nxret" + app._id;
     
             function getOneDoc(collectionId, callback) {
-                countlyDb.collection(collectionId).findOne({}, function(err, result) {
+                userovoDb.collection(collectionId).findOne({}, function(err, result) {
                     if (err) {
                         printMessage("error", "(" + app.name + ") Error at getOneDoc", err);
                     }
@@ -139,7 +139,7 @@ pluginManager.dbConnection().then((countlyDb) => {
                     }
                 ];
                 printMessage("log", "(" + app.name + ") Fixing collection...");
-                countlyDb.collection(originalColId).aggregate(pipeline, {allowDiskUse: true}, function(err, res) {
+                userovoDb.collection(originalColId).aggregate(pipeline, {allowDiskUse: true}, function(err, res) {
                     if (err) {
                         printMessage("error", "(" + app.name + ") Error at fixCollection", err);
                     }
@@ -154,7 +154,7 @@ pluginManager.dbConnection().then((countlyDb) => {
     
             function ensureUidIndex(collectionId, callback) {
                 printMessage("log", "(" + app.name + ") Ensuring uid index...");
-                countlyDb.collection(collectionId).ensureIndex({ "uid": 1 }, function(err) {
+                userovoDb.collection(collectionId).ensureIndex({ "uid": 1 }, function(err) {
                     if (err) {
                         printMessage("log", "(" + app.name + ") Error at ensureUidIndex", err);
                     }
@@ -169,7 +169,7 @@ pluginManager.dbConnection().then((countlyDb) => {
     
             function renameCollection(callback) {
                 printMessage("log", "(" + app.name + ") Renaming collection...");
-                countlyDb.collection(fixedColId).rename(originalColId, {dropTarget: true}, function(err) {
+                userovoDb.collection(fixedColId).rename(originalColId, {dropTarget: true}, function(err) {
                     if (err) {
                         printMessage("error", "(" + app.name + ") Error at renameCollection", err);
                         if (callback) {

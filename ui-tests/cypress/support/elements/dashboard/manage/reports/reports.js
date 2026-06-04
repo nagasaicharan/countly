@@ -92,7 +92,7 @@ const reportDrawerElements = {
 };
 
 const reportsPreviewElements = {
-    COUNTLY_LOGO: "countly-logo",
+    USEROVO_LOGO: "userovo-logo",
     DASHBOARD_IMAGE: "dashboard-image"
 };
 

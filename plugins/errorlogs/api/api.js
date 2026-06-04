@@ -43,7 +43,7 @@ const readFromEnd = (file, size) => {
 };
 
 (function() {
-    var logs = {api: "countly-api.log", dashboard: "countly-dashboard.log"};
+    var logs = {api: "userovo-api.log", dashboard: "userovo-dashboard.log"};
     var logDirectory = path.resolve(__dirname, "../../../log");
     var getLogPath = function(logFileName) {
         if (!logFileName || common.sanitizeFilename(logFileName) !== logFileName) {
@@ -78,16 +78,16 @@ const readFromEnd = (file, size) => {
                                 if (err) {
                                     data = "";
                                 }
-                                common.returnRaw(params, 200, data, {'Content-Type': 'plain/text; charset=utf-8', 'Content-disposition': 'attachment; filename=countly-' + params.qstring.log + '.log'});
+                                common.returnRaw(params, 200, data, {'Content-Type': 'plain/text; charset=utf-8', 'Content-disposition': 'attachment; filename=userovo-' + params.qstring.log + '.log'});
                             });
                         }
                         else {
                             readFromEnd(selectedLogPath, bytes)
                                 .then(function(data) {
-                                    common.returnRaw(params, 200, data, {'Content-Type': 'plain/text; charset=utf-8', 'Content-disposition': 'attachment; filename=countly-' + params.qstring.log + '.log'});
+                                    common.returnRaw(params, 200, data, {'Content-Type': 'plain/text; charset=utf-8', 'Content-disposition': 'attachment; filename=userovo-' + params.qstring.log + '.log'});
                                 }).catch(function() {
                                     if (!params.res.finished) {
-                                        common.returnRaw(params, 200, "", {'Content-Type': 'plain/text; charset=utf-8', 'Content-disposition': 'attachment; filename=countly-' + params.qstring.log + '.log'});
+                                        common.returnRaw(params, 200, "", {'Content-Type': 'plain/text; charset=utf-8', 'Content-disposition': 'attachment; filename=userovo-' + params.qstring.log + '.log'});
                                     }
                                 });
                         }
@@ -202,8 +202,8 @@ const readFromEnd = (file, size) => {
                 return done(null, results);
             }
             list.forEach(function(file) {
-                if (file && file.startsWith("countly-") && file.endsWith(".log")) {
-                    results[file.replace("countly-", "").replace(".log", "")] = file;
+                if (file && file.startsWith("userovo-") && file.endsWith(".log")) {
+                    results[file.replace("userovo-", "").replace(".log", "")] = file;
                     if (!--pending) {
                         done(null, results);
                     }

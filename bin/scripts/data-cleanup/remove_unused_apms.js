@@ -1,6 +1,6 @@
 const pluginManager = require('../../../plugins/pluginManager.js');
 
-pluginManager.dbConnection('countly').then(async(db) => {
+pluginManager.dbConnection('userovo').then(async(db) => {
     try {
         let apps = await db.collection('apps').find({}, { _id: 1 }).toArray();
 

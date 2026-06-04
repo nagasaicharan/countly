@@ -7,8 +7,8 @@ var pluginDependencies = require('./pluginDependencies.js'),
     pluginsApis = {},
     mongodb = require('mongodb'),
     cluster = require('cluster'),
-    countlyConfig = require('../frontend/express/config', 'dont-enclose'),
-    apiCountlyConfig = require('../api/config', 'dont-enclose'),
+    userovoConfig = require('../frontend/express/config', 'dont-enclose'),
+    apiUserovoConfig = require('../api/config', 'dont-enclose'),
     utils = require('../api/utils/utils.js'),
     fs = require('fs'),
     querystring = require('querystring'),
@@ -70,9 +70,9 @@ var pluginManager = function pluginManager() {
      *  Custom configuration files for different databases
      */
     this.dbConfigFiles = {
-        countly_drill: "./drill/config.js",
-        countly_out: "../api/configs/config.db_out.js",
-        countly_fs: "../api/configs/config.db_fs.js"
+        userovo_drill: "./drill/config.js",
+        userovo_out: "../api/configs/config.db_out.js",
+        userovo_fs: "../api/configs/config.db_fs.js"
     };
     /**
      * TTL collections to clean up periodically
@@ -83,9 +83,9 @@ var pluginManager = function pluginManager() {
      *  Custom configuration files for different databases for docker env
      */
     this.dbConfigEnvs = {
-        countly_drill: "PLUGINDRILL",
-        countly_out: "PLUGINOUT",
-        countly_fs: "PLUGINFS"
+        userovo_drill: "PLUGINDRILL",
+        userovo_out: "PLUGINOUT",
+        userovo_fs: "PLUGINFS"
     };
 
     this.loadDependencyMap = function() {
@@ -255,7 +255,7 @@ var pluginManager = function pluginManager() {
     };
     /**
     * Load configurations from database
-    * @param {object} db - database connection for countly db
+    * @param {object} db - database connection for userovo db
     * @param {function} callback - function to call when configs loaded
     * @param {boolean} api - was the call made from api process
     **/
@@ -503,7 +503,7 @@ var pluginManager = function pluginManager() {
 
     /**
     * Check if there are changes in configs ans store the changes
-    * @param {object} db - database connection for countly db
+    * @param {object} db - database connection for userovo db
     * @param {object} current - current configs we have
     * @param {object} provided - provided configs
     * @param {function} callback - function to call when checking finished
@@ -531,7 +531,7 @@ var pluginManager = function pluginManager() {
 
     /**
     * Update existing configs, when syncing between servers
-    * @param {object} db - database connection for countly db
+    * @param {object} db - database connection for userovo db
     * @param {string} namespace - namespace of configuration, usually plugin name
     * @param {object} conf - provided config
     * @param {function} callback - function to call when updating finished
@@ -558,7 +558,7 @@ var pluginManager = function pluginManager() {
 
     /**
     * Update existing application level configuration
-    * @param {object} db -database connection for countly db
+    * @param {object} db -database connection for userovo db
     * @param {string} appId - id of application
     * @param {string} namespace - name of plugin
     * @param {object} config  - new configuration object for selected plugin 
@@ -609,7 +609,7 @@ var pluginManager = function pluginManager() {
 
     /**
     * Update all configs with provided changes
-    * @param {object} db - database connection for countly db
+    * @param {object} db - database connection for userovo db
     * @param {object} changes - provided changes
     * @param {function} callback - function to call when updating finished
     **/
@@ -648,7 +648,7 @@ var pluginManager = function pluginManager() {
 
     /**
     * Update user configs with provided changes
-    * @param {object} db - database connection for countly db
+    * @param {object} db - database connection for userovo db
     * @param {object} changes - provided changes
     * @param {string} user_id - user for which to update settings
     * @param {function} callback - function to call when updating finished
@@ -673,7 +673,7 @@ var pluginManager = function pluginManager() {
     };
 
     /**
-    * Allow extending object module is exporting by using extend folders in countly
+    * Allow extending object module is exporting by using extend folders in userovo
     * @param {string} name - filename to extend
     * @param {object} object - object to extend
     **/
@@ -864,10 +864,10 @@ var pluginManager = function pluginManager() {
     /**
     * Load plugins frontend app.js and expose static paths for plugins
     * @param {object} app - express app
-    * @param {object} countlyDb - connection to countly database
+    * @param {object} userovoDb - connection to userovo database
     * @param {object} express - reference to express js
     **/
-    this.loadAppStatic = function(app, countlyDb, express) {
+    this.loadAppStatic = function(app, userovoDb, express) {
         var pluginNames = [];
         var pluginsList = fs.readdirSync(path.resolve(__dirname, './')); //all plugins in folder
         //filter out just folders
@@ -882,9 +882,9 @@ var pluginManager = function pluginManager() {
             try {
                 var plugin = require("./" + pluginNames[i] + "/frontend/app");
                 plugs.push({'name': pluginNames[i], "plugin": plugin});
-                app.use(countlyConfig.path + '/' + pluginNames[i], express.static(__dirname + '/' + pluginNames[i] + "/frontend/public", { maxAge: 31557600000 }));
+                app.use(userovoConfig.path + '/' + pluginNames[i], express.static(__dirname + '/' + pluginNames[i] + "/frontend/public", { maxAge: 31557600000 }));
                 if (plugin.staticPaths) {
-                    plugin.staticPaths(app, countlyDb, express);
+                    plugin.staticPaths(app, userovoDb, express);
                 }
             }
             catch (ex) {
@@ -897,13 +897,13 @@ var pluginManager = function pluginManager() {
     /**
     * Call init method of plugin's frontend app.js  modules
     * @param {object} app - express app
-    * @param {object} countlyDb - connection to countly database
+    * @param {object} userovoDb - connection to userovo database
     * @param {object} express - reference to express js
     **/
-    this.loadAppPlugins = function(app, countlyDb, express) {
+    this.loadAppPlugins = function(app, userovoDb, express) {
         for (let i = 0; i < plugs.length; i++) {
             try {
-                //plugs[i].init(app, countlyDb, express);
+                //plugs[i].init(app, userovoDb, express);
                 if (plugs[i] && plugs[i].plugin && plugs[i].plugin.init && typeof plugs[i].plugin.init === 'function') {
                     plugs[i].plugin.init({
                         name: plugs[i].name,
@@ -966,7 +966,7 @@ var pluginManager = function pluginManager() {
                                 }
                             });
                         }
-                    }, countlyDb, express);
+                    }, userovoDb, express);
                 }
             }
             catch (ex) {
@@ -1229,7 +1229,7 @@ var pluginManager = function pluginManager() {
 
     /**
     * We check plugins and sync between processes/servers
-    * @param {object} db - connection to countly database
+    * @param {object} db - connection to userovo database
     * @param {function} callback - when finished checking and syncing
     **/
     this.checkPlugins = function(db, callback) {
@@ -1283,7 +1283,7 @@ var pluginManager = function pluginManager() {
     * Sync plugin states between server
     * @param {object} pluginState - object with plugin names as keys and true/false values to indicate if plugin is enabled or disabled
     * @param {function} callback - when finished checking and syncing
-    * @param {object} db - connection to countly database
+    * @param {object} db - connection to userovo database
     **/
     this.syncPlugins = function(pluginState, callback, db) {
         var self = this;
@@ -1331,7 +1331,7 @@ var pluginManager = function pluginManager() {
                         if (callback) {
                             callback(err ? true : false);
                         }
-                        setTimeout(self.restartCountly.bind(self), 500);
+                        setTimeout(self.restartUserovo.bind(self), 500);
                     });
                 }
                 else if (callback) {
@@ -1417,13 +1417,13 @@ var pluginManager = function pluginManager() {
             }
             var cwd = eplugin ? eplugin.rfs : path.join(__dirname, plugin);
             //if we are on docker skip npm install. 
-            if (process && process.env && process.env.COUNTLY_CONTAINER && !process.env.FORCE_NPM_INSTALL) {
+            if (process && process.env && process.env.USEROVO_CONTAINER && !process.env.FORCE_NPM_INSTALL) {
                 console.log('Skipping on docker');
                 resolve(errors);
             }
             else if (!self.getConfig("api").offline_mode) {
                 var args = ["install"];
-                if (apiCountlyConfig.symlinked === true) {
+                if (apiUserovoConfig.symlinked === true) {
                     args.unshift(...["--preserve-symlinks", "--preserve-symlinks-main"]);
                 }
                 const cmd = spawn('npm', args, {cwd: cwd});
@@ -1457,7 +1457,7 @@ var pluginManager = function pluginManager() {
         }).then(function(result) {
             var scriptPath = path.join(__dirname, plugin, 'install.js');
             var args = [scriptPath];
-            if (apiCountlyConfig.symlinked === true) {
+            if (apiUserovoConfig.symlinked === true) {
                 args.unshift(...["--preserve-symlinks", "--preserve-symlinks-main"]);
             }
             var m = cp.spawn("nodejs", args);
@@ -1529,7 +1529,7 @@ var pluginManager = function pluginManager() {
         }).then(function(result) {
             var scriptPath = path.join(__dirname, plugin, 'install.js');
             var args = [scriptPath];
-            if (apiCountlyConfig.symlinked === true) {
+            if (apiUserovoConfig.symlinked === true) {
                 args.unshift(...["--preserve-symlinks", "--preserve-symlinks-main"]);
             }
             var m = cp.spawn("nodejs", args);
@@ -1564,7 +1564,7 @@ var pluginManager = function pluginManager() {
         var scriptPath = path.join(__dirname, plugin, 'uninstall.js');
         var errors = false;
         var args = [scriptPath];
-        if (apiCountlyConfig.symlinked === true) {
+        if (apiUserovoConfig.symlinked === true) {
             args.unshift(...["--preserve-symlinks", "--preserve-symlinks-main"]);
         }
         var m = cp.spawn("nodejs", args);
@@ -1592,7 +1592,7 @@ var pluginManager = function pluginManager() {
     **/
     this.prepareProduction = function(callback) {
         console.log('Preparing production files');
-        exec('countly task dist-all', {cwd: path.dirname(process.argv[1])}, function(error, stdout) {
+        exec('userovo task dist-all', {cwd: path.dirname(process.argv[1])}, function(error, stdout) {
             console.log('Done preparing production files with %j / %j', error, stdout);
             var errors;
             if (error && error !== 'Error: Command failed: ') {
@@ -1606,12 +1606,12 @@ var pluginManager = function pluginManager() {
     };
 
     /**
-    * Procedure to restart countly process
+    * Procedure to restart userovo process
     **/
-    this.restartCountly = function() {
-        console.log('Restarting Countly ...');
-        exec("sudo countly restart", function(error, stdout, stderr) {
-            console.log('Done restarting countly with %j / %j / %j', error, stderr, stdout);
+    this.restartUserovo = function() {
+        console.log('Restarting Userovo ...');
+        exec("sudo userovo restart", function(error, stdout, stderr) {
+            console.log('Done restarting userovo with %j / %j / %j', error, stderr, stdout);
             if (error) {
                 console.log('error: %j', error);
             }
@@ -1626,11 +1626,11 @@ var pluginManager = function pluginManager() {
     * @returns {object} db connection
     **/
     this.singleDefaultConnection = function() {
-        if (typeof countlyConfig.mongodb === "string") {
+        if (typeof userovoConfig.mongodb === "string") {
             var query = {};
-            var conUrl = countlyConfig.mongodb;
-            if (countlyConfig.mongodb.indexOf("?") !== -1) {
-                var parts = countlyConfig.mongodb.split("?");
+            var conUrl = userovoConfig.mongodb;
+            if (userovoConfig.mongodb.indexOf("?") !== -1) {
+                var parts = userovoConfig.mongodb.split("?");
                 query = querystring.parse(parts.pop());
                 conUrl = parts[0];
             }
@@ -1639,7 +1639,7 @@ var pluginManager = function pluginManager() {
             return this.dbConnection({mongodb: conUrl});
         }
         else {
-            var conf = Object.assign({}, countlyConfig.mongodb);
+            var conf = Object.assign({}, userovoConfig.mongodb);
             for (let k in conf) {
                 if (typeof k === 'object') {
                     conf[k] = Object.assign({}, conf[k]);
@@ -1669,7 +1669,7 @@ var pluginManager = function pluginManager() {
                 }
                 catch (ex) {
                     //user default config
-                    config = JSON.parse(JSON.stringify(countlyConfig));
+                    config = JSON.parse(JSON.stringify(userovoConfig));
                 }
                 if (this.dbConfigEnvs[confDb]) {
                     config = configextender(this.dbConfigEnvs[confDb], config, process.env);
@@ -1677,11 +1677,11 @@ var pluginManager = function pluginManager() {
             }
             else {
                 //user default config
-                config = JSON.parse(JSON.stringify(countlyConfig));
+                config = JSON.parse(JSON.stringify(userovoConfig));
             }
         }
         else {
-            config = config || JSON.parse(JSON.stringify(countlyConfig));
+            config = config || JSON.parse(JSON.stringify(userovoConfig));
         }
 
         if (typeof config.mongodb === 'string') {
@@ -1697,7 +1697,7 @@ var pluginManager = function pluginManager() {
             }
             var dbParts = dbName.split("/");
             ob.host = dbParts[0];
-            ob.db = dbParts[1] || "countly";
+            ob.db = dbParts[1] || "userovo";
             if (ob.db.indexOf("?") !== -1) {
                 var parts = ob.db.split("?");
                 ob.db = parts[0];
@@ -1726,7 +1726,7 @@ var pluginManager = function pluginManager() {
 
         }
         else {
-            ob.db = db || config.mongodb.db || 'countly';
+            ob.db = db || config.mongodb.db || 'userovo';
             if (typeof config.mongodb.replSetServers === 'object') {
                 ob.host = "";
                 if (config.mongodb.replicaName) {
@@ -1769,20 +1769,20 @@ var pluginManager = function pluginManager() {
     * @param {string} db - database name
     * @returns {string} modified connection string
     **/
-    this.replaceDatabaseString = function(str, db = "countly") {
+    this.replaceDatabaseString = function(str, db = "userovo") {
         const connectionString = new ConnectionString(str);
         connectionString.pathname = "/" + db;
         return connectionString.toString();
     };
 
     this.connectToAllDatabases = async() => {
-        let dbs = ['countly', 'countly_out', 'countly_fs'];
+        let dbs = ['userovo', 'userovo_out', 'userovo_fs'];
         if (fs.existsSync(path.resolve(__dirname, 'drill'))) {
-            dbs.push('countly_drill');
+            dbs.push('userovo_drill');
         }
 
         let databases = [];
-        if (apiCountlyConfig && apiCountlyConfig.shared_connection) {
+        if (apiUserovoConfig && apiUserovoConfig.shared_connection) {
             console.log("using shared connection pool");
             databases = await this.dbConnection(dbs);
         }
@@ -1790,12 +1790,12 @@ var pluginManager = function pluginManager() {
             console.log("using separate connection pool");
             databases = await Promise.all(dbs.map(this.dbConnection.bind(this)));
         }
-        const [dbCountly, dbOut, dbFs, dbDrill] = databases;
+        const [dbUserovo, dbOut, dbFs, dbDrill] = databases;
 
         let common = require('../api/utils/common');
-        common.db = dbCountly;
+        common.db = dbUserovo;
         common.outDb = dbOut;
-        require('../api/utils/countlyFs').setHandler(dbFs);
+        require('../api/utils/userovoFs').setHandler(dbFs);
         common.drillDb = dbDrill;
         var self = this;
         await new Promise(function(resolve) {
@@ -1821,9 +1821,9 @@ var pluginManager = function pluginManager() {
             maxPoolSize = 100;
         }
 
-        var useConfig = JSON.parse(JSON.stringify(countlyConfig));
+        var useConfig = JSON.parse(JSON.stringify(userovoConfig));
         if (process.argv[1] && process.argv[1].endsWith('api/api.js') && !cluster.isMaster) {
-            useConfig = JSON.parse(JSON.stringify(apiCountlyConfig));
+            useConfig = JSON.parse(JSON.stringify(apiUserovoConfig));
         }
         if (typeof config === "string") {
             db = config;
@@ -1895,7 +1895,7 @@ var pluginManager = function pluginManager() {
             dbName = this.replaceDatabaseString(config.mongodb, db);
         }
         else {
-            config.mongodb.db = db || config.mongodb.db || 'countly';
+            config.mongodb.db = db || config.mongodb.db || 'userovo';
             if (typeof config.mongodb.replSetServers === 'object') {
                 //mongodb://db1.example.net,db2.example.net:2500/?replicaSet=test
                 dbName = config.mongodb.replSetServers.join(',') + '/' + config.mongodb.db;
@@ -1934,12 +1934,12 @@ var pluginManager = function pluginManager() {
             }
         }
 
-        var db_name = "countly";
+        var db_name = "userovo";
         try {
             db_name = dbName.split("/").pop().split("?")[0];
         }
         catch (ex) {
-            db_name = "countly";
+            db_name = "userovo";
         }
 
         try {
@@ -2178,29 +2178,29 @@ var pluginManager = function pluginManager() {
 
     /**
      *  Wrap db object with our compatability layer
-     *  @param {Db} countlyDb - database connection
+     *  @param {Db} userovoDb - database connection
      *  @param {MongoClient} client - database client connection
      *  @param {string} dbName - database name
      *  @param {string} dbConnectionString - database connection string
      *  @param {Object} dbOptions - database connection options
      *  @returns {Db} wrapped database connection
      */
-    this.wrapDatabase = function(countlyDb, client, dbName, dbConnectionString, dbOptions) {
-        if (countlyDb._wrapped) {
-            return countlyDb;
+    this.wrapDatabase = function(userovoDb, client, dbName, dbConnectionString, dbOptions) {
+        if (userovoDb._wrapped) {
+            return userovoDb;
         }
 
-        countlyDb._wrapped = true;
+        userovoDb._wrapped = true;
         var mngr = this;
-        countlyDb._cly_debug = {
+        userovoDb._cly_debug = {
             db: dbName,
             connection: dbConnectionString,
             options: dbOptions
         };
 
-        logDbRead.d("New connection %j", countlyDb._cly_debug);
-        if (!countlyDb.ObjectID) {
-            countlyDb.ObjectID = function(id) {
+        logDbRead.d("New connection %j", userovoDb._cly_debug);
+        if (!userovoDb.ObjectID) {
+            userovoDb.ObjectID = function(id) {
                 try {
                     return new mongodb.ObjectId(id);
                 }
@@ -2210,29 +2210,29 @@ var pluginManager = function pluginManager() {
                 }
             };
         }
-        countlyDb.encode = function(str) {
+        userovoDb.encode = function(str) {
             return str.replace(/^\$/g, "&#36;").replace(/\./g, '&#46;');
         };
 
-        countlyDb.decode = function(str) {
+        userovoDb.decode = function(str) {
             return str.replace(/^&#36;/g, "$").replace(/&#46;/g, '.');
         };
-        countlyDb.onOpened = function(callback) {
+        userovoDb.onOpened = function(callback) {
             callback();
         };
-        countlyDb._native = countlyDb;
-        countlyDb.client = client;
-        countlyDb.close = client.close.bind(client);
+        userovoDb._native = userovoDb;
+        userovoDb.client = client;
+        userovoDb.close = client.close.bind(client);
         mngr.dispatch("/db/connected", {
             db: dbName,
-            instance: countlyDb,
+            instance: userovoDb,
             connection: dbConnectionString,
             options: dbOptions
         });
 
-        countlyDb.admin().buildInfo().then((result) => {
+        userovoDb.admin().buildInfo().then((result) => {
             if (result) {
-                countlyDb.build = result;
+                userovoDb.build = result;
             }
         }).catch(function(err) {
             console.log("Cannot get build info", err);
@@ -2261,19 +2261,19 @@ var pluginManager = function pluginManager() {
                 return promise;
             };
         };
-        overwriteDbPromise(countlyDb, "aggregate");
-        overwriteDbPromise(countlyDb, "collections");
-        overwriteDbPromise(countlyDb, "command");
-        overwriteDbPromise(countlyDb, "createCollection");
-        overwriteDbPromise(countlyDb, "createIndex");
-        overwriteDbPromise(countlyDb, "dropCollection");
-        overwriteDbPromise(countlyDb, "dropDatabase");
-        overwriteDbPromise(countlyDb, "indexInformation");
-        overwriteDbPromise(countlyDb, "profilingLevel");
-        overwriteDbPromise(countlyDb, "removeUser");
-        overwriteDbPromise(countlyDb, "renameCollection");
-        overwriteDbPromise(countlyDb, "setProfilingLevel");
-        overwriteDbPromise(countlyDb, "stats");
+        overwriteDbPromise(userovoDb, "aggregate");
+        overwriteDbPromise(userovoDb, "collections");
+        overwriteDbPromise(userovoDb, "command");
+        overwriteDbPromise(userovoDb, "createCollection");
+        overwriteDbPromise(userovoDb, "createIndex");
+        overwriteDbPromise(userovoDb, "dropCollection");
+        overwriteDbPromise(userovoDb, "dropDatabase");
+        overwriteDbPromise(userovoDb, "indexInformation");
+        overwriteDbPromise(userovoDb, "profilingLevel");
+        overwriteDbPromise(userovoDb, "removeUser");
+        overwriteDbPromise(userovoDb, "renameCollection");
+        overwriteDbPromise(userovoDb, "setProfilingLevel");
+        overwriteDbPromise(userovoDb, "stats");
 
 
         var findOptions = [
@@ -2329,12 +2329,12 @@ var pluginManager = function pluginManager() {
             "willRetryWrite"
         ];
 
-        countlyDb._collection_cache = {};
+        userovoDb._collection_cache = {};
         //overwrite some methods
-        countlyDb._collection = countlyDb.collection;
-        countlyDb.collection = function(collection, opts, done) {
-            if (countlyDb._collection_cache[collection]) {
-                return countlyDb._collection_cache[collection];
+        userovoDb._collection = userovoDb.collection;
+        userovoDb.collection = function(collection, opts, done) {
+            if (userovoDb._collection_cache[collection]) {
+                return userovoDb._collection_cache[collection];
             }
 
             /**
@@ -2376,7 +2376,7 @@ var pluginManager = function pluginManager() {
                         else {
                             if (ignore_errors && ignore_errors.indexOf(err.code) === -1) {
                                 logDbWrite.e("Error in promise from " + collection + " %j %s %j", data, err, err);
-                                logDbWrite.d("From connection %j", countlyDb._cly_debug);
+                                logDbWrite.d("From connection %j", userovoDb._cly_debug);
                                 if (e) {
                                     logDbWrite.e(e.stack);
                                 }
@@ -2416,13 +2416,13 @@ var pluginManager = function pluginManager() {
                         if (retry && err.code === 11000) {
                             if (typeof retry === "function") {
                                 logDbWrite.d("Retrying writing " + collection + " %j", data);
-                                logDbWrite.d("From connection %j", countlyDb._cly_debug);
+                                logDbWrite.d("From connection %j", userovoDb._cly_debug);
                                 retry();
                             }
                             else {
                                 if (!(data.args && data.args[2] && data.args[2].ignore_errors && data.args[2].ignore_errors.indexOf(err.code) !== -1)) {
                                     logDbWrite.e("Error writing " + collection + " %j %s %j", data, err, err);
-                                    logDbWrite.d("From connection %j", countlyDb._cly_debug);
+                                    logDbWrite.d("From connection %j", userovoDb._cly_debug);
                                     if (e) {
                                         logDbWrite.e(e.stack);
                                     }
@@ -2435,7 +2435,7 @@ var pluginManager = function pluginManager() {
                         else {
                             if (!(data.args && data.args[2] && data.args[2].ignore_errors && data.args[2].ignore_errors.indexOf(err.code) !== -1)) {
                                 logDbWrite.e("Error writing " + collection + " %j %s %j", data, err, err);
-                                logDbWrite.d("From connection %j", countlyDb._cly_debug);
+                                logDbWrite.d("From connection %j", userovoDb._cly_debug);
                                 if (e) {
                                     logDbWrite.e(e.stack);
                                 }
@@ -2478,12 +2478,12 @@ var pluginManager = function pluginManager() {
                 }
 
                 logDbWrite.d("findAndModify " + collection + " %j %j %j %j" + at, query, sort, doc, options);
-                logDbWrite.d("From connection %j", countlyDb._cly_debug);
+                logDbWrite.d("From connection %j", userovoDb._cly_debug);
                 if (options.upsert) {
                     var self = this;
                     return handlePromiseErrors(this._findAndModify(query, sort, doc, options), e, copyArguments(arguments, "findAndModify"), retryifNeeded(callback, function() {
                         logDbWrite.d("retrying findAndModify " + collection + " %j %j %j %j" + at, query, sort, doc, options);
-                        logDbWrite.d("From connection %j", countlyDb._cly_debug);
+                        logDbWrite.d("From connection %j", userovoDb._cly_debug);
                         return handlePromiseErrors(self._findAndModify(query, sort, doc, options), e, copyArguments(arguments, "findAndModify"), retryifNeeded(callback, null, e, copyArguments(arguments, "findAndModify")));
                     }, e, copyArguments(arguments, "findAndModify")));
                 }
@@ -2523,12 +2523,12 @@ var pluginManager = function pluginManager() {
                     }
 
                     logDbWrite.d(name + " " + collection + " %j %j %j" + at, selector, doc, options);
-                    logDbWrite.d("From connection %j", countlyDb._cly_debug);
+                    logDbWrite.d("From connection %j", userovoDb._cly_debug);
                     if (options.upsert) {
                         var self = this;
                         return handlePromiseErrors(this["_" + name](selector, doc, options), e, copyArguments(arguments, name), retryifNeeded(callback, function() {
                             logDbWrite.d("retrying " + name + " " + collection + " %j %j %j" + at, selector, doc, options);
-                            logDbWrite.d("From connection %j", countlyDb._cly_debug);
+                            logDbWrite.d("From connection %j", userovoDb._cly_debug);
                             return handlePromiseErrors(self["_" + name](selector, doc, options), e, copyArguments(arguments, name), retryifNeeded(callback, null, e, copyArguments(arguments, name)));
                         }, e, copyArguments(arguments, name)));
                     }
@@ -2554,7 +2554,7 @@ var pluginManager = function pluginManager() {
                     if (err) {
                         if (!(data.args && data.args[1] && data.args[1].ignore_errors && data.args[1].ignore_errors.indexOf(err.code) !== -1)) {
                             logDbWrite.e("Error writing " + collection + " %j %s %j", data, err, err);
-                            logDbWrite.d("From connection %j", countlyDb._cly_debug);
+                            logDbWrite.d("From connection %j", userovoDb._cly_debug);
                             if (e) {
                                 logDbWrite.e(e.stack);
                             }
@@ -2612,7 +2612,7 @@ var pluginManager = function pluginManager() {
                     }
 
                     logDbWrite.d(name + " " + collection + " %j %j" + at, selector, options);
-                    logDbWrite.d("From connection %j", countlyDb._cly_debug);
+                    logDbWrite.d("From connection %j", userovoDb._cly_debug);
                     return handlePromiseErrors(this["_" + name](selector, options), e, copyArguments(arguments, name), logForWrites(callback, e, copyArguments(arguments, name)));
                 };
             };
@@ -2633,7 +2633,7 @@ var pluginManager = function pluginManager() {
                     if (err) {
                         if (!(data && data.args && data.args[1] && data.args[1].ignore_errors && data.args[1].ignore_errors.indexOf(err.code) !== -1)) {
                             logDbRead.e("Error reading " + collection + " %j %s %j", data, err, err);
-                            logDbRead.d("From connection %j", countlyDb._cly_debug);
+                            logDbRead.d("From connection %j", userovoDb._cly_debug);
                             if (e) {
                                 logDbRead.e(e.stack);
                             }
@@ -2681,7 +2681,7 @@ var pluginManager = function pluginManager() {
                         }
                     }
                     logDbRead.d(name + " " + collection + " %j %j" + at, query, options);
-                    logDbRead.d("From connection %j", countlyDb._cly_debug);
+                    logDbRead.d("From connection %j", userovoDb._cly_debug);
                     if (name === "findOneAndDelete" && !options.remove) {
                         return handlePromiseErrors(this["_" + name](query, options).then(result => ({ value: result })),
                             e, copyArguments(arguments, name), logForReads(callback, e, copyArguments(arguments, name))
@@ -2720,7 +2720,7 @@ var pluginManager = function pluginManager() {
                     at += e.stack.replace(/\r\n|\r|\n/g, "\n").split("\n")[2];
                 }
                 logDbRead.d("aggregate " + collection + " %j %j" + at, query, options);
-                logDbRead.d("From connection %j", countlyDb._cly_debug);
+                logDbRead.d("From connection %j", userovoDb._cly_debug);
                 var cursor = this._aggregate(query, options);
                 cursor._count = cursor.count;
                 cursor.count = function(...countArgs) {
@@ -2777,7 +2777,7 @@ var pluginManager = function pluginManager() {
                     at += e.stack.replace(/\r\n|\r|\n/g, "\n").split("\n")[2];
                 }
                 logDbRead.d("find " + collection + " %j %j" + at, query, options);
-                logDbRead.d("From connection %j", countlyDb._cly_debug);
+                logDbRead.d("From connection %j", userovoDb._cly_debug);
                 var cursor = this._find(query, options);
                 cursor._count = cursor.count;
                 cursor.count = function(...countArgs) {
@@ -2826,7 +2826,7 @@ var pluginManager = function pluginManager() {
                     if (err) {
                         if (ignore_errors && ignore_errors.indexOf(err.code) === -1) {
                             logDbRead.d("Error reading " + collection + " %j %s %j", data, err, err);
-                            logDbRead.d("From connection %j", countlyDb._cly_debug);
+                            logDbRead.d("From connection %j", userovoDb._cly_debug);
                             if (e) {
                                 logDbRead.e(e.stack);
                             }
@@ -2856,7 +2856,7 @@ var pluginManager = function pluginManager() {
                     }
 
                     logDbRead.d(name + " " + collection + " %j" + at, args);
-                    logDbRead.d("From connection %j", countlyDb._cly_debug);
+                    logDbRead.d("From connection %j", userovoDb._cly_debug);
                     return handlePromiseErrors(this["_" + name](...args), e, copyArguments(arguments, name), logForOps(callback, e, copyArguments(arguments, name), ignore_errors), ignore_errors);
                 };
             };
@@ -2886,7 +2886,7 @@ var pluginManager = function pluginManager() {
                     }
 
                     logDbRead.d(name + " " + collection + " %j" + at, args);
-                    logDbRead.d("From connection %j", countlyDb._cly_debug);
+                    logDbRead.d("From connection %j", userovoDb._cly_debug);
                     var bulk = this["_" + name](...args);
                     bulk._execute = bulk.execute;
                     bulk.execute = function(options, callback) {
@@ -2984,12 +2984,12 @@ var pluginManager = function pluginManager() {
 
 
 
-            countlyDb._collection_cache[collection] = ob;
+            userovoDb._collection_cache[collection] = ob;
 
             //return original collection object
             return ob;
         };
-        return countlyDb;
+        return userovoDb;
     };
 
     var getObjectDiff = function(current, provided) {

@@ -1,7 +1,7 @@
 print("cleanup.js started " + new Date());
 
 var currDBAddress = "IP_ADDRESS:PORT";
-var currDBName = "countly";
+var currDBName = "userovo";
 
 /*
     **************************************************

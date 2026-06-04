@@ -1,6 +1,6 @@
 var pluginObject = {},
     {authenticator: GA} = require("otplib"),
-    countlyConfig = require('../../../frontend/express/config'),
+    userovoConfig = require('../../../frontend/express/config'),
     plugins = require('../../pluginManager.js'),
     apiUtils = require("../../../api/utils/utils.js"),
     members = require("../../../frontend/express/libs/members.js"),
@@ -10,19 +10,19 @@ var pluginObject = {},
 const { generateQRCode } = require('../lib.js');
 
 (function(plugin) {
-    plugin.init = function(app, countlyDb) {
+    plugin.init = function(app, userovoDb) {
         // require two factor auth localization file for translation strings
-        app.get(countlyConfig.path + '/login', function(req, res, next) {
-            req.template.js += "\naddLocalization('two-factor-auth', countlyGlobal['cdn']+'two-factor-auth/localization/');";
+        app.get(userovoConfig.path + '/login', function(req, res, next) {
+            req.template.js += "\naddLocalization('two-factor-auth', userovoGlobal['cdn']+'two-factor-auth/localization/');";
             next();
         });
 
         // modify password reset flow
-        app.get(countlyConfig.path + '/reset/:prid', function(req, res, next) {
+        app.get(userovoConfig.path + '/reset/:prid', function(req, res, next) {
             if (req.params.prid) {
                 req.params.prid += "";
                 // password reset id is found
-                countlyDb.collection('password_reset').findOne({prid: req.params.prid}, function(passwordResetErr, passwordReset) {
+                userovoDb.collection('password_reset').findOne({prid: req.params.prid}, function(passwordResetErr, passwordReset) {
                     if (!passwordReset || !passwordReset.user_id) {
                         next();
                         return;
@@ -33,26 +33,26 @@ const { generateQRCode } = require('../lib.js');
                     }
 
                     // member is found
-                    countlyDb.collection('members').findOne({_id: passwordReset.user_id}, {}, function(memberErr, member) {
+                    userovoDb.collection('members').findOne({_id: passwordReset.user_id}, {}, function(memberErr, member) {
                         if (member && member.two_factor_auth && member.two_factor_auth.enabled && member.two_factor_auth.secret_token) {
                             if (!req.query.auth_code) {
                                 // user has not passed the 2fa
                                 res.render("../../../plugins/two-factor-auth/frontend/public/templates/enter2fa_reset", {
-                                    cdn: countlyConfig.cdn || "",
-                                    countlyFavicon: req.countly.favicon,
-                                    countlyPage: req.countly.page,
-                                    countlyTitle: req.countly.title,
+                                    cdn: userovoConfig.cdn || "",
+                                    userovoFavicon: req.userovo.favicon,
+                                    userovoPage: req.userovo.page,
+                                    userovoTitle: req.userovo.title,
                                     csrf: req.csrfToken(),
                                     inject_template: req.template,
                                     languages: languages,
                                     message: req.flash('info'),
-                                    path: countlyConfig.path || "",
+                                    path: userovoConfig.path || "",
                                     themeFiles: req.themeFiles
                                 });
                             }
                             else if (GA.check(req.query.auth_code, apiUtils.decrypt(member.two_factor_auth.secret_token))) {
                                 // everything is ok, let the user reset their password
-                                countlyDb.collection('password_reset').updateOne({prid: req.params.prid}, {$set: {two_factor_auth_passed: true}}, {}, function(passwordResetUpdateErr) {
+                                userovoDb.collection('password_reset').updateOne({prid: req.params.prid}, {$set: {two_factor_auth_passed: true}}, {}, function(passwordResetUpdateErr) {
                                     if (passwordResetUpdateErr) {
                                         console.error(`Error setting 2FA pass for password reset: ${passwordResetUpdateErr}`);
                                     }
@@ -61,12 +61,12 @@ const { generateQRCode } = require('../lib.js');
                             }
                             else {
                                 // 2FA auth code was wrong, delete the password reset token
-                                countlyDb.collection('password_reset').deleteOne({prid: req.params.prid}, function(passwordResetDelErr) {
+                                userovoDb.collection('password_reset').deleteOne({prid: req.params.prid}, function(passwordResetDelErr) {
                                     if (passwordResetDelErr) {
                                         console.error(`Error deleting password reset: ${passwordResetDelErr}`);
                                     }
                                 });
-                                res.redirect(countlyConfig.path + '/forgot');
+                                res.redirect(userovoConfig.path + '/forgot');
                             }
                         }
                         else {
@@ -80,23 +80,23 @@ const { generateQRCode } = require('../lib.js');
             }
         });
 
-        app.post(countlyConfig.path + '/reset', function(req, res, next) {
+        app.post(userovoConfig.path + '/reset', function(req, res, next) {
             if (req.body.prid) {
                 req.body.prid += "";
                 // password reset id is found
-                countlyDb.collection('password_reset').findOne({prid: req.body.prid}, function(passwordResetErr, passwordReset) {
+                userovoDb.collection('password_reset').findOne({prid: req.body.prid}, function(passwordResetErr, passwordReset) {
                     if (!passwordReset || !passwordReset.user_id) {
                         next();
                         return;
                     }
 
-                    countlyDb.collection('members').findOne({_id: passwordReset.user_id}, {}, function(memberErr, member) {
+                    userovoDb.collection('members').findOne({_id: passwordReset.user_id}, {}, function(memberErr, member) {
                         if (member && member.two_factor_auth && member.two_factor_auth.enabled && member.two_factor_auth.secret_token) {
                             if (passwordReset.two_factor_auth_passed) {
                                 next();
                             }
                             else {
-                                res.redirect(countlyConfig.path + '/reset/' + req.body.prid);
+                                res.redirect(userovoConfig.path + '/reset/' + req.body.prid);
                             }
                         }
                         else {
@@ -111,7 +111,7 @@ const { generateQRCode } = require('../lib.js');
         });
 
         // modify login flow
-        app.post(countlyConfig.path + '/login', function(req, res, next) {
+        app.post(userovoConfig.path + '/login', function(req, res, next) {
             members.verifyCredentials(req.body.username, req.body.password, async function(member) {
                 // if member exists and 2fa is enabled globally or for the user
                 if (member && (member.two_factor_auth && member.two_factor_auth.enabled || plugins.getConfig("two-factor-auth").globally_enabled)) {
@@ -122,15 +122,15 @@ const { generateQRCode } = require('../lib.js');
                         try {
                             const svg = await generateQRCode(member.username, secretToken, console.warn);
                             res.render("../../../plugins/two-factor-auth/frontend/public/templates/setup2fa", {
-                                cdn: countlyConfig.cdn || "",
-                                countlyFavicon: req.countly.favicon,
-                                countlyPage: req.countly.page,
-                                countlyTitle: req.countly.title,
+                                cdn: userovoConfig.cdn || "",
+                                userovoFavicon: req.userovo.favicon,
+                                userovoPage: req.userovo.page,
+                                userovoTitle: req.userovo.title,
                                 csrf: req.csrfToken(),
                                 inject_template: req.template,
                                 languages: languages,
                                 message: req.flash('info'),
-                                path: countlyConfig.path || "",
+                                path: userovoConfig.path || "",
                                 themeFiles: req.themeFiles,
                                 username: req.body.username || "",
                                 password: req.body.password || "",
@@ -140,21 +140,21 @@ const { generateQRCode } = require('../lib.js');
                         }
                         catch (err) {
                             console.error("Error generating QR code", err);
-                            res.redirect(countlyConfig.path + "/login?message=two-factor-auth.login.error");
+                            res.redirect(userovoConfig.path + "/login?message=two-factor-auth.login.error");
                         }
                     }
                     // else if user did not provide 2fa code (login flow first phase)
                     else if (!req.body.auth_code) {
                         res.render("../../../plugins/two-factor-auth/frontend/public/templates/enter2fa_login", {
-                            cdn: countlyConfig.cdn || "",
-                            countlyFavicon: req.countly.favicon,
-                            countlyPage: req.countly.page,
-                            countlyTitle: req.countly.title,
+                            cdn: userovoConfig.cdn || "",
+                            userovoFavicon: req.userovo.favicon,
+                            userovoPage: req.userovo.page,
+                            userovoTitle: req.userovo.title,
                             csrf: req.csrfToken(),
                             inject_template: req.template,
                             languages: languages,
                             message: req.flash('info'),
-                            path: countlyConfig.path || "",
+                            path: userovoConfig.path || "",
                             themeFiles: req.themeFiles,
                             username: req.body.username || "",
                             password: req.body.password || ""
@@ -178,7 +178,7 @@ const { generateQRCode } = require('../lib.js');
                             if (GA.check(req.body.auth_code, secretToken)) {
                                 req.session.twoFactorPassed = true;
                                 if (req.body.secret_token) {
-                                    countlyDb.collection("members").findAndModify(
+                                    userovoDb.collection("members").findAndModify(
                                         {_id: member._id},
                                         {},
                                         {
@@ -205,15 +205,15 @@ const { generateQRCode } = require('../lib.js');
                                     try {
                                         const svg = await generateQRCode(member.username, req.body.secret_token, console.warn);
                                         res.render("../../../plugins/two-factor-auth/frontend/public/templates/setup2fa", {
-                                            cdn: countlyConfig.cdn || "",
-                                            countlyFavicon: req.countly.favicon,
-                                            countlyPage: req.countly.page,
-                                            countlyTitle: req.countly.title,
+                                            cdn: userovoConfig.cdn || "",
+                                            userovoFavicon: req.userovo.favicon,
+                                            userovoPage: req.userovo.page,
+                                            userovoTitle: req.userovo.title,
                                             csrf: req.csrfToken(),
                                             inject_template: req.template,
                                             languages: languages,
                                             message: req.flash('info'),
-                                            path: countlyConfig.path || "",
+                                            path: userovoConfig.path || "",
                                             themeFiles: req.themeFiles,
                                             username: req.body.username || "",
                                             password: req.body.password || "",
@@ -223,7 +223,7 @@ const { generateQRCode } = require('../lib.js');
                                     }
                                     catch (err) {
                                         console.error("Error generating QR code", err);
-                                        res.redirect(countlyConfig.path + "/login?message=two-factor-auth.login.error");
+                                        res.redirect(userovoConfig.path + "/login?message=two-factor-auth.login.error");
                                     }
                                 }
                                 // 2fa is already set up
@@ -231,15 +231,15 @@ const { generateQRCode } = require('../lib.js');
                                     // otp is wrong, increase fails
                                     preventBruteforce.fail("login", req.body.username);
                                     res.render("../../../plugins/two-factor-auth/frontend/public/templates/enter2fa_login", {
-                                        cdn: countlyConfig.cdn || "",
-                                        countlyFavicon: req.countly.favicon,
-                                        countlyPage: req.countly.page,
-                                        countlyTitle: req.countly.title,
+                                        cdn: userovoConfig.cdn || "",
+                                        userovoFavicon: req.userovo.favicon,
+                                        userovoPage: req.userovo.page,
+                                        userovoTitle: req.userovo.title,
                                         csrf: req.csrfToken(),
                                         inject_template: req.template,
                                         languages: languages,
                                         message: req.flash('info'),
-                                        path: countlyConfig.path || "",
+                                        path: userovoConfig.path || "",
                                         themeFiles: req.themeFiles,
                                         username: req.body.username || "",
                                         password: req.body.password || ""
@@ -249,7 +249,7 @@ const { generateQRCode } = require('../lib.js');
                         }
                         catch (verifyErr) {
                             console.error(`Error verifying 2FA for ${member.username}: ${verifyErr.message}`);
-                            res.redirect(countlyConfig.path + "/login?message=two-factor-auth.login.code");
+                            res.redirect(userovoConfig.path + "/login?message=two-factor-auth.login.code");
                         }
                     }
                 }
@@ -261,10 +261,10 @@ const { generateQRCode } = require('../lib.js');
     };
 
     // set vars to be usable on frontend
-    // these variables are passed to countly.views.js
-    // therefore the view / vars are loaded in the existing countly window
+    // these variables are passed to userovo.views.js
+    // therefore the view / vars are loaded in the existing userovo window
     plugin.renderDashboard = function(params) {
-        params.data.countlyGlobal["2fa_globally_enabled"] = !!plugins.getConfig("two-factor-auth").globally_enabled;
+        params.data.userovoGlobal["2fa_globally_enabled"] = !!plugins.getConfig("two-factor-auth").globally_enabled;
     };
 }(pluginObject));
 

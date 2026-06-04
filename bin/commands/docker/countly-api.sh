@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ "$COUNTLY_MONGO_INSIDE" == "1" ]
+if [ "$USEROVO_MONGO_INSIDE" == "1" ]
 then
 	until mongo localhost --eval "db.stats()" | grep "collections"
 	do
@@ -12,4 +12,4 @@ then
 	echo "[api] MongoDB started"
 fi
 
-exec /sbin/setuser countly /usr/bin/nodejs /opt/countly/api/api.js
+exec /sbin/setuser userovo /usr/bin/nodejs /opt/userovo/api/api.js

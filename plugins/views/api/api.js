@@ -4,7 +4,7 @@ var pluginOb = {},
     common = require('../../../api/utils/common.js'),
     moment = require('moment-timezone'),
     authorize = require('../../../api/utils/authorizer.js'),
-    countlyCommon = require('../../../api/lib/countly.common.js'),
+    userovoCommon = require('../../../api/lib/userovo.common.js'),
     plugins = require('../../pluginManager.js'),
     fetch = require('../../../api/parts/data/fetch.js'),
     log = common.log('views:api'),
@@ -226,7 +226,7 @@ const escapedViewSegments = { "name": true, "segment": true, "height": true, "wi
     });
 
     plugins.register("/batcher/fail", function(ob) {
-        if (ob.db === "countly" && (ob.collection.indexOf("app_viewdata") === 0)) {
+        if (ob.db === "userovo" && (ob.collection.indexOf("app_viewdata") === 0)) {
             //omit segment using app_id and segment name
             if (ob.data && ob.data.updateOne && ob.data.updateOne.update && ob.data.updateOne.update.$set) {
                 var appId = ob.data.updateOne.update.$set.a;
@@ -411,7 +411,7 @@ const escapedViewSegments = { "name": true, "segment": true, "height": true, "wi
 
         var year_array = [];
         var curmonth = "";
-        var periodObj = countlyCommon.getPeriodObj(params);
+        var periodObj = userovoCommon.getPeriodObj(params);
         var now = moment(periodObj.end - 1);
         var month_array = [];
         var last_pushed = "";
@@ -979,7 +979,7 @@ const escapedViewSegments = { "name": true, "segment": true, "height": true, "wi
                     for (let i = 0; i < settingsList.length; i++) {
                         pp[settingsList[i]] = true;
                     }
-                    common.returnOutput(params, {db: "countly", "pipeline": pipeline, "collection": colName, "projection": pp});
+                    common.returnOutput(params, {db: "userovo", "pipeline": pipeline, "collection": colName, "projection": pp});
                 }
                 if (params.qstring.action === 'getTable') {
                     colName = "app_viewdata" + crypto.createHash('sha1').update(segment + params.app_id).digest('hex');
@@ -1400,10 +1400,10 @@ const escapedViewSegments = { "name": true, "segment": true, "height": true, "wi
             return false;
         }
 
-        countlyCommon.setTimezone(params.appTimezone);
-        countlyCommon.setPeriod(params.qstring.period);
+        userovoCommon.setTimezone(params.appTimezone);
+        userovoCommon.setPeriod(params.qstring.period);
 
-        const periodObj = countlyCommon.periodObj;
+        const periodObj = userovoCommon.periodObj;
         const matchQuery = {};
         const now = params.time.now.toDate();
 
@@ -1565,7 +1565,7 @@ const escapedViewSegments = { "name": true, "segment": true, "height": true, "wi
         var params = ob.params;
 
         if (common.drillDb && params.qstring && params.qstring.view) {
-            if (params.req.headers["countly-token"]) {
+            if (params.req.headers["userovo-token"]) {
                 common.readBatcher.getOne("apps", {'key': params.qstring.app_key}, (err1, app) => {
                     if (!app) {
                         common.returnMessage(params, 401, 'User does not have view right for this application');
@@ -1574,17 +1574,17 @@ const escapedViewSegments = { "name": true, "segment": true, "height": true, "wi
                     params.qstring.app_id = app._id + "";
                     authorize.verify_return({
                         db: common.db,
-                        token: params.req.headers["countly-token"],
+                        token: params.req.headers["userovo-token"],
                         req_path: params.fullPath,
                         callback: function(owner, expires_after) {
                             if (owner) {
-                                var token = params.req.headers["countly-token"];
+                                var token = params.req.headers["userovo-token"];
                                 if (expires_after < 600 && expires_after > -1) {
                                     authorize.extend_token({
                                         extendTill: Date.now() + 600000, //10 minutes
-                                        token: params.req.headers["countly-token"],
+                                        token: params.req.headers["userovo-token"],
                                         callback: function(/*err,res*/) {
-                                            params.token_headers = {"countly-token": token, "content-language": token, "Access-Control-Expose-Headers": "countly-token"};
+                                            params.token_headers = {"userovo-token": token, "content-language": token, "Access-Control-Expose-Headers": "userovo-token"};
                                             params.app_id = app._id;
                                             params.app_cc = app.country;
                                             params.appTimezone = app.timezone;
@@ -1596,7 +1596,7 @@ const escapedViewSegments = { "name": true, "segment": true, "height": true, "wi
 
                                 }
                                 else {
-                                    params.token_headers = {"countly-token": token, "content-language": token, "Access-Control-Expose-Headers": "countly-token"};
+                                    params.token_headers = {"userovo-token": token, "content-language": token, "Access-Control-Expose-Headers": "userovo-token"};
                                     params.app_id = app._id;
                                     params.app_cc = app.country;
                                     params.appTimezone = app.timezone;

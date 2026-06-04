@@ -1,7 +1,7 @@
 /**
  *  Delete users with device id defined in CSV FILE_NAME under FIELD_NAME
- *  Server: countly
- *  Path: countly dir/bin/scripts/modify-data/csv_tag
+ *  Server: userovo
+ *  Path: userovo dir/bin/scripts/modify-data/csv_tag
  *  Command: node delete_user_from_csv.js
  */
 
@@ -43,7 +43,7 @@ csv()
         if (batch.length > 0) {
             batches.push(batch);
         }
-        Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).spread(function(db, drill) {
+        Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).spread(function(db, drill) {
             common.db = db;
             common.drillDb = drill;
             asyncjs.eachOfSeries(batches, function(batch, num, done) {

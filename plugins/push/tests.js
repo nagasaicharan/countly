@@ -118,7 +118,7 @@
 //     });
 
 //     // it('should validate correct APN key file', done => {
-//     //     request.post(`/i/pushes/validate?api_key=${API_KEY_ADMIN}&platform=i&secret=6A6MVM6HQF[CLY]EQ43JUC8GV[CLY]ly.count.Countly-Tester`)
+//     //     request.post(`/i/pushes/validate?api_key=${API_KEY_ADMIN}&platform=i&secret=6A6MVM6HQF[CLY]EQ43JUC8GV[CLY]ly.count.Userovo-Tester`)
 //     //         .attach('key', Buffer.from(p8))
 //     //         .expect(200)
 //     //         .end((err, res) => {

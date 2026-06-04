@@ -4,12 +4,12 @@ var async = require('async'),
 
 console.log("Updating drill indexes");
 var hashes = {};
-Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_drill")]).then(function([countlyDb, db]) {
-    countlyDb.collection('apps').find({}).toArray(function(err, apps) {
+Promise.all([plugins.dbConnection("userovo"), plugins.dbConnection("userovo_drill")]).then(function([userovoDb, db]) {
+    userovoDb.collection('apps').find({}).toArray(function(err, apps) {
         if (!apps || err) {
             console.log("No apps to upgrade");
             db.close();
-            countlyDb.close();
+            userovoDb.close();
             return;
         }
         for (var i = 0; i < apps.length; i++) {
@@ -29,7 +29,7 @@ Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_dril
         db.collections(function(error, results) {
             if (error || !results) {
                 db.close();
-                countlyDb.close();
+                userovoDb.close();
                 console.log("Error occured:", error);
             }
             else {
@@ -93,12 +93,12 @@ Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_dril
                 }, function() {
                     console.log("Fixing indexes on eventTimes collections");
                     async.eachSeries(apps, function(app, done) {
-                        countlyDb.collection('eventTimes' + app._id).ensureIndex({"uid": 1}, function() {
+                        userovoDb.collection('eventTimes' + app._id).ensureIndex({"uid": 1}, function() {
                             done();
                         });
                     }, function() {
                         db.close();
-                        countlyDb.close();
+                        userovoDb.close();
                         console.log("Drill index finished");
                     });
                 });

@@ -1,9 +1,9 @@
 var pluginManager = require('../../../../plugins/pluginManager.js');
 
 console.log("Fixing app_id in cohorts collection.");
-pluginManager.dbConnection().then((countlyDb) => {
+pluginManager.dbConnection().then((userovoDb) => {
 
-    var cursor = countlyDb.collection('cohorts').find({});
+    var cursor = userovoDb.collection('cohorts').find({});
     var requests = [];
     cursor.forEach(function(cohort) {
 		if (typeof cohort.app_id !== 'string') {
@@ -17,7 +17,7 @@ pluginManager.dbConnection().then((countlyDb) => {
         if (requests.length === 500) {
             //Execute per 500 operations and re-init
 			console.log("Flushing changes:"+requests.length);
-            countlyDb.collection('cohorts').bulkWrite(requests, function(err) {
+            userovoDb.collection('cohorts').bulkWrite(requests, function(err) {
                 if (err) {
                     console.error(err);
                 }
@@ -27,17 +27,17 @@ pluginManager.dbConnection().then((countlyDb) => {
     }, function() {
         if (requests.length > 0) {
 			console.log("Flushing changes:"+requests.length);
-            countlyDb.collection('cohorts').bulkWrite(requests, function(err) {
+            userovoDb.collection('cohorts').bulkWrite(requests, function(err) {
                 if (err) {
                     console.error(err);
                 }
                 console.log("Done");
-                countlyDb.close();
+                userovoDb.close();
             });
         }
         else {
             console.log("Done");
-            countlyDb.close();
+            userovoDb.close();
         }
     });
 });

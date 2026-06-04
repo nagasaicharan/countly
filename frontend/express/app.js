@@ -27,8 +27,8 @@ var versionInfo = require('./version.info'),
     COUNTLY_VERSION = versionInfo.version,
     COUNTLY_COMPANY = versionInfo.company || '',
     COUNTLY_TYPE = versionInfo.type,
-    COUNTLY_PAGE = versionInfo.page = (!versionInfo.title) ? "http://count.ly" : null,
-    COUNTLY_NAME = versionInfo.title = versionInfo.title || "Countly",
+    COUNTLY_PAGE = versionInfo.page = (!versionInfo.title) ? "https://userovo.com" : null,
+    COUNTLY_NAME = versionInfo.title = versionInfo.title || "Userovo",
     COUNTLY_DOCUMENTATION_LINK = (typeof versionInfo.documentationLink === "undefined") ? true : (typeof versionInfo.documentationLink === "string") ? versionInfo.documentationLink : (typeof versionInfo.documentationLink === "boolean") ? versionInfo.documentationLink : true,
     COUNTLY_FEEDBACK_LINK = (typeof versionInfo.feedbackLink === "undefined") ? true : (typeof versionInfo.feedbackLink === "string") ? versionInfo.feedbackLink : (typeof versionInfo.feedbackLink === "boolean") ? versionInfo.feedbackLink : true,
     COUNTLY_HELPCENTER_LINK = (typeof versionInfo.helpCenterLink === "undefined") ? true : (typeof versionInfo.helpCenterLink === "string") ? versionInfo.helpCenterLink : (typeof versionInfo.helpCenterLink === "boolean") ? versionInfo.helpCenterLink : true,
@@ -75,9 +75,9 @@ var versionInfo = require('./version.info'),
     { validateCreate } = require('../../api/utils/rights.js'),
     tracker = require('../../api/parts/mgmt/tracker.js');
 
-console.log("Starting Countly", "version", versionInfo.version, "package", pack.version);
+console.log("Starting Userovo", "version", versionInfo.version, "package", pack.version);
 
-var COUNTLY_NAMED_TYPE = "Countly Lite v" + COUNTLY_VERSION;
+var COUNTLY_NAMED_TYPE = "Userovo Lite v" + COUNTLY_VERSION;
 var COUNTLY_TYPE_CE = true;
 var COUNTLY_TRIAL = (versionInfo.trial) ? true : false;
 var COUNTLY_TRACK_TYPE = "OSS";
@@ -98,7 +98,7 @@ else if (versionInfo.footer) {
     }
 }
 else if (COUNTLY_TYPE !== "777a2bf527a18e0fffe22fb5b3e322e68d9c07a6") {
-    COUNTLY_NAMED_TYPE = "Countly Enterprise v" + COUNTLY_VERSION;
+    COUNTLY_NAMED_TYPE = "Userovo Enterprise v" + COUNTLY_VERSION;
     COUNTLY_TYPE_CE = false;
     COUNTLY_TRACK_TYPE = "Enterprise";
 }
@@ -132,7 +132,7 @@ if (!countlyConfig.cookie) {
 }
 
 plugins.setConfigs("frontend", {
-    production: true,
+    production: false,
     theme: countlyConfig.web.theme || "",
     session_timeout: 30,
     use_google: true,
@@ -719,10 +719,10 @@ Promise.all([plugins.dbConnection(countlyConfig), plugins.dbConnection("countly_
             page: COUNTLY_PAGE,
             title: COUNTLY_NAME,
             favicon: "images/favicon.png",
-            documentationLink: convertLink(versionInfo.documentationLink, "https://support.count.ly/hc/en-us/categories/360002373332-Knowledge-Base"),
-            helpCenterLink: convertLink(versionInfo.helpCenterLink, "https://support.count.ly/hc/en-us"),
+            documentationLink: convertLink(versionInfo.documentationLink, "https://userovo.com/docs"),
+            helpCenterLink: convertLink(versionInfo.helpCenterLink, "https://userovo.com/support"),
             featureRequestLink: convertLink(versionInfo.featureRequestLink, "https://discord.com/channels/1088398296789299280/1088721958218248243"),
-            feedbackLink: convertLink(versionInfo.feedbackLink, "https://count.ly/legal/privacy-policy"),
+            feedbackLink: convertLink(versionInfo.feedbackLink, "https://userovo.com/privacy-policy"),
         };
         plugins.loadConfigs(countlyDb, function() {
             var securityConf = plugins.getConfig("security");
@@ -823,7 +823,15 @@ Promise.all([plugins.dbConnection(countlyConfig), plugins.dbConnection("countly_
     }
 
     app.get(countlyConfig.path + '/', function(req, res) {
-        res.redirect(countlyConfig.path + '/login');
+        res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+        res.header('Expires', '0');
+        res.header('Pragma', 'no-cache');
+        res.render('landing', {
+            countlyFavicon: req.countly.favicon,
+            countlyTitle: req.countly.title,
+            path: countlyConfig.path || "",
+            cdn: countlyConfig.cdn || ""
+        });
     });
 
     var extendSession = function(req) {
@@ -1024,7 +1032,7 @@ Promise.all([plugins.dbConnection(countlyConfig), plugins.dbConnection("countly_
                     countlyTitle: req.countly.title,
                     company: req.countly.company,
                     languages: languages,
-                    countlyVersion: req.countly.version,
+                    countlyVersion: req.countly.version + "&userovo-runtime-20260604-2",
                     countlyFavicon: req.countly.favicon,
                     pluginsSHA: sha1Hash(plugins.getPlugins()),
                     apps: countlyGlobalApps,
@@ -1074,7 +1082,7 @@ Promise.all([plugins.dbConnection(countlyConfig), plugins.dbConnection("countly_
                     track: countlyConfig.web.track || false,
                     installed: req.session.install || false,
                     cpus: require('os').cpus().length,
-                    countlyVersion: req.countly.version,
+                    countlyVersion: req.countly.version + "&userovo-runtime-20260604-2",
                     countlyType: COUNTLY_TYPE_CE,
                     countlyTrial: COUNTLY_TRIAL,
                     countlyTypeName: overriddenCountlyNamedType,
@@ -1345,7 +1353,7 @@ Promise.all([plugins.dbConnection(countlyConfig), plugins.dbConnection("countly_
         res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
         res.header('Expires', '0');
         res.header('Pragma', 'no-cache');
-        if (req.session.uid) {
+        if (req.session.uid && !req.query.landing) {
             res.redirect(countlyConfig.path + '/dashboard');
         }
         else {

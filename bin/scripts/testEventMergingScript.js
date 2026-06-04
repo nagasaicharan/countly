@@ -11,15 +11,15 @@ var collectionName = 'fe55f384d642312c76f6164a4f8ea40ffcc80795';
 var app_ID = '6075f94b7e5e0d392902520c';
 var EventKey = 'bumba';
 
-var pathToScript = '/opt/countly/bin/upgrade/DEV/scripts/merge_events_collections.js';
+var pathToScript = '/opt/userovo/bin/upgrade/DEV/scripts/merge_events_collections.js';
 Promise.all(
     [
-        pluginManager.dbConnection("countly")
+        pluginManager.dbConnection("userovo")
     ])
-    .spread(async function(countlyDB) {
+    .spread(async function(userovoDB) {
         //insert some documents in collection
-        await countlyDB.collection("events" + collectionName).drop();//cleanup in case
-        await countlyDB.collection("events_data").deleteMany({'_id': {"$regex": "^" + app_ID + "_" + collectionName + "_.*"}});
+        await userovoDB.collection("events" + collectionName).drop();//cleanup in case
+        await userovoDB.collection("events_data").deleteMany({'_id': {"$regex": "^" + app_ID + "_" + collectionName + "_.*"}});
         var docs = [{
             "_id": "no-segment_2023:0_z",
             "m": "2023:0",
@@ -89,7 +89,7 @@ Promise.all(
         }
         ];
 
-        await countlyDB.collection("events" + collectionName).insertMany(docs);
+        await userovoDB.collection("events" + collectionName).insertMany(docs);
         //run node.js script and wait for it to finish
         var exec = require('child_process').exec;
         exec('node ' + pathToScript, async function(error, stdout) {
@@ -99,7 +99,7 @@ Promise.all(
             console.log(stdout);
             //run query to check current state in database
 
-            var result = await countlyDB.collection("events_data").find({'_id': {"$regex": "^" + app_ID + "_" + collectionName + "_.*"}}).toArray();
+            var result = await userovoDB.collection("events_data").find({'_id': {"$regex": "^" + app_ID + "_" + collectionName + "_.*"}}).toArray();
             var mapped = {};
             for (var ii = 0; ii < result.length; ii++) {
                 mapped[result[ii]._id] = result[ii];
@@ -124,7 +124,7 @@ Promise.all(
             }
 
             //
-            await countlyDB.collection("events" + collectionName).drop();
+            await userovoDB.collection("events" + collectionName).drop();
 
             //insertng new docs(should clash)
             var docs2 = [{
@@ -197,7 +197,7 @@ Promise.all(
             docs[1].d["1"]["c"] += 1;
             docs[1].d["1"]["dur"] += 8;
 
-            await countlyDB.collection("events" + collectionName).insertMany(docs2);
+            await userovoDB.collection("events" + collectionName).insertMany(docs2);
 
             //run script again and compare again
             exec('node ' + pathToScript, async function(error, stdout) {
@@ -207,7 +207,7 @@ Promise.all(
                 console.log(stdout);
                 //run query to check current state in database
 
-                var result = await countlyDB.collection("events_data").find({'_id': {"$regex": "^" + app_ID + "_" + collectionName + "_.*"}}).toArray();
+                var result = await userovoDB.collection("events_data").find({'_id': {"$regex": "^" + app_ID + "_" + collectionName + "_.*"}}).toArray();
                 var mapped = {};
                 for (var ij = 0; ij < result.length; ij++) {
                     mapped[result[ij]._id] = result[ij];
@@ -231,10 +231,10 @@ Promise.all(
                 }
 
                 //delete all records from selected databases
-                //await countlyDB.collection("events"+collectionName).drop();
-                // await countlyDB.collection("events_data").deleteMany({'_id':{"$regex":"^"+app_ID+"_"+collectionName+"_.*"}});
+                //await userovoDB.collection("events"+collectionName).drop();
+                // await userovoDB.collection("events_data").deleteMany({'_id':{"$regex":"^"+app_ID+"_"+collectionName+"_.*"}});
                 console.log("Done");
-                countlyDB.close();
+                userovoDB.close();
             });
         });
 

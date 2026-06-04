@@ -5,7 +5,7 @@ Values should closely match data points statistics unless data is being :
 	b)some events are deleted
 
 Path: 
-	{COUNTLY DIRECTORY}/bin/scripts/export-data/countl_event_datapoints.js
+	{USEROVO DIRECTORY}/bin/scripts/export-data/countl_event_datapoints.js
 Command: 
 	node ./bin/scripts/export-data/countl_event_datapoints.js
 
@@ -29,7 +29,7 @@ They can set multiple parameters:
 	There are 3 options to run it. With more precision calculations will take LONGER.
 
 	OPTION1:
-	var calculate_from = "countly"
+	var calculate_from = "userovo"
 	Fastest way to calculate.
 	Data is calculated using aggregated data. This method will be precise only if  data from SDK is sent right away(server is not reciewing a lot data about events that happened some time ago).
 	If there is periodic clenup in drill, this method will still historically recorded data as it is not cleared out from aggregated data. 
@@ -66,7 +66,7 @@ var crypto = require('crypto');
 
 var app_list = [];//add app ids, if none added will run on all apps
 var eventsMatch = []; //rules to match events by. If nothing set will check all events
-var calculate_from = "drill_precise"; //"drill" or "countly" or "drill_precise"
+var calculate_from = "drill_precise"; //"drill" or "userovo" or "drill_precise"
 
 
 var matchQuery = false; //put in query if run on drill to limit drill data by some range or properties.
@@ -296,7 +296,7 @@ function countDataPoints(options, callback) {
     });
 }
 
-Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_drill")]).spread(function(db, db_drill) {
+Promise.all([plugins.dbConnection("userovo"), plugins.dbConnection("userovo_drill")]).spread(function(db, db_drill) {
     getAppList({db: db}, function(err, apps) {
         if (err) {
             console.log(err);

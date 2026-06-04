@@ -7,15 +7,15 @@
         <key>ProgramArguments</key>
         <array>
                 <string>/usr/local/bin/node</string>
-                <string>/usr/local/countly/api/api.js</string>
+                <string>/usr/local/userovo/api/api.js</string>
         </array>
         <key>Label</key>
-        <string>com.countly.api</string>
+        <string>com.userovo.api</string>
         <key>KeepAlive</key>
         <true/>
         <key>Disabled</key>
         <false/>
         <key>WorkingDirectory</key>
-        <string>/usr/local/countly/bin/config/</string>
+        <string>/usr/local/userovo/bin/config/</string>
 </dict>
 </plist>

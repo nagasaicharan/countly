@@ -8,8 +8,8 @@
 #connection string without database
 connection_string="mongodb://localhost"
 
-#database which to export, countly has data in 2 database countly and countly_drill
-db="countly"
+#database which to export, userovo has data in 2 database userovo and userovo_drill
+db="userovo"
 
 #output where to store the exported files
 out_dir="./output"

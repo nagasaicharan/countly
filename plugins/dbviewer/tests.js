@@ -12,7 +12,7 @@ var db = "";
 
 describe('Testing DBViewer', function() {
     describe('Checking database and collections', function() {
-        it('should have countly db', function(done) {
+        it('should have userovo db', function(done) {
             API_KEY_ADMIN = testUtils.get("API_KEY_ADMIN");
             APP_ID = testUtils.get("APP_ID");
             APP_KEY = testUtils.get("APP_KEY");
@@ -26,7 +26,7 @@ describe('Testing DBViewer', function() {
                     var ob = JSON.parse(res.text);
                     ob.should.not.be.empty;
                     ob.should.be.an.instanceOf(Array);
-                    ob[0].should.have.property("name", "countly");
+                    ob[0].should.have.property("name", "userovo");
                     ob[0].should.have.property("collections");
                     ob[0].collections.should.have.property("apps");
                     ob[0].collections.should.have.property("members");
@@ -43,7 +43,7 @@ describe('Testing DBViewer', function() {
     describe('Checking apps collections contents', function() {
         it('should have our test app', function(done) {
             request
-                .get('/o/db?dbs=countly&collection=apps&api_key=' + API_KEY_ADMIN)
+                .get('/o/db?dbs=userovo&collection=apps&api_key=' + API_KEY_ADMIN)
                 .expect(200)
                 .end(function(err, res) {
                     if (err) {
@@ -66,7 +66,7 @@ describe('Testing DBViewer', function() {
     describe('Checking apps document contents', function() {
         it('should have our test app', function(done) {
             request
-                .get('/o/db?dbs=countly&collection=apps&document=' + APP_ID + '&api_key=' + API_KEY_ADMIN)
+                .get('/o/db?dbs=userovo&collection=apps&document=' + APP_ID + '&api_key=' + API_KEY_ADMIN)
                 .expect(200)
                 .end(function(err, res) {
                     if (err) {
@@ -88,7 +88,7 @@ describe('Testing DBViewer', function() {
 
     describe('Checking collection list when specific app_id selected', function() {
         it('getting app name', function(done) {
-            db = testUtils.client.db("countly");
+            db = testUtils.client.db("userovo");
             db.collection("apps").findOne({ _id: db.ObjectID(APP_ID) }, function(err, app) {
                 if (app) {
                     APP_NAME = app.name;
@@ -98,7 +98,7 @@ describe('Testing DBViewer', function() {
         });
         it('should have our test app', function(done) {
             request
-                .get('/o/db?dbs=countly&app_id=' + APP_ID + '&api_key=' + API_KEY_ADMIN)
+                .get('/o/db?dbs=userovo&app_id=' + APP_ID + '&api_key=' + API_KEY_ADMIN)
                 .expect(200)
                 .end(function(err, res) {
                     if (err) {
@@ -108,7 +108,7 @@ describe('Testing DBViewer', function() {
                     console.log(res.text);
                     ob.should.not.be.empty;
                     ob.should.be.an.instanceOf(Object);
-                    ob[0].should.have.property("name", "countly");
+                    ob[0].should.have.property("name", "userovo");
                     ob[0].should.have.property("collections");
                     ob[0].collections.should.not.have.property("apps");
                     ob[0].collections.should.not.have.property("members");

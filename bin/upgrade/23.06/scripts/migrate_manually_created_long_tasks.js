@@ -98,7 +98,7 @@ function queryToName(queryString) {
     }
 };
 
-async function upgradeDrillReport(report, countlyDb, countlyDrill) {
+async function upgradeDrillReport(report, userovoDb, userovoDrill) {
     try {
         report.meta = JSON.parse(report.meta);
     }
@@ -121,7 +121,7 @@ async function upgradeDrillReport(report, countlyDb, countlyDrill) {
     const eventUnescaped = _.unescape(report.meta.event);
 
     try {
-        const { insertedId } = await countlyDrill.collection('drill_bookmarks').insertOne({
+        const { insertedId } = await userovoDrill.collection('drill_bookmarks').insertOne({
             "app_id": report.app_id,
             "event_key": report.meta.event,
             "name": report.report_name,
@@ -146,7 +146,7 @@ async function upgradeDrillReport(report, countlyDb, countlyDrill) {
             unorderedObjects: true,
         });
 
-        await countlyDb.collection('long_tasks').updateOne({ _id: report._id }, {
+        await userovoDb.collection('long_tasks').updateOne({ _id: report._id }, {
             $set: {
                 linked_to: {
                     _issuer: 'manually_created',
@@ -162,19 +162,19 @@ async function upgradeDrillReport(report, countlyDb, countlyDrill) {
     }
 }
 
-pluginManager.dbConnection().then(async (countlyDb) => {
-    pluginManager.dbConnection('countly_drill').then(async (countlyDrill) => {
-        const tasksToMigrate = await countlyDb.collection('long_tasks')
+pluginManager.dbConnection().then(async (userovoDb) => {
+    pluginManager.dbConnection('userovo_drill').then(async (userovoDrill) => {
+        const tasksToMigrate = await userovoDb.collection('long_tasks')
             .find({ type: 'drill', manually_create: true, linked_to: { $exists: false } })
             .toArray();
 
         for (let idx = 0; idx < tasksToMigrate.length; idx += 1) {
-            await upgradeDrillReport(tasksToMigrate[idx], countlyDb, countlyDrill);
+            await upgradeDrillReport(tasksToMigrate[idx], userovoDb, userovoDrill);
         }
 
         console.log('Migrating manually created long tasks finished');
 
-        countlyDb.close();
-        countlyDrill.close();
+        userovoDb.close();
+        userovoDrill.close();
     });
 });

@@ -216,8 +216,9 @@
     <% if (typeof inject_template.css != 'undefined') { %>
 	<style><%- inject_template.css %></style>
 	<% } %>
+    <link rel="stylesheet" href="<%- cdn %>stylesheets/userovo-dashboard.css?v=userovo-dashboard-20260604-1" />
 </head>
-<body>
+<body class="userovo-dashboard-page">
 	<div id="main-views-container" class="bu-is-flex">
         <div id="cly-vue-sidebar" data-test-id="dashboard-sidebar">
             <div id="sidebar-x"></div>

@@ -1,9 +1,9 @@
 {
   "files": {
     "included": [
-      "frontend/express/public/javascripts/countly/*.js",
-      "plugins/*/frontend/public/javascripts/countly.models.js",
-      "plugins/*/frontend/public/javascripts/countly.views.js",
+      "frontend/express/public/javascripts/userovo/*.js",
+      "plugins/*/frontend/public/javascripts/userovo.models.js",
+      "plugins/*/frontend/public/javascripts/userovo.views.js",
       "api/**/*.js",
       "frontend/express/*.js",
       "frontend/express/libs/*.js",

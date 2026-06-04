@@ -1,7 +1,7 @@
 /**
  *  Description: Script will finish started merges
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/fix-data
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/fix-data
  *  Command: node process_merges.js
  */
 const pluginManager = require('../../../plugins/pluginManager.js');
@@ -206,9 +206,9 @@ var handleMerges = function(db, callback) {
     });
 };
 
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
     console.log("Connected to databases...");
-    common.db = countlyDb;
+    common.db = userovoDb;
     common.drillDb = drillDb;
 
     common.writeBatcher = new WriteBatcher(common.db);

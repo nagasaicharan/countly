@@ -18,7 +18,7 @@ const AVAILABLE_API_IDS = ["server-guides", "server-consents", "server-intro-vid
     BASE_URL = "https://cms.count.ly/api/";
 
 /**
-* Get entries for a given API ID from Countly CMS
+* Get entries for a given API ID from Userovo CMS
 * @param {params} params - params object
 * @param {function} callback - callback function
 **/
@@ -137,7 +137,7 @@ function transformAndStoreData(params, err, data, callback) {
 }
 
 /**
-* Get entries for a given API ID from Countly CMS
+* Get entries for a given API ID from Userovo CMS
 * @param {params} params - params object
 **/
 function syncCMSDataToDB(params) {

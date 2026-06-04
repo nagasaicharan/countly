@@ -1,6 +1,6 @@
 /**
  *  Description: This script is used to anonymize drill collectionto fix broken custom properties in drill session collections
- *  Path: $(countly dir)/bin/scripts/fix-data
+ *  Path: $(userovo dir)/bin/scripts/fix-data
  *  Command: node fix_drill_custom_props.js
  */
 const { ObjectId } = require('mongodb');
@@ -14,11 +14,11 @@ var dry_run = true;
 var query_drill = {"ts": {"$gte": 1698829052000}};
 
 
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
     console.log("Connected to databases...");
 
     //SET COMMON DBs
-    common.db = countlyDb;
+    common.db = userovoDb;
     common.drillDb = drillDb;
 
     var query = {};
@@ -30,7 +30,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
     }
     try {
         //FETCH APPS
-        var apps = await countlyDb.collection('apps').find(query, {_id: 1, name: 1}).toArray();
+        var apps = await userovoDb.collection('apps').find(query, {_id: 1, name: 1}).toArray();
         //PROCESS COLLECTIONS FOR EACH APP
         for (let i = 0; i < apps.length; i++) {
             console.log("Processing app: " + apps[i].name);
@@ -110,7 +110,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
         console.log(err);
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
         drillDb.close();
         console.log("Done.");
     }

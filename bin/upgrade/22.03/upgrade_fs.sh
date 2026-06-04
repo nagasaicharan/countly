@@ -4,7 +4,7 @@ echo "Running filesystem modifications"
 
 VER="22.03"
 
-CONTINUE="$(countly check before upgrade fs "$VER")"
+CONTINUE="$(userovo check before upgrade fs "$VER")"
 
 if [ "$CONTINUE" != "1" ] && [ "$1" != "combined" ]
 then
@@ -34,8 +34,8 @@ then
 
     #removing files
     bash "$CUR/scripts/remove_old_files.sh"
-    mv "$DIR/../frontend/express/public/javascripts/countly/countly.config.js" "$DIR/../frontend/express/public/javascripts/countly/countly.config.backup.20.11.js"
-    cp -n "$DIR/../frontend/express/public/javascripts/countly/countly.config.sample.js" "$DIR/../frontend/express/public/javascripts/countly/countly.config.js"
+    mv "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.js" "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.backup.20.11.js"
+    cp -n "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.sample.js" "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.js"
     rm -f "$DIR/../frontend/express/public/robots.txt"
 
 # Checking GCC version and Installing it to match the compatibility version
@@ -105,35 +105,35 @@ fi
     (cd "$DIR/.." && sudo npm install --unsafe-perm && sudo npm install argon2 --build-from-source)
 
     #upgrade plugins
-    countly plugin upgrade white-labeling
-    countly plugin upgrade sources
-    countly plugin upgrade two-factor-auth
-    countly plugin upgrade web
-    countly plugin upgrade push
-    countly plugin upgrade hooks
+    userovo plugin upgrade white-labeling
+    userovo plugin upgrade sources
+    userovo plugin upgrade two-factor-auth
+    userovo plugin upgrade web
+    userovo plugin upgrade push
+    userovo plugin upgrade hooks
 
 
     #enable new plugins
-    countly plugin enable data-manager
-    countly plugin enable heatmaps
+    userovo plugin enable data-manager
+    userovo plugin enable heatmaps
 
     #disable old plugins
-    countly plugin disable EChartMap
-    countly plugin disable restrict
-    countly plugin disable assistant
+    userovo plugin disable EChartMap
+    userovo plugin disable restrict
+    userovo plugin disable assistant
 
     #get web sdk
-    countly update sdk-web
+    userovo update sdk-web
 
-    #install dependencies, process files and restart countly
+    #install dependencies, process files and restart userovo
     if [ "$1" != "combined" ]; then
-        countly upgrade;
+        userovo upgrade;
     else
-        countly task dist-all;
+        userovo task dist-all;
     fi
 
     #call after check
-    countly check after upgrade fs "$VER"
+    userovo check after upgrade fs "$VER"
 elif [ "$CONTINUE" == "0" ]
 then
     echo "Filesystem is already upgraded to $VER"

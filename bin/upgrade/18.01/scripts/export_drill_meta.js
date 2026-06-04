@@ -4,10 +4,10 @@ var pluginManager = require("../../../../plugins/pluginManager"),
 
 var dir = path.resolve(__dirname, "drill_backups");
 fs.mkdir(dir, function() {
-    var params = pluginManager.getDbConnectionParams("countly_drill");
+    var params = pluginManager.getDbConnectionParams("userovo_drill");
     params.query = "'" + JSON.stringify({"_id": {"$regex": "meta.*"}}) + "'";
 
-    pluginManager.dbConnection("countly_drill").then((db) => {
+    pluginManager.dbConnection("userovo_drill").then((db) => {
         var reg = /^drill_events\.*/;
     
         function outputParams(params) {

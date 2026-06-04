@@ -3,11 +3,11 @@ var exportedPlugin = {},
     plugins = require('../../pluginManager.js');
 
 (function(plugin) {
-    plugin.init = function(_, countlyDb) {
+    plugin.init = function(_, userovoDb) {
         plugin.loginSuccessful = function(ob) {
             const member = ob.data;
 
-            countlyDb.collection('members').update(
+            userovoDb.collection('members').update(
                 { _id: common.db.ObjectID(member._id) },
                 { $inc: { login_count: 1 } },
             );
@@ -15,7 +15,7 @@ var exportedPlugin = {},
     };
 
     plugin.renderDashboard = function(ob) {
-        ob.data.countlyGlobal.domain = plugins.getConfig("api").domain;
+        ob.data.userovoGlobal.domain = plugins.getConfig("api").domain;
     };
 }(exportedPlugin));
 

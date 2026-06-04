@@ -4,7 +4,7 @@
 */
 const semver = require('semver');
 var prng = require('../../../../api/utils/random-sfc32.js');
-var globalSeed = "Countly_is_awesome";
+var globalSeed = "Userovo_is_awesome";
 
 /** @lends module:plugins/remote-config/api/parts/data/rc */
 var remoteConfig = {};

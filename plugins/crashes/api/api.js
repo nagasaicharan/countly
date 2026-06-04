@@ -53,7 +53,7 @@ plugins.setConfigs("crashes", {
     });
     plugins.register("/master", function() {
         fs.chmod(path.resolve(__dirname + "/../bin/minidump_stackwalk"), 0o744, function(err) {
-            if (err && !process.env.COUNTLY_CONTAINER) {
+            if (err && !process.env.USEROVO_CONTAINER) {
                 console.log(err);
             }
         });

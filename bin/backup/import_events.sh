@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# this script creates a default user and an app for countly.
+# this script creates a default user and an app for userovo.
 # default values are as following
 #
-#   Full Name: Countly Admin
-#   Email: admin@countly.com
+#   Full Name: Userovo Admin
+#   Email: admin@userovo.com
 #   username: admin
 #   password: admin
 #   api_key: e6bfab40a224d55a2f5d40c83abc7ed4
@@ -48,12 +48,12 @@ check_connectivity mongosh
 #
 #  Backup is taken with the following commands
 #
-# /usr/bin/mongoexport --db countly  --collection  app_crashgroups58bf06bd6cba850047ac9f19  --out app_crashgroups58bf06bd6cba850047ac9f19.json
-# /usr/bin/mongoexport --db countly  --collection  apps                                     --out apps.json
-# /usr/bin/mongoexport --db countly  --collection  members                                  --out members.json
+# /usr/bin/mongoexport --db userovo  --collection  app_crashgroups58bf06bd6cba850047ac9f19  --out app_crashgroups58bf06bd6cba850047ac9f19.json
+# /usr/bin/mongoexport --db userovo  --collection  apps                                     --out apps.json
+# /usr/bin/mongoexport --db userovo  --collection  members                                  --out members.json
 
-/usr/bin/mongoimport --db countly --collection app_crashgroups58bf06bd6cba850047ac9f19 --file app_crashgroups58bf06bd6cba850047ac9f19.json --upsert
-/usr/bin/mongoimport --db countly --collection apps --file apps.json --upsert
-/usr/bin/mongoimport --db countly --collection members --file members.json --upsert
-/usr/bin/mongoimport --db countly --collection events --file events.json --upsert
-/usr/bin/mongoimport --db countly_drill --collection drill_meta --file drill_meta.json --upsert
+/usr/bin/mongoimport --db userovo --collection app_crashgroups58bf06bd6cba850047ac9f19 --file app_crashgroups58bf06bd6cba850047ac9f19.json --upsert
+/usr/bin/mongoimport --db userovo --collection apps --file apps.json --upsert
+/usr/bin/mongoimport --db userovo --collection members --file members.json --upsert
+/usr/bin/mongoimport --db userovo --collection events --file events.json --upsert
+/usr/bin/mongoimport --db userovo_drill --collection drill_meta --file drill_meta.json --upsert

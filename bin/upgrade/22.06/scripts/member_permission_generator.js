@@ -53,11 +53,11 @@ var restrictMap = {
 //list of permissions
 var permissions = ["core","events","web","density","locale","sources","views","drill","funnels","retention_segments","flows","formulas","activity_map","cohorts","surveys","remote_config","ab_testing","revenue","logger","systemlogs","populator","reports","crashes","push","geo","block","users","star_rating","alerts","slipping_away_users","compare","assistant","dbviewer","times_of_day","compliance_hub","active_users","performance_monitoring","config_transfer","data_manager","vue_example","attribution","data_migration","groups","concurrent_users","browser","heatmaps","monetization","two_factor_auth","dashboards"];
 
-pluginManager.dbConnection().then((countlyDb) => {
-    countlyDb.collection('members').find({}).toArray(function(err, members) {
+pluginManager.dbConnection().then((userovoDb) => {
+    userovoDb.collection('members').find({}).toArray(function(err, members) {
         if (!members && err) {
             console.log(err);
-            countlyDb.close();
+            userovoDb.close();
             return;
         }
 
@@ -210,7 +210,7 @@ pluginManager.dbConnection().then((countlyDb) => {
                 }
             }
 
-            countlyDb.collection('members').findAndModify({"_id": member._id}, {}, {$set: {permission: memberPermission, migrated:"22.02"}}, function(err, member) {
+            userovoDb.collection('members').findAndModify({"_id": member._id}, {}, {$set: {permission: memberPermission, migrated:"22.02"}}, function(err, member) {
                 if (err || !member) {
                     console.log("Member not found.");
                 }
@@ -221,7 +221,7 @@ pluginManager.dbConnection().then((countlyDb) => {
 
         async.forEach(members, upgrade, function() {
             console.log("Finished upgrading member permissions.");
-            countlyDb.close();
+            userovoDb.close();
         });
     });
 });

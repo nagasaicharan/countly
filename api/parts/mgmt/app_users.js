@@ -9,7 +9,7 @@ var usersApi = {},
     plugins = require('../../../plugins/pluginManager.js');
 var path = require('path');
 const fs = require('fs');
-var countlyFs = require('./../../utils/countlyFs.js');
+var userovoFs = require('./../../utils/userovoFs.js');
 //var cp = require('child_process'); //call process
 //var spawn = cp.spawn; //for calling comannd line
 const fse = require('fs-extra');
@@ -250,7 +250,7 @@ usersApi.delete = function(app_id, query, params, callback) {
                                     continue;
                                 }
                                 var pp = path.resolve(__dirname, './../../../frontend/express/public/userimages/' + id);
-                                countlyFs.deleteFile("userimages", pp, {id: id}, function(err1) {
+                                userovoFs.deleteFile("userimages", pp, {id: id}, function(err1) {
                                     if (err1) {
                                         console.log(err1);
                                     }
@@ -791,7 +791,7 @@ var deleteMyExport = function(exportID) { //tries to delete packed file, exporte
                 errors.push(err);
             }
         }
-        countlyFs.gridfs.deleteFile("appUsers", path.resolve(__dirname, './../../../export/AppUser/' + exportID + '.tar.gz'), {id: exportID + '.tar.gz'}, function(error) {
+        userovoFs.gridfs.deleteFile("appUsers", path.resolve(__dirname, './../../../export/AppUser/' + exportID + '.tar.gz'), {id: exportID + '.tar.gz'}, function(error) {
             if (error && error.message && error.message.substring(0, 12) !== "FileNotFound" && error.message.substring(0, 14) !== 'File not found') {
                 log.e(error.message.substring(0, 14));
                 errors.push(error.message);
@@ -964,9 +964,9 @@ var export_safely = function(options) {
     return new Promise(function(resolve) {
         var args = options.args;
 
-        var params_countly = plugins.getDbConnectionParams('countly');
+        var params_userovo = plugins.getDbConnectionParams('userovo');
 
-        var dbName = 'countly';
+        var dbName = 'userovo';
         var collection = "";
         var query = "{}";
         for (var z = 0; z < args.length; z++) {
@@ -989,8 +989,8 @@ var export_safely = function(options) {
             query = {};
         }
 
-        var pipeline = [{"$match": query}, {"$addFields": {"_col": collection, "__id": "$_id", "_eid": options.export_id}}, {"$project": {"_id": 0}}, {"$merge": {"into": {"db": "countly", "coll": "exports"}}}];
-        if (dbName === params_countly.db) {
+        var pipeline = [{"$match": query}, {"$addFields": {"_col": collection, "__id": "$_id", "_eid": options.export_id}}, {"$project": {"_id": 0}}, {"$merge": {"into": {"db": "userovo", "coll": "exports"}}}];
+        if (dbName === params_userovo.db) {
             common.db.collection(collection).aggregate(pipeline, function(err) {
                 if (err) {
                     log.e(err);
@@ -1078,7 +1078,7 @@ usersApi.export = function(app_id, query, params, callback) {
 
             var dbargs = [];
             var export_commands = {};
-            var db_params = plugins.getDbConnectionParams('countly');
+            var db_params = plugins.getDbConnectionParams('userovo');
             for (var p in db_params) {
                 dbargs.push("--" + p);
                 dbargs.push(db_params[p]);

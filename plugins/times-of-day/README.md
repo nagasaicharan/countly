@@ -1,4 +1,4 @@
-# Countly times-of-day plugin
+# Userovo times-of-day plugin
 
 The Times of Day plugin provides a visual representation of user activity based on local time, offering a scatter plot chart that shows when sessions and events occur across different days of the week.
 
@@ -14,9 +14,9 @@ times-of-day/
 │   │   │   └── times-of-day/                       # Folder for times-of-day related images
 │   │   │       └── times-of-day.svg                # SVG image for times-of-day widget
 │   │   ├── javascripts/                            # JavaScript files for frontend logic
-│   │   │   ├── countly.models.js                   # Model definitions for data handling
-│   │   │   ├── countly.views.component.common.js   # Common view component logic
-│   │   │   └── countly.views.js                    # View definitions for rendering
+│   │   │   ├── userovo.models.js                   # Model definitions for data handling
+│   │   │   ├── userovo.views.component.common.js   # Common view component logic
+│   │   │   └── userovo.views.js                    # View definitions for rendering
 │   ├── localization/                               # Localization files for multi-language support
 │   ├── stylesheets/                                # Stylesheets for styling the plugin
 │   │   ├── main.css                                # Compiled CSS for styling

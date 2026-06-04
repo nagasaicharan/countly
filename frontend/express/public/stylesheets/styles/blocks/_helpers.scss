@@ -3,7 +3,7 @@
 
 .cly-vue-tooltip-icon {
     font-size: 17px;
-    color: #A7AEB8;
+    color: #94A3B8;
     vertical-align: middle;
     width: 18px;
     height: 18px;
@@ -14,20 +14,20 @@
     text-align: center;
     margin-bottom: 32px;
     &--light-informational {
-        background-color: #E1EFFF;
-        color: #333C48;
+        background-color: #EEF6FF;
+        color: #172554;
     }
     &--light-successful {
         background-color: #EBFAEE;
-        color: #333C48;
+        color: #172554;
     }
     &--light-destructive {
         background-color: #FBECE5;
-        color: #333C48;
+        color: #172554;
     }
     &--light-warning {
         background-color: #FCF5E5;
-        color: #333C48;
+        color: #172554;
     }            
     &--dark-successful {
         background-color: #24292E;
@@ -111,7 +111,7 @@
         margin-bottom: 5px;
         border-radius: 4px;
         &__selected {
-            border: 2px solid #0166D6;
+            border: 2px solid #2563EB;
         }
     }
 
@@ -161,7 +161,7 @@
 
 .is-estimate {
     &:hover { 
-        color:#0166D6; 
+        color:#2563EB; 
         text-decoration: underline;
         text-decoration-style: dotted;
     }

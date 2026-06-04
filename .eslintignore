@@ -12,4 +12,4 @@ bin/scripts/nghttp2/*
 plugins/push/api/parts/apn/*
 
 !plugins/*/frontend/public/javascripts
-!plugins/*/frontend/public/javascripts/countly.*.js
+!plugins/*/frontend/public/javascripts/userovo.*.js

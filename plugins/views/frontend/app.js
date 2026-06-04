@@ -7,7 +7,7 @@ var plugins = require('../../pluginManager.js');
     };
 
     plugin.renderDashboard = function(ob) {
-        ob.data.countlyGlobal.views_limit = plugins.getConfig("views").view_limit;
+        ob.data.userovoGlobal.views_limit = plugins.getConfig("views").view_limit;
     };
 }(exported));
 

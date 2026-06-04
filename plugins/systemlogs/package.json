@@ -1,5 +1,5 @@
 {
-  "name": "countly-systemlogs",
+  "name": "userovo-systemlogs",
   "title": "System Logs",
   "version": "1.0.0",
   "description": "Keeping logs of user actions on data",
@@ -7,13 +7,13 @@
   "homepage": "https://count.ly/plugins/system-logs",
   "repository": {
     "type": "git",
-    "url": "http://github.com/Countly/countly-server.git"
+    "url": "http://github.com/Userovo/userovo-server.git"
   },
   "bugs": {
-    "url": "http://github.com/Countly/countly-server/issues"
+    "url": "http://github.com/Userovo/userovo-server/issues"
   },
   "keywords": [
-    "countly",
+    "userovo",
     "analytics",
     "mobile",
     "plugins",

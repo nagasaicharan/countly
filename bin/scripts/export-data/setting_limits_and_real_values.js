@@ -1,7 +1,7 @@
 /**
  *  Description: Creates JSON file of events, views, and custom user properties, their segments, and segment values.
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/export-data
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/export-data
  *  Command: node setting_limits_and_real_values.js
  */
 const fs = require('fs');
@@ -23,12 +23,12 @@ const DEFAULT_LIMITS = {
     //custom_property_limit: 20,
     custom_prop_value_limit: 50,
 };
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
     console.log("Connected to databases...");
-    common.db = countlyDb;
+    common.db = userovoDb;
     common.drillDb = drillDb;
     try {
-        const apps = await getAppList({db: countlyDb});
+        const apps = await getAppList({db: userovoDb});
         if (!apps || !apps.length) {
             return close();
         }
@@ -36,7 +36,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
             // WRITE START OF ARRAY
             WriteStream.write('[\n', 'utf8');
             // GETTING DATA FOR SET LIMITS FOR EVENTS, VIEWS, AND CUSTOM PROPERTIES
-            var pluginsCollectionPlugins = await countlyDb.collection("plugins").findOne({"_id": 'plugins'});
+            var pluginsCollectionPlugins = await userovoDb.collection("plugins").findOne({"_id": 'plugins'});
             // LOOP APPS FOR EACH REQUIREMENT
             for (let i = 0; i < apps.length; i++) {
                 var app = apps[i];
@@ -47,7 +47,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                         realVal,
                         currentVal;
                     // SETTING UP CURRENT SET LIMITS PER APP
-                    var appsCollectionPerApp = await countlyDb.collection("apps").findOne({"_id": common.db.ObjectID(app._id)});
+                    var appsCollectionPerApp = await userovoDb.collection("apps").findOne({"_id": common.db.ObjectID(app._id)});
                     var CURRENT_LIMITS = {
                         event_limit: appsCollectionPerApp?.plugins?.api?.event_limit || pluginsCollectionPlugins?.api?.event_limit || DEFAULT_LIMITS.event_limit,
                         event_segment_limit: appsCollectionPerApp?.plugins?.api?.event_segmentation_limit || pluginsCollectionPlugins?.api?.event_segmentation_limit || DEFAULT_LIMITS.event_segment_limit,
@@ -61,9 +61,9 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                         custom_prop_value_limit: pluginsCollectionPlugins?.users?.custom_set_limit || DEFAULT_LIMITS.custom_prop_value_limit,
                     };
                     // GETTING REAL DATA PER APP
-                    var eventsCollectionPerApp = await countlyDb.collection("events").findOne({"_id": common.db.ObjectID(app._id)});
-                    var viewsCountsPerApp = await countlyDb.collection("app_viewsmeta" + app._id).countDocuments();
-                    var viewsCollectionPerApp = await countlyDb.collection("app_viewsmeta" + app._id).aggregate([
+                    var eventsCollectionPerApp = await userovoDb.collection("events").findOne({"_id": common.db.ObjectID(app._id)});
+                    var viewsCountsPerApp = await userovoDb.collection("app_viewsmeta" + app._id).countDocuments();
+                    var viewsCollectionPerApp = await userovoDb.collection("app_viewsmeta" + app._id).aggregate([
                         {
                             $addFields: {
                                 max_length: { $strLenCP: {$convert: {input: "$view", to: "string", onError: "", onNull: ""} }}
@@ -78,7 +78,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                             $limit: 1
                         }
                     ]).toArray();
-                    var viewsSegmentsPerApp = await countlyDb.collection("views").aggregate([
+                    var viewsSegmentsPerApp = await userovoDb.collection("views").aggregate([
                         {
                             $match: { "_id": common.db.ObjectID(app._id) }
                         },
@@ -164,7 +164,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                         var regexes = [
                             "^" + app._id + "_" + hash + "_no-segment_2025:0.*"
                         ];
-                        var eventsSegmentsValues = await countlyDb.collection(eventCollectionName).aggregate([
+                        var eventsSegmentsValues = await userovoDb.collection(eventCollectionName).aggregate([
                             {
                                 "$match": {
                                     "_id": {
@@ -298,7 +298,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
         if (err) {
             console.log("Error: ", err);
         }
-        countlyDb.close();
+        userovoDb.close();
         drillDb.close();
         WriteStream.end();
         console.log("Done.");

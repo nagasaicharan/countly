@@ -1,8 +1,8 @@
 /**
  * Script to set block filtering rule for list of events.
  * Rule is applied to all apps.
- * Server: countly server
- * Path: countly/bin/scripts/modify-data
+ * Server: userovo server
+ * Path: userovo/bin/scripts/modify-data
  * Command: node setFilteringRules.js
  */
 
@@ -14,16 +14,16 @@ var SERVER_URL = "https://yourpage.count.ly"; //Your server url. Has to be acces
 var API_KEY = "7e320fb5dd4af5bf123456e776474ef1"; //Any global admin API key
 var eventKeysToBlock = ["Share Score", "Invite Friends"]; //List of event keys for events to block
 
-//get database connections for countly and countly_drill
-Promise.all([pluginManager.dbConnection("countly")]).spread(function(countlyDb) {
+//get database connections for userovo and userovo_drill
+Promise.all([pluginManager.dbConnection("userovo")]).spread(function(userovoDb) {
     //get list of apps
-    countlyDb.collection("apps").find({}, {"_id": true, "name": true}).toArray(function(err, apps) {
+    userovoDb.collection("apps").find({}, {"_id": true, "name": true}).toArray(function(err, apps) {
         //get list of collections
         Promise.each(apps, function(app) {
             console.log("processing app:" + app.name + "(" + app._id + ")");
             return new Promise(function(resolveTop) {
                 var blockUs = [];
-                countlyDb.collection("events").findOne({"_id": countlyDb.ObjectID(app._id + "")}, {"list": true}, function(err, eventsDb) {
+                userovoDb.collection("events").findOne({"_id": userovoDb.ObjectID(app._id + "")}, {"list": true}, function(err, eventsDb) {
                     eventsDb = eventsDb || {};
                     eventsDb.list = eventsDb.list || [];
                     if (err) {
@@ -70,10 +70,10 @@ Promise.all([pluginManager.dbConnection("countly")]).spread(function(countlyDb) 
             });
         }).then(function() {
             console.log("Done");
-            countlyDb.close();
+            userovoDb.close();
         }).catch(function(err) {
             console.log(err);
-            countlyDb.close();
+            userovoDb.close();
         });
     });
 });

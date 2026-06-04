@@ -1,5 +1,5 @@
 /**
- * Script to clean unused localization keys from Countly plugin properties files
+ * Script to clean unused localization keys from Userovo plugin properties files
  * 
  * This script:
  * 1. Reads all keys from a plugin's localization properties file
@@ -36,8 +36,8 @@ if (!pluginName) {
 
 // Define paths - fixed to correctly reference the root directory
 const scriptDir = __dirname;
-const countlyRoot = path.resolve(scriptDir, '../../..'); // Go up three levels from bin/scripts/localization
-const pluginPath = path.join(countlyRoot, 'plugins', pluginName);
+const userovoRoot = path.resolve(scriptDir, '../../..'); // Go up three levels from bin/scripts/localization
+const pluginPath = path.join(userovoRoot, 'plugins', pluginName);
 const localizationPath = path.join(pluginPath, 'frontend', 'public', 'localization', `${propertiesFileName}.properties`);
 
 // Check if plugin directory exists
@@ -201,7 +201,7 @@ async function cleanUnusedKeys() {
         console.log(`Scanning files for unused localization keys in plugin: ${pluginName}...`);
 
         // Get relevant files across the entire project (JS, HTML files)
-        const projectFiles = await getFilesWithExtensions(countlyRoot, ['.js', '.html', '.hbs', '.ejs', '.vue'], ['node_modules', '.git', 'dump', 'log']);
+        const projectFiles = await getFilesWithExtensions(userovoRoot, ['.js', '.html', '.hbs', '.ejs', '.vue'], ['node_modules', '.git', 'dump', 'log']);
         console.log(`Found ${projectFiles.length} relevant files to scan across the project.`);
 
         // Extract keys from properties file

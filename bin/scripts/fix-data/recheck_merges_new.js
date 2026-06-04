@@ -1,7 +1,7 @@
 /**
  *  Description: This script is used to recheck merges and update drill data with new uid
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/fix-data
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/fix-data
  *  Command: node recheck_merges_new.js
  */
 
@@ -17,9 +17,9 @@ const APP_ID = ""; //leave empty to get all apps
 
 var totalProcessedUsers = {};
 
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
     console.log("Connected to databases...");
-    common.db = countlyDb;
+    common.db = userovoDb;
     common.drillDb = drillDb;
     //get all apps
     try {
@@ -27,7 +27,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
         if (APP_ID) {
             query._id = common.db.ObjectID(APP_ID);
         }
-        const apps = await countlyDb.collection("apps").find(query, {_id: 1, name: 1}).toArray();
+        const apps = await userovoDb.collection("apps").find(query, {_id: 1, name: 1}).toArray();
         if (!apps || !apps.length) {
             return close();
         }
@@ -53,7 +53,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
     async function getDrillCollections(app_id) {
         var collections = ["drill_events"];
         try {
-            var events = await countlyDb.collection("events").findOne({_id: common.db.ObjectID(app_id)});
+            var events = await userovoDb.collection("events").findOne({_id: common.db.ObjectID(app_id)});
             var list = ["[CLY]_session", "[CLY]_crash", "[CLY]_view", "[CLY]_action", "[CLY]_push_action", "[CLY]_push_sent", "[CLY]_star_rating", "[CLY]_nps", "[CLY]_survey", "[CLY]_apm_network", "[CLY]_apm_device", "[CLY]_consent"];
 
             if (events && events.list) {
@@ -123,7 +123,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
 
     async function addRecheckedFlag(appId, uid) {
         if (!DRY_RUN) {
-            await countlyDb.collection('app_users' + appId).update({uid}, {'$set': {merges_rechecked: true}});
+            await userovoDb.collection('app_users' + appId).update({uid}, {'$set': {merges_rechecked: true}});
         }
     }
 
@@ -138,11 +138,11 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
         var session;
         try {
             //start session
-            session = await countlyDb.client.startSession();
+            session = await userovoDb.client.startSession();
             //get all drill collections for this app
             var drillCollections = await getDrillCollections(app._id);
             //get users collection
-            const usersCollection = session.client.db("countly").collection('app_users' + app._id);
+            const usersCollection = session.client.db("userovo").collection('app_users' + app._id);
             //create cursor 
             var usersCursor = generateCursor(usersCollection);
             var refreshTimestamp = new Date();
@@ -154,7 +154,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                     if ((new Date() - refreshTimestamp) / 1000 > 300) {
                         console.log("Refreshing session");
                         try {
-                            await session.client.db("countly").admin().command({ refreshSessions: [session.id] });
+                            await session.client.db("userovo").admin().command({ refreshSessions: [session.id] });
                             refreshTimestamp = new Date();
                         }
                         catch (err) {
@@ -199,7 +199,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
     }
 
     function close(err) {
-        countlyDb.close();
+        userovoDb.close();
         drillDb.close();
         if (err) {
             console.log("Finished with errors: ", err);

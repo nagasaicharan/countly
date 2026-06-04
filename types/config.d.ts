@@ -2,7 +2,7 @@
 export interface MongoDBConfig {
     // Standard connection
     host?: string; // default: "localhost"
-    db?: string; // default: "countly"
+    db?: string; // default: "userovo"
     port?: number; // default: 27017
     max_pool_size?: number; // default: 500
     username?: string;
@@ -71,7 +71,7 @@ export interface WebConfig {
     secure_cookies?: boolean; // default: false
     track?: "all" | "GA" | "noneGA" | "none"; // default: "all"
     theme?: string; // default: ""
-    session_secret?: string; // default: "countlyss"
+    session_secret?: string; // default: "userovoss"
     session_name?: string; // default: "connect.sid"
 }
 
@@ -90,14 +90,14 @@ export interface CookieConfig {
 /** 
  * API Configuration - Complete API server configuration
  */
-export interface CountlyAPIConfig {
+export interface UserovoAPIConfig {
     /** MongoDB connection configuration - can be object or connection string */
     mongodb: MongoDBConfig | string;
     
     /** API server settings */
     api: APIConfig;
     
-    /** Path to use for countly directory, empty path if installed at root of website */
+    /** Path to use for userovo directory, empty path if installed at root of website */
     path: string; // default: ""
     
     /** Logging configuration */
@@ -131,7 +131,7 @@ export interface CountlyAPIConfig {
 /** 
  * Frontend Configuration - Complete frontend/dashboard configuration
  */
-export interface CountlyFrontendConfig {
+export interface UserovoFrontendConfig {
     /** MongoDB connection configuration - can be object or connection string */
     mongodb: MongoDBConfig | string;
     
@@ -154,9 +154,9 @@ export interface CountlyFrontendConfig {
     [key: string]: any;
 }
 
-/** Union type for any Countly configuration */
-export type CountlyConfig = CountlyAPIConfig | CountlyFrontendConfig;
+/** Union type for any Userovo configuration */
+export type UserovoConfig = UserovoAPIConfig | UserovoFrontendConfig;
 
 /** Main config export - defaults to API config type */
-declare const countlyConfig: CountlyAPIConfig;
-export default countlyConfig;
+declare const userovoConfig: UserovoAPIConfig;
+export default userovoConfig;

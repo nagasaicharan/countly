@@ -7,7 +7,7 @@ var nginxConfTargetPath = '/etc/nginx/sites-enabled/default';
 var nginxConfSourcePath = path.join(__dirname, '../config/nginx.server.conf');
 
 var nginxConf = fs.readFileSync(nginxConfSourcePath, { encoding: 'utf8' });
-var apiPath = process.env.COUNTLY_PATH || '';
+var apiPath = process.env.USEROVO_PATH || '';
 
 if (apiPath !== '') {
     if (apiPath.charAt(0) === '/') {

@@ -1,7 +1,7 @@
 /**
  *  Return list of events that have no data in drill_events collection for each app
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/data-reports
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/data-reports
  *  Command: node event_list_no_data.js
  */
 
@@ -9,12 +9,12 @@ const pluginManager = require('../../../plugins/pluginManager.js'),
     common = require('../../../api/utils/common.js'),
     crypto = require('crypto');
 
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
 
     var empty_event_list = [];
 
     try {
-        var apps = await countlyDb.collection('apps').find({}, {_id: 1, name: 1}).toArray();
+        var apps = await userovoDb.collection('apps').find({}, {_id: 1, name: 1}).toArray();
         if (apps.length == 0) {
             console.log("No apps");
         }
@@ -22,7 +22,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
             for (const app of apps) {
                 var obj = {app_id: app._id, app_name: app.name, events: []};
                 try {
-                    var events = await countlyDb.collection('events').findOne({_id: countlyDb.ObjectID(app._id)});
+                    var events = await userovoDb.collection('events').findOne({_id: userovoDb.ObjectID(app._id)});
                     if (events && events.list) {
                         for (const event of events.list) {
                             try {
@@ -56,7 +56,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
     }
     finally {
         console.log(JSON.stringify(empty_event_list));
-        countlyDb.close();
+        userovoDb.close();
         drillDb.close();
     }
 });

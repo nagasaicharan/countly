@@ -1,19 +1,19 @@
 {
-  "name": "countly-data-migration",
+  "name": "userovo-data-migration",
   "title": "Data Migration",
   "version": "1.0.0",
-  "description": "Migrate your data from one Countly server to another",
+  "description": "Migrate your data from one Userovo server to another",
   "author": "Anna Sosina",
   "homepage": "https://count.ly/plugins/data-migration",
   "repository": {
     "type": "git",
-    "url": "http://github.com/Countly/countly-server.git"
+    "url": "http://github.com/Userovo/userovo-server.git"
   },
   "bugs": {
-    "url": "http://github.com/Countly/countly-server/issues"
+    "url": "http://github.com/Userovo/userovo-server/issues"
   },
   "keywords": [
-    "countly",
+    "userovo",
     "analytics",
     "mobile",
     "plugins",

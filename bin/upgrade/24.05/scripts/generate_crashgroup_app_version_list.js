@@ -7,14 +7,14 @@ const pluginManager = require('../../../../plugins/pluginManager.js');
 
 console.log('Updating crashgroup data');
 
-pluginManager.dbConnection().then(async (countlyDb) => {
+pluginManager.dbConnection().then(async (userovoDb) => {
     const BATCH_SIZE = 200;
 
-    countlyDb.collection('apps').find({}).toArray(async (err, apps) => {
+    userovoDb.collection('apps').find({}).toArray(async (err, apps) => {
         async function update(app) {
             console.log(`Updating crashgroup for ${app.name}`);
 
-            const cursor = await countlyDb.collection(`app_crashgroups${app._id}`)
+            const cursor = await userovoDb.collection(`app_crashgroups${app._id}`)
                 .find({ _id: { $ne: 'meta' } }, { fields: { _id: 1, app_version: 1 } });
             let requests = [];
 
@@ -36,7 +36,7 @@ pluginManager.dbConnection().then(async (countlyDb) => {
 
                 if (requests.length === BATCH_SIZE) {
                     try {
-                        await countlyDb.collection(`app_crashgroups${app._id}`).bulkWrite(requests);
+                        await userovoDb.collection(`app_crashgroups${app._id}`).bulkWrite(requests);
                     }
                     catch (err) {
                         console.error(err);
@@ -48,7 +48,7 @@ pluginManager.dbConnection().then(async (countlyDb) => {
 
             if(requests.length > 0) {
                 try {
-                    await countlyDb.collection(`app_crashgroups${app._id}`).bulkWrite(requests);
+                    await userovoDb.collection(`app_crashgroups${app._id}`).bulkWrite(requests);
                 }
                 catch (err) {
                     console.error(err);
@@ -63,6 +63,6 @@ pluginManager.dbConnection().then(async (countlyDb) => {
         }
 
         console.log("Crashgroup data update finished");
-        countlyDb.close();
+        userovoDb.close();
     });
 });

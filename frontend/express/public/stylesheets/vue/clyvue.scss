@@ -33,7 +33,7 @@
     margin: 0;
     padding: 0;
     &--green{
-        background-color: #12AF51;
+        background-color: #06B6D4;
     }
     &--blue{
         background-color: #017AFF;
@@ -69,11 +69,11 @@
         /* .cly-vue-notification__alert-box__close-icon */
         &__close-icon {
             cursor: pointer;
-            color: #81868D;
+            color: #475569;
 
             /* .cly-vue-notification__alert-box__close-icon:hover */
             &:hover {
-                color: #333C48;
+                color: #172554;
             }
         }
 
@@ -88,28 +88,28 @@
         &__alert-text {
             line-height: 22px;
             &--light-informational {
-                background-color: #E1EFFF;
+                background-color: #EEF6FF;
                 border-color: rgba(1, 102, 214, 0.25);
                 box-shadow: 0px 5px 8px rgba(1, 102, 214, 0.09);
-                color: #333C48;
+                color: #172554;
             }
             &--light-successful {
                 background-color: #EBFAEE;
                 border-color: rgba(55, 176, 87, 0.25);
                 box-shadow: 0px 5px 8px rgba(55, 176, 87, 0.09);
-                color: #333C48;
+                color: #172554;
             }
             &--light-destructive {
                 background-color: #FBECE5;
                 border-color:rgba(227, 79, 47, 0.25);
                 box-shadow: 0px 5px 8px rgba(227, 79, 47, 0.09);
-                color: #333C48;
+                color: #172554;
             }
             &--light-warning {
                 background-color: #FCF5E5;
                 border-color: rgba(239, 148, 0, 0.25);
                 box-shadow: 0px 5px 8px rgba(239, 148, 0, 0.09);
-                color: #333C48;
+                color: #172554;
             }            
             &--dark-successful {
                 background-color: #24292E;
@@ -175,7 +175,7 @@
 
     /* .cly-vue-status-tag--blue */
     &--blue {
-        background-color: #E6F0FB;
+        background-color: #F6FAFF;
         color: #017AFF;
 
         /* .cly-vue-status-tag--blue .cly-vue-status-tag__blink */
@@ -198,11 +198,11 @@
     /* .cly-vue-status-tag--green */
     &--green {
         background-color: #EBFAEE;
-        color: #12AF51;
+        color: #06B6D4;
         
         /* .cly-vue-status-tag--green .cly-vue-status-tag__blink */
         & .cly-vue-status-tag__blink {
-            background-color: #12AF51;
+            background-color: #06B6D4;
         }
     }
 
@@ -693,7 +693,7 @@
                 position: absolute;
                 width: 100%;
                 height: 12px;
-                background: linear-gradient(180deg, rgba(51, 60, 72, 0.8) 0%, rgba(51, 60, 72, 8e-05) 100%);
+                background: linear-gradient(180deg, rgba(23, 37, 84, 0.8) 0%, rgba(23, 37, 84, 8e-05) 100%);
                 mix-blend-mode: normal;
                 opacity: 0.1;
                 top: 0px;
@@ -705,7 +705,7 @@
                 position: absolute;
                 width: 100%;
                 height: 12px;
-                background: linear-gradient(180deg, rgba(51, 60, 72, 0.6) 0%, rgba(51, 60, 72, 6e-05) 100%);
+                background: linear-gradient(180deg, rgba(23, 37, 84, 0.6) 0%, rgba(23, 37, 84, 6e-05) 100%);
                 mix-blend-mode: normal;
                 opacity: 0.1;
                 transform: rotate(-180deg);
@@ -723,7 +723,7 @@
 
             .el-tabs {
                 &__active-bar {
-                    background-color: #0166D6;
+                    background-color: #2563EB;
                 }
             }
         }
@@ -951,7 +951,7 @@
 
         @mixin cell-hover() {
             background: #FFFFFF;
-            border: 2px solid #0166D6;
+            border: 2px solid #2563EB;
             color: map.get(c.$colors, "text-custom-1-active");
         }
 
@@ -1132,16 +1132,16 @@
 
                 &.selected {
                     background-color: #F6F6F6;
-					border-left: 2px solid #0166D6;
+					border-left: 2px solid #2563EB;
                     .box {
-                        box-shadow: inset 0 0 0 4px #0166D6;
+                        box-shadow: inset 0 0 0 4px #2563EB;
                         background-color: #fff;
 						border: none;
                     }
                 }
 
                 .box {
-                    border: 1px solid #A7AEB8;
+                    border: 1px solid #94A3B8;
                     border-radius: 16px;
                     width: 16px;
 					height: 16px;
@@ -1162,7 +1162,7 @@
                     font-weight: 500;
 					position: relative;
 					top: -4px;
-					color: #12AF51;
+					color: #06B6D4;
 					.fas {
 						background-color:#EBFAEE
 					}
@@ -1196,10 +1196,10 @@
 				border-left: 1px solid #ececec;
 				&.selected {
                     background-color: #F6F6F6;
-					border-bottom: 2px solid #0166D6;
+					border-bottom: 2px solid #2563EB;
 					border-left: 1px solid #ececec;
                     .box {
-                        box-shadow: inset 0 0 0 4px #0166D6;
+                        box-shadow: inset 0 0 0 4px #2563EB;
                         background-color: #fff;
 						border: none;
                     }
@@ -1475,7 +1475,7 @@
                 background: none;
                 border: none;
                 border-radius: 0;
-                color: #81868d;
+                color: #475569;
             }
 
             /* cly-vue-color-picker__color-input .el-input-group__prepend */
@@ -1492,7 +1492,7 @@
                 background: none;
                 border: none;
                 border-radius: 0;
-                color: #81868d;
+                color: #475569;
             }
 
             /* cly-vue-color-picker__color-input--alpha */
@@ -1555,7 +1555,7 @@
                 text-transform: uppercase;
 
                 font-size: 12px;
-                color: #81868d;
+                color: #475569;
             }
         }
 
@@ -1592,7 +1592,7 @@
             font-weight: 400;
             line-height: 20px;
 
-            border: 1px solid #CFD6E4;
+            border: 1px solid #CBD5E1;
             border-radius: 4px;
             text-transform: uppercase;
 
@@ -1895,7 +1895,7 @@
                 padding: 0px;
             }
             .divider {
-                color:#A7AEB8;
+                color:#94A3B8;
             }
         }
         &__value-row {
@@ -1909,7 +1909,7 @@
                 &:hover {
                     background-color: #F6F6F6;
                     .cly-vue-metric-breakdown__numbers {
-                        color: #0166D6;
+                        color: #2563EB;
                         i { 
                             color: black !important;
                         } 
@@ -1929,7 +1929,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #333c48;
+            color: #172554;
             font-size: 14px;
             font-weight: 400;
             line-height: 20px;
@@ -2105,7 +2105,7 @@
         }
 
         &__sidecars-view {
-            background-color: #81868d;
+            background-color: #475569;
             overflow-y: scroll;
             position: absolute;
             left: 0;
@@ -2240,7 +2240,7 @@
             justify-content: center;
 
             font-size: 30px;
-            color: #81868D;
+            color: #475569;
             transition: color 1s;
             cursor: pointer;
             height: 20px;
@@ -2272,8 +2272,8 @@
             height: 18px;
             border-radius: 18px;
             background-color: transparent;
-            border: 1px solid #A7AEB8;
-            color: #A7AEB8;
+            border: 1px solid #94A3B8;
+            color: #94A3B8;
             display: inline-block;   
             min-width: 18px;
             // margin: 0px 6px;
@@ -2294,7 +2294,7 @@
 
         &__step-separator {
             width: 40px;
-            border-top: 1px solid #A7AEB8;
+            border-top: 1px solid #94A3B8;
             max-width: 40px;
             margin-left: 12px;
             margin-right: 12px;
@@ -2315,23 +2315,23 @@
 
             &.is-active {
                 .cly-vue-drawer__step-sign {
-                    background-color: #333C48;
-                    border-color:#333C48;
+                    background-color: #172554;
+                    border-color:#172554;
                     color: white;
                 }
-                color: #333C48;
+                color: #172554;
                 .cly-vue-drawer__step-title {
-                    color: #333C48 !important;
+                    color: #172554 !important;
                 }
                 + .cly-vue-drawer__step-separator {
-                    border-color: #333C48;
+                    border-color: #172554;
                 }
             }
 
             &.is-passed {
                 .cly-vue-drawer__step-sign {
-                    background-color: #12AF51;
-                    border-color: #12AF51;
+                    background-color: #06B6D4;
+                    border-color: #06B6D4;
                     color: white;
                     .done-icon {
                         display: block;
@@ -2406,7 +2406,7 @@
         left: calc(50% - 260px);
 
         &__header {
-            border-bottom: 1px solid #CFD6E4;
+            border-bottom: 1px solid #CBD5E1;
         }
 
         &__footer {
@@ -4206,7 +4206,7 @@
             font-size: 14px;
             line-height: 20px;
             .text-dark {
-                color: #333C48;
+                color: #172554;
             }
             .text-light {
                 color: #636363;
@@ -4248,7 +4248,7 @@
             font-size: 14px;
             line-height: 20px;
             .text-dark {
-                color: #333C48;
+                color: #172554;
             }
             .text-light {
                 color: #636363;
@@ -4304,7 +4304,7 @@
             .text {
                 font-size: 14px;
                 line-height: 20px;
-                color: #81868D;
+                color: #475569;
             }
         }
         /* .circle { */
@@ -4558,7 +4558,7 @@
         opacity: 0.7;
     }
     &:hover {
-        background-color: #E6F0FB;
+        background-color: #F6FAFF;
     }
 }
 
@@ -4570,7 +4570,7 @@
         position: absolute;
         width: 100%;
         height: 12px;
-        background: linear-gradient(180deg, #333c48 0%, rgba(51, 60, 72, 0.0001) 100%);
+        background: linear-gradient(180deg, #172554 0%, rgba(23, 37, 84, 0.0001) 100%);
         opacity: .12;
         z-index: 2001;
     }
@@ -4588,7 +4588,7 @@
                 position: absolute;
                 width: 100%;
                 height: 12px;
-                background: linear-gradient(180deg, rgba(51, 60, 72, 0.0001) 0%, #333c48 100%);
+                background: linear-gradient(180deg, rgba(23, 37, 84, 0.0001) 0%, #172554 100%);
                 opacity: .12;
                 z-index: 2001;
                 bottom: 0;
@@ -4623,11 +4623,11 @@
 .cly-vue-auto-refresh-toggle {
     &__refresh {
         font-size: 18px;
-        color: #a7aeb8;
+        color: #94a3b8;
         margin-left: 10px;
         &--enabled {
             font-size: 14px;
-            color: #333c48;
+            color: #172554;
         }
         &--enabled-color {
             font-size: 14px;
@@ -4636,7 +4636,7 @@
         }
         &--disabled {
             font-size: 14px;
-            color: #333c48;
+            color: #172554;
             margin-left: 10px;
         }
     }
@@ -4733,7 +4733,7 @@
     /* .cly-content-block-list-input__list-block-header-display-title */
     &__list-block-header-display-title {
         margin: 0;
-        color: #333C48;
+        color: #172554;
         font-family: Inter;
         font-size: 13px;
         font-weight: 500;
@@ -4806,7 +4806,7 @@
     /* .cly-content-builder-sidebar-step__sub-header */
     &__sub-header {
         margin-top: 24px;
-        color: #81868D;
+        color: #475569;
         font-size: 13px;
         font-weight: 500;
         line-height: 16px;
@@ -4975,7 +4975,7 @@
 
         margin-top: 6px;
 
-        color: #333C48;
+        color: #172554;
         font-size: 12px;
         font-weight: 400;
         line-height: 16px;
@@ -4997,7 +4997,7 @@
             font-size: 16px;
             font-weight: 500;
             line-height: 24px;
-            color: #333C48;
+            color: #172554;
 
             /* .cly-vue-content-builder-header__input .el-input__inner:focus */
             &:focus {
@@ -5009,7 +5009,7 @@
         /* .cly-vue-content-builder-header__input--editing .el-input__inner */
         &:hover .el-input__inner,
         &--editing .el-input__inner {
-            border-color: #333C48;
+            border-color: #172554;
         }
     }
 
@@ -5157,7 +5157,7 @@
 
             /* .cly-vue-content-builder-sidebar-input__component .el-input__inner:hover */
             &:hover {
-                border-color: #0166D6;
+                border-color: #2563EB;
             }
         }
 
@@ -5170,7 +5170,7 @@
         & .el-input__suffix-inner {
             padding: 6px 10px;
             padding-left: 0;
-            color: #81868D;
+            color: #475569;
             width: 16px;
         }
 
@@ -5219,7 +5219,7 @@
                 min-height: 40px;
                 border-bottom-left-radius: 6px;
                 border-bottom-right-radius: 6px;
-                border-bottom: 1px solid #cfd6e4 !important;
+                border-bottom: 1px solid #cbd5e1 !important;
             }
 
             /* .cly-vue-content-builder-sidebar-input__component.el-tiptap-editor .el-tiptap-editor__footer */
@@ -5252,12 +5252,12 @@
 
             /* .cly-vue-content-builder-sidebar-input__component--slider .el-slider__bar */
             & .el-slider__bar {
-                background-color: #0166D6;
+                background-color: #2563EB;
             }
 
             /* .cly-vue-content-builder-sidebar-input__component--slider .el-slider__button */
             & .el-slider__button {
-                border: 1px solid #0166D6;
+                border: 1px solid #2563EB;
             }
 
             /* .cly-vue-content-builder-sidebar-input__component--slider .el-slider__button-wrapper */
@@ -5301,7 +5301,7 @@
 
                     /* .cly-vue-content-builder-sidebar-input__component--upload .el-upload .el-upload-dragger::hover */
                     &:hover {
-                        background: #0166D60D;
+                        background: #2563EB0D;
                     }
                 }
             }
@@ -5388,7 +5388,7 @@
         right: 0;
         padding: 6px 10px;
         padding-left: 0;
-        color: #81868D;
+        color: #475569;
         width: 16px;
         font-size: 14px;
         line-height: 20px;
@@ -5414,12 +5414,12 @@
                 width: 16px;
                 height: 16px;
                 font-size: 16px;
-                color: #81868D;
+                color: #475569;
             }
 
             /* .cly-vue-content-builder-sidebar-input__upload-action.el-button:hover */
             &:hover {
-                border-color: #0166D6;
+                border-color: #2563EB;
             }
         }
     }
@@ -5438,7 +5438,7 @@
 
     /* .cly-vue-content-builder-sidebar-input__upload-placeholder */
     &__upload-placeholder {
-        color: #A7AEB8;
+        color: #94A3B8;
         height: 48px;
         width: 48px;
         font-size: 48px;
@@ -5505,16 +5505,16 @@
         font-size: 13px;
         font-weight: 400;
         line-height: 16px;
-        color: #333C48;
+        color: #172554;
         background: #FFFFFF;
         flex-grow: 1;
         text-align: center;
 
         /* .cly-option-swapper__option--active:not(.cly-option-swapper__option--disabled):not(.cly-option-swapper__option--no-highlight) */
         &--active:not(#{&}--disabled):not(#{&}--no-highlight) {
-            background: rgba(#0166D6, 0.1);
-            border-color: #0166D6;
-            color: #0166D6;
+            background: rgba(#2563EB, 0.1);
+            border-color: #2563EB;
+            color: #2563EB;
         }
 
         /* .cly-option-swapper__option--disabled */
@@ -5562,7 +5562,7 @@
 
 .cly-list-drawer {
     .cly-list-drawer__text-clickable {
-        color: #0166D6;
+        color: #2563EB;
         cursor: pointer;
     }
     .cly-list-drawer__text-clickable i {

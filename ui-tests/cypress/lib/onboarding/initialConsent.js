@@ -27,7 +27,7 @@ const verifyDefaultPageElements = () => {
 
     cy.verifyElement({
         labelElement: initialConsentPageElements.PAGE_DESC_NEWSLETTER,
-        labelText: "We offer a newsletter brimming with recent updates about our product, news from Countly, and information on product analytics. We assure you - our aim is to provide value and insights, not clutter your inbox with unwanted emails."
+        labelText: "We offer a newsletter brimming with recent updates about our product, news from Userovo, and information on product analytics. We assure you - our aim is to provide value and insights, not clutter your inbox with unwanted emails."
     });
 
     cy.verifyElement({

@@ -5,8 +5,8 @@ var TEST_PREFIX = "";
 
 var currDBAddress = "IP_ADDRESS:PORT";
 var targetDBAddress = "IP_ADDRESS:PORT";
-var currDBName = "countly";
-var targetDBName = "countly";
+var currDBName = "userovo";
+var targetDBName = "userovo";
 
 /*
  **************************************************

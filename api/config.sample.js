@@ -4,14 +4,14 @@
 */
 
 /** @lends module:api/config */
-var countlyConfig = {
+var userovoConfig = {
     /**
     * MongoDB connection definition and options
     * @type {object} 
     * @property {string} [host=localhost] - host where to connect to mongodb, default localhost
     * @property {array=} replSetServers - array with multiple hosts, if you are connecting to replica set, provide this instead of host
     * @property {string=} replicaName - replica name, must provide for replica set connection to work
-    * @property {string} [db=countly] - countly database name, default countly
+    * @property {string} [db=userovo] - userovo database name, default userovo
     * @property {number} [port=27017] - port to use for mongodb connection, default 27017
     * @property {number} [max_pool_size=500] - how large pool size connection per process to create, default 500 per process, not recommended to be more than 1000 per server
     * @property {string=} username - username for authenticating user, if mongodb supports authentication
@@ -21,7 +21,7 @@ var countlyConfig = {
     */
     mongodb: {
         host: "localhost",
-        db: "countly",
+        db: "userovo",
         port: 27017,
         max_pool_size: 500,
         //username: test,
@@ -40,7 +40,7 @@ var countlyConfig = {
             '192.168.3.2:27017'
         ],
 		replicaName: "test",
-        db: "countly",
+        db: "userovo",
 		username: test,
 		password: test,
         max_pool_size: 100,
@@ -51,7 +51,7 @@ var countlyConfig = {
     */
     /*  or define as a url
 	//mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]
-	mongodb: "mongodb://localhost:27017/countly",
+	mongodb: "mongodb://localhost:27017/userovo",
     */
     /**
     * Default API configuration
@@ -59,7 +59,7 @@ var countlyConfig = {
     * @property {number} [port=3001] - api port number to use, default 3001
     * @property {string} [host=localhost] - host to which to bind connection
     * @property {number} [max_sockets=1024] - maximal amount of sockets to open simultaneously
-    * @property {number} workers - amount of paralel countly processes to run, defaults to cpu/core amount
+    * @property {number} workers - amount of paralel userovo processes to run, defaults to cpu/core amount
     * @property {number} [timeout=120000] - nodejs server request timeout, need to also increase nginx timeout too for longer requests
     * @property {number} maxUploadFileSize - limit the size of uploaded file
     */
@@ -77,7 +77,7 @@ var countlyConfig = {
         }
     },
     /**
-    * Path to use for countly directory, empty path if installed at root of website
+    * Path to use for userovo directory, empty path if installed at root of website
     * @type {string} 
     */
     path: "",
@@ -92,7 +92,7 @@ var countlyConfig = {
         default: "warn"
     },
     /**
-    * Default proxy settings, if provided then countly uses ip address from the right side of x-forwarded-for header ignoring list of provided proxy ip addresses
+    * Default proxy settings, if provided then userovo uses ip address from the right side of x-forwarded-for header ignoring list of provided proxy ip addresses
     * @type {array=} 
     */
     ignoreProxies: [/*"127.0.0.1"*/],
@@ -120,8 +120,8 @@ var countlyConfig = {
     **/
     reloadConfigAfter: 10000,
     /**
-	* Specifies if jobs are run on this countly instance
-	* Usable only in case when there are multiple countly instances connected to single database. Has to be set to true for at least one instance.
+	* Specifies if jobs are run on this userovo instance
+	* Usable only in case when there are multiple userovo instances connected to single database. Has to be set to true for at least one instance.
 	*/
     preventJobs: false,
     /** 
@@ -130,7 +130,7 @@ var countlyConfig = {
     shared_connection: true,
     /**
      * Simple SMTP mail sender configuration.
-     * Can only be used when you don't have custom mailer extend ({@code countly/extend/mail.js}).
+     * Can only be used when you don't have custom mailer extend ({@code userovo/extend/mail.js}).
      * If omited, sendmail will be used. Sendmail is not installed in Docker images.
      * @type {Object}
      */
@@ -150,10 +150,10 @@ var countlyConfig = {
 
         // standard strings used in email templates
         strings: {
-            //from: 'countly@example.com',
+            //from: 'userovo@example.com',
             //hithere: 'there' // as in "Hi, there" when name is unknown
         }
     }
 };
 
-module.exports = require('./configextender')('API', countlyConfig, process.env);
+module.exports = require('./configextender')('API', userovoConfig, process.env);

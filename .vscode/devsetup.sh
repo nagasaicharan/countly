@@ -6,8 +6,8 @@ set -euo pipefail  # Exit on error, undefined vars, and pipe failures
 trap 'echo "Error on line $LINENO. Exit code: $?"' ERR
 
 # Configuration variables
-REPO_URL="git@github.com:Countly/countly-server.git"
-REPO_NAME="countly-community"
+REPO_URL="git@github.com:Userovo/userovo-server.git"
+REPO_NAME="userovo-community"
 BRANCH="master"
 LOG_FILE="community_setup_$(date +%Y%m%d_%H%M%S).log"
 DIR="$(pwd)/$REPO_NAME"
@@ -118,16 +118,16 @@ setup_configuration() {
     cp -n "$DIR/api/config.sample.js" "$DIR/api/config.js" || log "WARNING" "Skipping api config - file may already exist"
     cp -n "$DIR/plugins/plugins.default.json" "$DIR/plugins/plugins.json" || log "WARNING" "Skipping plugins config - file may already exist"
     cp -n "$DIR/frontend/express/config.sample.js" "$DIR/frontend/express/config.js" || log "WARNING" "Skipping express config - file may already exist"
-    cp -n "$DIR/frontend/express/public/javascripts/countly/countly.config.sample.js" "$DIR/frontend/express/public/javascripts/countly/countly.config.js" || log "WARNING" "Skipping frontend config - file may already exist"
+    cp -n "$DIR/frontend/express/public/javascripts/userovo/userovo.config.sample.js" "$DIR/frontend/express/public/javascripts/userovo/userovo.config.js" || log "WARNING" "Skipping frontend config - file may already exist"
 
     # Use platform-independent sed syntax
     if [[ "$OSTYPE" == "darwin"* ]]; then
         # macOS
-        sed -i '' 's#countlyGlobal.path#"http://localhost:3001"#g' "$DIR/frontend/express/public/javascripts/countly/countly.config.js"
+        sed -i '' 's#userovoGlobal.path#"http://localhost:3001"#g' "$DIR/frontend/express/public/javascripts/userovo/userovo.config.js"
         sed -i '' 's/max_pool_size: 500/max_pool_size: 20/g' "$DIR/api/config.js"
     else
         # Linux and others
-        sed -i 's#countlyGlobal.path#"http://localhost:3001"#g' "$DIR/frontend/express/public/javascripts/countly/countly.config.js"
+        sed -i 's#userovoGlobal.path#"http://localhost:3001"#g' "$DIR/frontend/express/public/javascripts/userovo/userovo.config.js"
         sed -i 's/max_pool_size: 500/max_pool_size: 20/g' "$DIR/api/config.js"
     fi
 }
@@ -190,7 +190,7 @@ main() {
     npx grunt dist-all
 
     log "INFO" "Community setup completed successfully!"
-    log "INFO" "You can now start Countly by using the debugger"
+    log "INFO" "You can now start Userovo by using the debugger"
 }
 
 # Execute main function

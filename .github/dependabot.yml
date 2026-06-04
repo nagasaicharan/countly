@@ -29,7 +29,7 @@ updates:
 
   # API utilities
   - package-ecosystem: npm
-    directory: "/api/utils/countly-request"
+    directory: "/api/utils/userovo-request"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
@@ -38,7 +38,7 @@ updates:
     versioning-strategy: increase-if-necessary
 
   - package-ecosystem: npm
-    directory: "/api/utils/countly-root"
+    directory: "/api/utils/userovo-root"
     schedule:
       interval: daily
     open-pull-requests-limit: 10

@@ -1,7 +1,7 @@
 /**
  *  Ensure customer specific indexes for drill and remove redundant indexes
- *  Server: countly
- *  Path: countly dir
+ *  Server: userovo
+ *  Path: userovo dir
  *  Command: node create_indexes.js
  */
 var DRY_RUN = true;
@@ -24,7 +24,7 @@ var bad_indexes = [
 
 var result = [];
 
-plugins.dbConnection('countly_drill').then(async function(db) {
+plugins.dbConnection('userovo_drill').then(async function(db) {
     var collections = await db.collections();
     //filter only drill event collections
     collections = collections.filter((coll) => coll.collectionName.startsWith("drill_events"));

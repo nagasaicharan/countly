@@ -2,18 +2,18 @@
 
 #get current directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-COUNTLY_DIR="$( cd "$DIR"/../../ && pwd )"
+USEROVO_DIR="$( cd "$DIR"/../../ && pwd )"
 
 #check if user not created yet
-if [ "$(getent passwd countly)x" == 'x' ]; then
-    #create countly user
-    useradd -d "$COUNTLY_DIR" -M -U countly
-    #countly process should be able to restart itself
-    echo "countly ALL=(ALL) NOPASSWD:ALL" | tee -a /etc/sudoers.d/countly >/dev/null
+if [ "$(getent passwd userovo)x" == 'x' ]; then
+    #create userovo user
+    useradd -d "$USEROVO_DIR" -M -U userovo
+    #userovo process should be able to restart itself
+    echo "userovo ALL=(ALL) NOPASSWD:ALL" | tee -a /etc/sudoers.d/userovo >/dev/null
 else
-    echo "Countly user already exist."
-    usermod -d "$COUNTLY_DIR" countly
+    echo "Userovo user already exist."
+    usermod -d "$USEROVO_DIR" userovo
 fi
 
-#change permission of countly directory
-sudo chown -R countly:countly "$DIR/../../."
+#change permission of userovo directory
+sudo chown -R userovo:userovo "$DIR/../../."

@@ -1,10 +1,10 @@
-//Put script in ./countly/plugins/views/scripts/omitViewSegments.js
+//Put script in ./userovo/plugins/views/scripts/omitViewSegments.js
 /*
 The script deletes data for specific segments in aggregated data. It also can set an omitting list in the database to ensure that segments are also omitted on incoming data.
 */
 
 //to run:
-// cd `countly dir`
+// cd `userovo dir`
 // node ./plugins/views/scripts/omitViewSegments.js
 
 
@@ -19,15 +19,15 @@ var save_list_in_database = true; //If omitting is successful, should list be sa
 var omitSegments = [];//list with segments to omit. If empty will check allsegments in this app and omit those with more than segmentValueLimit values.
 var segmentValueLimit = 10; //segment value limit. If segment has more than this number of values, it will be omitted.
 
-Promise.all([pluginManager.dbConnection("countly")]).spread(function(countlyDb) {
+Promise.all([pluginManager.dbConnection("userovo")]).spread(function(userovoDb) {
     console.log("Validating app list: ");
-    getAppList({db: countlyDb}, function(err, apps) {
+    getAppList({db: userovoDb}, function(err, apps) {
         if (apps && apps.length > 0) {
             console.log(apps.length + " apps found");
             Promise.each(apps, function(app) {
                 return new Promise(function(resolve) {
                     console.log("processing app:" + app.name);
-                    getOmitList(omitSegments, {db: countlyDb, app_id: app._id}, function(error, omit) {
+                    getOmitList(omitSegments, {db: userovoDb, app_id: app._id}, function(error, omit) {
                         omit = omit || [];
                         var promises = [];
                         var errCn = 0;
@@ -40,7 +40,7 @@ Promise.all([pluginManager.dbConnection("countly")]).spread(function(countlyDb) 
                                 }
                                 else {
                                     console.log(colName);
-                                    countlyDb.collection(colName).drop(function(err) {
+                                    userovoDb.collection(colName).drop(function(err) {
                                         if (err && err.code !== 26) {
                                             console.log(JSON.stringify(err));
                                             errCn++;
@@ -67,7 +67,7 @@ Promise.all([pluginManager.dbConnection("countly")]).spread(function(countlyDb) 
                                             unset["segments." + omit[z]] = "";
                                         }
 
-                                        countlyDb.collection("views").update({_id: app._id}, {"$addToSet": {"omit": {"$each": omit}}, "$unset": unset}, function(err) {
+                                        userovoDb.collection("views").update({_id: app._id}, {"$addToSet": {"omit": {"$each": omit}}, "$unset": unset}, function(err) {
                                             if (err) {
                                                 console.log(err);
                                             }
@@ -90,19 +90,19 @@ Promise.all([pluginManager.dbConnection("countly")]).spread(function(countlyDb) 
                 });
             }).then(function() {
                 console.log("completed");
-                countlyDb.close();
+                userovoDb.close();
                 return;
 
             }).catch(function(rejection) {
                 console.log("Error");
                 console.log("Error:", rejection);
-                countlyDb.close();
+                userovoDb.close();
                 return;
             });
         }
         else {
             console.log("exiting as there are no apps to process.");
-            countlyDb.close();
+            userovoDb.close();
             return;
         }
     });

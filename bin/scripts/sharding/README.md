@@ -49,7 +49,7 @@ This fails because MongoDB doesn't know which shard to query.
 
 ## Sharding Script
 
-Countly provides a sharding script that determines which collections should be sharded and how:
+Userovo provides a sharding script that determines which collections should be sharded and how:
 
 ```
 bin/scripts/sharding/sharding.js
@@ -71,7 +71,7 @@ If your plugin requires different sharding behavior for its collections, modify 
 
 | File | Description |
 |------|-------------|
-| `sharding.js` | Current sharding script for Countly collections |
+| `sharding.js` | Current sharding script for Userovo collections |
 | `sharding_old.js` | Legacy sharding script (deprecated) |
 | `sharding_with_auth_old.js` | Legacy sharding script with authentication (deprecated) |
 

@@ -1,6 +1,6 @@
 # Custom Scripts
 
-This directory contains utility scripts for Countly Server maintenance, data operations, and administration tasks.
+This directory contains utility scripts for Userovo Server maintenance, data operations, and administration tasks.
 
 ## Script Requirements
 
@@ -14,7 +14,7 @@ Every script must have a descriptive header comment:
 #!/bin/bash
 
 #  Description of what this script does
-#  Server: mongodb / countly / any (which server it should run on)
+#  Server: mongodb / userovo / any (which server it should run on)
 #  Path: where the script should be located to run
 #  Command: example command to run the script
 ```
@@ -38,7 +38,7 @@ All configurable values must be listed at the top with comments:
 connection_string="mongodb://localhost"
 
 #database which to export
-db="countly"
+db="userovo"
 
 #output directory for results
 out_dir="./output"
@@ -86,7 +86,7 @@ For command-line operations and system tasks.
 
 Validate with shellcheck:
 ```bash
-countly shellcheck
+userovo shellcheck
 ```
 
 ### Node.js Scripts
@@ -150,7 +150,7 @@ Here's a template for a new bash script:
 #  Remove specified folder from the system
 #  If dry_run is false, will remove the folder,
 #  else will output which folder will be removed
-#  Server: countly
+#  Server: userovo
 #  Path: any
 #  Command: bash remove_directory.sh
 
@@ -209,8 +209,8 @@ Before committing bash scripts, validate with shellcheck:
 # Check a specific script
 shellcheck path/to/script.sh
 
-# Check all scripts in Countly
-countly shellcheck
+# Check all scripts in Userovo
+userovo shellcheck
 ```
 
 This check runs automatically on Pull Requests.

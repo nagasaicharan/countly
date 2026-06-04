@@ -1,20 +1,20 @@
 #!/bin/bash
 
-countly_start (){ 
-    countly_root ;
-    start countly-supervisor;
+userovo_start (){ 
+    userovo_root ;
+    start userovo-supervisor;
 } 
 
-countly_stop (){ 
-    countly_root ;
-    stop countly-supervisor;
+userovo_stop (){ 
+    userovo_root ;
+    stop userovo-supervisor;
 } 
 
-countly_restart (){ 
-    countly_root ;
-    restart countly-supervisor;
+userovo_restart (){ 
+    userovo_root ;
+    restart userovo-supervisor;
 } 
 
-countly_status (){ 
-    status countly-supervisor;
+userovo_status (){ 
+    status userovo-supervisor;
 } 

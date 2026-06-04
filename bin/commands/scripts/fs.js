@@ -1,4 +1,4 @@
-var countlyFs = require("../../../api/utils/countlyFs");
+var userovoFs = require("../../../api/utils/userovoFs");
 var pluginManager = require("../../../plugins/pluginManager");
 var fs = require("fs");
 var path = require("path");
@@ -22,7 +22,7 @@ function importFiles(pathToFolder, name, callback, prefix) {
                         }, file + "/");
                     }
                     else {
-                        countlyFs.gridfs.saveFile(name, file, cur_path, {id: prefix + file, writeMode: "overwrite"}, function(err) {
+                        userovoFs.gridfs.saveFile(name, file, cur_path, {id: prefix + file, writeMode: "overwrite"}, function(err) {
                             console.log("Storing file finished", prefix + file, err);
                             done();
                         });
@@ -41,10 +41,10 @@ function importFiles(pathToFolder, name, callback, prefix) {
 function exportFiles(pathToFolder, name, callback) {
     console.log("Procesing", name);
     var dir = path.resolve(__dirname, pathToFolder);
-    countlyFs.getHandler().collection(name + ".files").find({}, {_id: 1, filename: 1}).toArray(function(err, files) {
+    userovoFs.getHandler().collection(name + ".files").find({}, {_id: 1, filename: 1}).toArray(function(err, files) {
         if (!err && files) {
             async.each(files, function(file, done) {
-                countlyFs.gridfs.getStreamById(name, file._id, function(err, stream) {
+                userovoFs.gridfs.getStreamById(name, file._id, function(err, stream) {
                     var dest = path.join(dir, file.filename);
                     if (file._id.indexOf("/") !== -1) {
                         //we found directory
@@ -59,7 +59,7 @@ function exportFiles(pathToFolder, name, callback) {
                             console.log(err);
                         }
                     }
-                    countlyFs.fs.saveStream(name, dest, stream, function(err) {
+                    userovoFs.fs.saveStream(name, dest, stream, function(err) {
                         console.log("Storing file finished", dest, err);
                         done();
                     });
@@ -80,7 +80,7 @@ function fs2gridfs() {
     importFiles("../../../frontend/express/public/appimages", "appimages", function() {
         importFiles("../../../frontend/express/public/userimages", "userimages", function() {
             importFiles("../../../plugins/crash_symbolication/crashsymbols", "crash_symbols", function() {
-                countlyFs.getHandler().close();
+                userovoFs.getHandler().close();
             });
         });
     });
@@ -90,7 +90,7 @@ function gridfs2fs() {
     exportFiles("../../../frontend/express/public/appimages", "appimages", function() {
         exportFiles("../../../frontend/express/public/userimages", "userimages", function() {
             exportFiles("../../../plugins/crash_symbolication/crashsymbols", "crash_symbols", function() {
-                countlyFs.getHandler().close();
+                userovoFs.getHandler().close();
             });
         });
     });
@@ -101,19 +101,19 @@ var conversions = {
     "gridfs": {"fs": gridfs2fs}
 };
 
-pluginManager.dbConnection("countly_fs").then((db) => {
-    countlyFs.setHandler(db);
+pluginManager.dbConnection("userovo_fs").then((db) => {
+    userovoFs.setHandler(db);
     if (myArgs[0] == "migrate") {
         if (myArgs[1] && myArgs[2] && conversions[myArgs[1]] && conversions[myArgs[1]][myArgs[2]]) {
             conversions[myArgs[1]][myArgs[2]]();
         }
         else {
             console.log("Storage from", myArgs[1], "to", myArgs[2], "not supported");
-            countlyFs.getHandler().close();
+            userovoFs.getHandler().close();
         }
     }
     else {
         console.log("Command", myArgs[0], "not supported");
-        countlyFs.getHandler().close();
+        userovoFs.getHandler().close();
     }
 });

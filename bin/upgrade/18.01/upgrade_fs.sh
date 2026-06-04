@@ -13,18 +13,18 @@ elif [[ ! -z "$YUM_CMD" ]]; then
 	yum install -y sqlite unzip
 fi
 
-countly stop
+userovo stop
 
 #upgrade existing plugins
-countly plugin upgrade push
-countly plugin upgrade live
+userovo plugin upgrade push
+userovo plugin upgrade live
 
-countly plugin enable times-of-day
+userovo plugin enable times-of-day
 
 #update web-sdk
-countly update sdk-web
+userovo update sdk-web
 
-#install dependencies, process files and restart countly
-countly upgrade
+#install dependencies, process files and restart userovo
+userovo upgrade
 
-countly start
+userovo start

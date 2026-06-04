@@ -1,10 +1,10 @@
 # CSS Style Guide
 
-This guide covers CSS conventions, SASS usage, and styling best practices for Countly development.
+This guide covers CSS conventions, SASS usage, and styling best practices for Userovo development.
 
 ## CSS Preprocessor
 
-Countly uses **SASS** as the CSS preprocessor with **Dart Sass** implementation and **SCSS** syntax.
+Userovo uses **SASS** as the CSS preprocessor with **Dart Sass** implementation and **SCSS** syntax.
 
 ### Key Resources
 - NPM module: `sass`
@@ -195,7 +195,7 @@ frontend/express/public/stylesheets/<library-name>/
 
 To modify Element UI components:
 
-1. Clone from: https://github.com/Countly/element
+1. Clone from: https://github.com/Userovo/element
 2. Make changes to the cloned repo
 3. Requirements: Node.js 14.x.x, Python 2.7
 4. Build: `npm run dist --unsafe-perm`

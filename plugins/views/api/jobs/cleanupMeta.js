@@ -11,12 +11,12 @@ const viewsUtils = require("../parts/viewsUtils.js");
 class CleanupMetaJob extends job.Job {
     /**
      * Get's called to run the job
-     * @param {mongoDatabase} countlyDb ref to countlyDb
+     * @param {mongoDatabase} userovoDb ref to userovoDb
      * @param {function} doneJob callback
      * @param {function} progressJob progress callback
      * @return {void} just for exit
      */
-    run(countlyDb, doneJob, progressJob) {
+    run(userovoDb, doneJob, progressJob) {
         log.i("Starting Views meta recheck job");
         /***
          * Ping function so that the job does not timeout
@@ -39,14 +39,14 @@ class CleanupMetaJob extends job.Job {
             doneJob();
         };
 
-        countlyDb.collection('apps').find({}).toArray(function(err0, apps) {
+        userovoDb.collection('apps').find({}).toArray(function(err0, apps) {
             if (err0) {
                 log.e(err0);
             }
             apps = apps || [];
             Promise.each(apps, function(app) {
                 return new Promise((resolve) => {
-                    countlyDb.collection("views").findOne({_id: app._id}, function(err1, view) {
+                    userovoDb.collection("views").findOne({_id: app._id}, function(err1, view) {
                         if (err1) {
                             log.e("Error while cleaning up views meta", err1);
                             resolve();
@@ -66,7 +66,7 @@ class CleanupMetaJob extends job.Job {
 
                             }
                             if (listToOmit.length > 0) {
-                                viewsUtils.ommit_segments({extend: true, db: countlyDb, omit: listToOmit, appId: app._id, params: {"qstring": {}, "user": {"_id": "SYSTEM", "username": "SYSTEM"}}}, function(err5) {
+                                viewsUtils.ommit_segments({extend: true, db: userovoDb, omit: listToOmit, appId: app._id, params: {"qstring": {}, "user": {"_id": "SYSTEM", "username": "SYSTEM"}}}, function(err5) {
                                     if (err5) {
                                         log.e(err5);
                                     }

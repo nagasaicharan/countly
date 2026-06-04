@@ -1,18 +1,18 @@
 #!/bin/bash
 
-countly_start (){ 
-    sudo /usr/bin/sv start countly-api countly-dashboard;
+userovo_start (){ 
+    sudo /usr/bin/sv start userovo-api userovo-dashboard;
 }
 
-countly_stop (){ 
-    sudo /usr/bin/sv stop countly-api countly-dashboard;
+userovo_stop (){ 
+    sudo /usr/bin/sv stop userovo-api userovo-dashboard;
 }
 
-countly_restart (){
-    sudo /usr/bin/sv restart countly-api countly-dashboard;
+userovo_restart (){
+    sudo /usr/bin/sv restart userovo-api userovo-dashboard;
 }
 
-countly_status (){
-    sudo /usr/bin/sv status countly-api;
-    sudo /usr/bin/sv status countly-dashboard;
+userovo_status (){
+    sudo /usr/bin/sv status userovo-api;
+    sudo /usr/bin/sv status userovo-dashboard;
 }

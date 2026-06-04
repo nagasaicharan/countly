@@ -1,9 +1,9 @@
 (function() {
     var pageWidth = 0,
         pageHeight = 0,
-        currentDevice = Countly.passed_data.currentDevice && Countly.passed_data.currentDevice.length && Countly.passed_data.currentDevice[0] ? Countly.passed_data.currentDevice : [],
-        currentMap = Countly.passed_data.currentMap == "scroll" ? "scroll" : "click",
-        showHeatMap = Countly.passed_data.showHeatMap == false ? false : true,
+        currentDevice = Userovo.passed_data.currentDevice && Userovo.passed_data.currentDevice.length && Userovo.passed_data.currentDevice[0] ? Userovo.passed_data.currentDevice : [],
+        currentMap = Userovo.passed_data.currentMap == "scroll" ? "scroll" : "click",
+        showHeatMap = Userovo.passed_data.showHeatMap == false ? false : true,
         clickMap,
         scrollMap;
 
@@ -56,7 +56,7 @@
                 extraArguments += arguments[i];
             }
             // eslint-disable-next-line no-shadow
-            var content = level + "[Countly] [Heatmap] " + message + extraArguments;
+            var content = level + "[Userovo] [Heatmap] " + message + extraArguments;
             // decide on the console
             if (level === logLevelEnums.ERROR) {
                 // eslint-disable-next-line no-console
@@ -179,10 +179,10 @@
         return str.join("&");
     }
 
-    Countly.passed_data.url = Countly.passed_data.url || Countly.url;
+    Userovo.passed_data.url = Userovo.passed_data.url || Userovo.url;
 
-    loadFile('link', 'rel', 'stylesheet', 'href', Countly.passed_data.url + "/stylesheets/ionicons/css/ionicons.min.css", function() {
-        loadFile('link', 'rel', 'stylesheet', 'href', Countly.passed_data.url + "/views/stylesheets/heatmap.css", function() {
+    loadFile('link', 'rel', 'stylesheet', 'href', Userovo.passed_data.url + "/stylesheets/ionicons/css/ionicons.min.css", function() {
+        loadFile('link', 'rel', 'stylesheet', 'href', Userovo.passed_data.url + "/views/stylesheets/heatmap.css", function() {
             document.body.style.position = "relative";
             var origtop = document.body.style.top;
             var toppx = 59;
@@ -296,7 +296,7 @@
 
             //TOPBAR IMAGE
             var img = document.createElement('img');
-            img.src = Countly.passed_data.url + "/images/pre-login/countly-logo-dark.svg";
+            img.src = Userovo.passed_data.url + "/images/pre-login/userovo-logo-dark.svg";
             img.setAttribute('class', 'cly-heatmap-logo');
             topbar.appendChild(img);
 
@@ -683,10 +683,10 @@
             baseBlur = 1.6,
             actionType = "click",
             apiPath = "/o/actions",
-            period = Countly.passed_data.period || "30days",
+            period = Userovo.passed_data.period || "30days",
             dataCache = {};
 
-        loadFile('script', 'type', 'text/javascript', 'src', Countly.passed_data.url + "/views/javascripts/simpleheat.js", function() {
+        loadFile('script', 'type', 'text/javascript', 'src', Userovo.passed_data.url + "/views/javascripts/simpleheat.js", function() {
             map = simpleheat("cly-heatmap-canvas-map");
             return cb(function(eventType, pageWidth, pageHeight, currentDevice, showHeatMap) {
                 map.resize();
@@ -714,7 +714,7 @@
                 }
 
                 function loadData() {
-                    sendXmlHttpRequest({ app_key: Countly.app_key, view: (Countly.getViewUrl) ? Countly.getViewUrl() : window.location.pathname, period: period, device: JSON.stringify(currentDevice[0]), actionType: actionType }, apiPath, function(err, clicks) {
+                    sendXmlHttpRequest({ app_key: Userovo.app_key, view: (Userovo.getViewUrl) ? Userovo.getViewUrl() : window.location.pathname, period: period, device: JSON.stringify(currentDevice[0]), actionType: actionType }, apiPath, function(err, clicks) {
                         if (!err) {
                             dataCache[currentDevice[0].type] = clicks.data;
                             try {
@@ -761,10 +761,10 @@
         var map,
             actionType = "scroll",
             apiPath = "/o/actions",
-            period = Countly.passed_data.period || "30days",
+            period = Userovo.passed_data.period || "30days",
             dataCache = {};
 
-        loadFile('script', 'type', 'text/javascript', 'src', Countly.passed_data.url + "/views/javascripts/simpleheat.js", function() {
+        loadFile('script', 'type', 'text/javascript', 'src', Userovo.passed_data.url + "/views/javascripts/simpleheat.js", function() {
             map = simpleheat("cly-heatmap-canvas-map");
             return cb(function(eventType, pageWidth, pageHeight, currentDevice, showHeatMap) {
                 map.resize();
@@ -793,7 +793,7 @@
                 }
 
                 function loadData() {
-                    sendXmlHttpRequest({ app_key: Countly.app_key, view: (Countly.getViewUrl) ? Countly.getViewUrl() : window.location.pathname, period: period, device: JSON.stringify(currentDevice[0]), actionType: actionType }, apiPath, function(err, scrolls) {
+                    sendXmlHttpRequest({ app_key: Userovo.app_key, view: (Userovo.getViewUrl) ? Userovo.getViewUrl() : window.location.pathname, period: period, device: JSON.stringify(currentDevice[0]), actionType: actionType }, apiPath, function(err, scrolls) {
                         if (!err) {
                             dataCache[currentDevice[0].type] = scrolls.data;
                             try {
@@ -938,20 +938,20 @@
 
             var data = prepareParams(params);
 
-            xhr.open('POST', Countly.passed_data.url + apiPath, true);
+            xhr.open('POST', Userovo.passed_data.url + apiPath, true);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.setRequestHeader("countly-token", Countly._internals.getValueFromStorage('cly_token'));
+            xhr.setRequestHeader("userovo-token", Userovo._internals.getValueFromStorage('cly_token'));
 
             // fallback on error
             xhr.onreadystatechange = function() {
                 if (this.readyState == this.HEADERS_RECEIVED) {
                     try {
-                        Countly._internals.removeValueFromStorage('cly_token');
-                        Countly._internals.setValueInStorage('cly_token', xhr.getResponseHeader("content-language"));
+                        Userovo._internals.removeValueFromStorage('cly_token');
+                        Userovo._internals.setValueInStorage('cly_token', xhr.getResponseHeader("content-language"));
                     }
                     catch (ex) {
                         log(logLevelEnums.ERROR, "[sendXmlHttpRequest] Failed setting token to storage, storing token to sdk instance");
-                        Countly.token = xhr.getResponseHeader("content-language");
+                        Userovo.token = xhr.getResponseHeader("content-language");
                     }
                 }
                 if (this.readyState === 4 && this.status >= 200 && this.status < 300) {

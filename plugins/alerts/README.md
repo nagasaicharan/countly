@@ -1,9 +1,9 @@
 # Alerts plugin
 
-The Alerts plugin in Countly is a reactive tool designed to keep you informed about critical changes in your application’s metrics, even when you’re not monitoring dashboards. It sends email notifications when specific conditions on important metrics are met, enabling you to respond quickly to potential issues. This feature helps ensure your app maintains high performance and provides a positive user experience by alerting you to areas that may need immediate attention.
+The Alerts plugin in Userovo is a reactive tool designed to keep you informed about critical changes in your application’s metrics, even when you’re not monitoring dashboards. It sends email notifications when specific conditions on important metrics are met, enabling you to respond quickly to potential issues. This feature helps ensure your app maintains high performance and provides a positive user experience by alerting you to areas that may need immediate attention.
 
 ## File structure
-File structure follows usual Countly plugin structure
+File structure follows usual Userovo plugin structure
 ```
 alerts/
 ├── api/ 
@@ -27,8 +27,8 @@ alerts/
 ├── frontend/
 │   ├── public/
 │   │    ├── javascripts
-│   │    │    ├── countly.models.js             # model code. Facilitates requests to backend (CRUD) 
-│   │    │    └── countly.views.js              # views code. Alerts view, Dashboard home widget
+│   │    │    ├── userovo.models.js             # model code. Facilitates requests to backend (CRUD) 
+│   │    │    └── userovo.views.js              # views code. Alerts view, Dashboard home widget
 │   │    ├── localization                       # All localization files 
 │   │    ├── stylesheets
 │   │    └── templates 

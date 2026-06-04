@@ -252,7 +252,7 @@ describe('Testing views plugin', function() {
             API_KEY_ADMIN = testUtils.get("API_KEY_ADMIN");
             APP_ID = testUtils.get("APP_ID");
             APP_KEY = testUtils.get("APP_KEY");
-            db = testUtils.client.db("countly");
+            db = testUtils.client.db("userovo");
             request
                 .get('/o?api_key=' + API_KEY_ADMIN + '&app_id=' + APP_ID + '&method=views&action=getTable&period=30days')
                 .expect(200)

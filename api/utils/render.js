@@ -10,7 +10,7 @@ try {
     puppeteer = require('puppeteer');
 }
 catch (err) {
-    if (process.env.COUNTLY_CONTAINER !== 'frontend') {
+    if (process.env.USEROVO_CONTAINER !== 'frontend') {
         console.warn(
             `Puppeteer not installed. Please install puppeteer if
             you would like to use api/utils/render.js. \nGracefully skipping
@@ -22,9 +22,9 @@ var pathModule = require('path');
 var exec = require('child_process').exec;
 var alternateChrome = true;
 var chromePath = "";
-var countlyFs = require('./countlyFs');
+var userovoFs = require('./userovoFs');
 var log = require('./log.js')('core:render');
-var countlyConfig = require('./../config', 'dont-enclose');
+var userovoConfig = require('./../config', 'dont-enclose');
 var fs = require('fs');
 
 
@@ -106,10 +106,10 @@ exports.renderView = function(options, cb) {
                     log.d("Headless chrome page failed request", request.failure().errorText, request.url());
                 });
 
-                var host = (process.env.COUNTLY_CONFIG_PROTOCOL || "http") + "://" + (process.env.COUNTLY_CONFIG_HOSTNAME || "localhost") + countlyConfig.path;
+                var host = (process.env.USEROVO_CONFIG_PROTOCOL || "http") + "://" + (process.env.USEROVO_CONFIG_HOSTNAME || "localhost") + userovoConfig.path;
 
                 if (options.host) {
-                    host = options.host + countlyConfig.path;
+                    host = options.host + userovoConfig.path;
                 }
 
                 var token = options.token;
@@ -137,7 +137,7 @@ exports.renderView = function(options, cb) {
                     throw new Error(`Failed to open login page. Status: ${status}`);
                 }
 
-                await page.waitForSelector('countly', {timeout: updatedTimeout});
+                await page.waitForSelector('userovo', {timeout: updatedTimeout});
 
                 await timeout(1500);
 
@@ -331,7 +331,7 @@ function saveScreenshot(image, path, source) {
         if (source && source.length) {
             saveDataOptions.id = source;
         }
-        countlyFs.saveData("screenshots", path, buffer, saveDataOptions, function(err3) {
+        userovoFs.saveData("screenshots", path, buffer, saveDataOptions, function(err3) {
             if (err3) {
                 log.e(err3, err3.stack);
             }

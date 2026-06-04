@@ -34,8 +34,8 @@ class InsertBatcher {
      *  @param {Db} db - database object
      */
     constructor(db) {
-        this.dbs = {countly: db};
-        this.data = {countly: {}};
+        this.dbs = {userovo: db};
+        this.data = {userovo: {}};
         plugins.loadConfigs(db, () => {
             this.loadConfig();
             this.schedule();
@@ -151,7 +151,7 @@ class InsertBatcher {
      *  @param {Object|Array} doc - one document or array of documents to insert
      *  @param {string} db - name of the database for which to write data
      */
-    insert(collection, doc, db = "countly") {
+    insert(collection, doc, db = "userovo") {
         if (!this.shared || cluster.isMaster) {
             if (!this.data[db][collection]) {
                 this.data[db][collection] = [];
@@ -188,8 +188,8 @@ class WriteBatcher {
      *  @param {Db} db - database object
      */
     constructor(db) {
-        this.dbs = {countly: db};
-        this.data = {countly: {}};
+        this.dbs = {userovo: db};
+        this.data = {userovo: {}};
         plugins.loadConfigs(db, () => {
             this.loadConfig();
             this.schedule();
@@ -324,7 +324,7 @@ class WriteBatcher {
      *  @param {string} db - name of the database for which to write data
      *  @returns {object} bulkwrite query for document by reference, you can modify it synchronously or data may be lost
      */
-    get(collection, id, db = "countly") {
+    get(collection, id, db = "userovo") {
         if (!this.data[db][collection]) {
             this.data[db][collection] = {};
         }
@@ -342,7 +342,7 @@ class WriteBatcher {
      *  @param {string} db - name of the database for which to write data
      *  @param {object=} options - options for operation ((upsert: false) - if you don't want to upsert document)
      */
-    add(collection, id, operation, db = "countly", options) {
+    add(collection, id, operation, db = "userovo", options) {
         if (!this.shared || cluster.isMaster) {
             if (!this.data[db][collection]) {
                 this.data[db][collection] = {};

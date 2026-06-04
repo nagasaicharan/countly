@@ -1,72 +1,72 @@
 #!/bin/bash
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
-COUNTLY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
-COUNTLY_DIR_NAME="$(basename "$COUNTLY_DIR")"
-COUNTLY_OUT="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../.." && pwd )"
-COUNTLY_VERSION="$(countly version)"
+USEROVO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
+USEROVO_DIR_NAME="$(basename "$USEROVO_DIR")"
+USEROVO_OUT="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../.." && pwd )"
+USEROVO_VERSION="$(userovo version)"
 
-countly_upgrade_pre (){
+userovo_upgrade_pre (){
     #enable command line
     bash "$DIR/scripts/detect.init.sh"
 }
 
-countly_upgrade_post (){
+userovo_upgrade_post (){
     #update web-sdk
-    countly update sdk-web
+    userovo update sdk-web
     
     #add indexes
     nodejs "$DIR/scripts/add_indexes.js"
     
-    #install dependencies, process files and restart countly
-    countly upgrade
+    #install dependencies, process files and restart userovo
+    userovo upgrade
 }
 
-countly_staging (){
+userovo_staging (){
     #check if there is previous staging and 
-    if [ -d "$COUNTLY_OUT/staging_$COUNTLY_DIR_NAME.$COUNTLY_VERSION" ]; then
-        echo "Staging already exist: $COUNTLY_OUT/staging_$COUNTLY_DIR_NAME.$COUNTLY_VERSION"
+    if [ -d "$USEROVO_OUT/staging_$USEROVO_DIR_NAME.$USEROVO_VERSION" ]; then
+        echo "Staging already exist: $USEROVO_OUT/staging_$USEROVO_DIR_NAME.$USEROVO_VERSION"
         return 0
     fi
   
-    #backup current countly installation
-    cp -rf "$COUNTLY_OUT/$COUNTLY_DIR_NAME" "$COUNTLY_OUT/staging_$COUNTLY_DIR_NAME.$COUNTLY_VERSION"
+    #backup current userovo installation
+    cp -rf "$USEROVO_OUT/$USEROVO_DIR_NAME" "$USEROVO_OUT/staging_$USEROVO_DIR_NAME.$USEROVO_VERSION"
     
     #clean logs
-    mkdir -p "$COUNTLY_DIR/log/logs.$COUNTLY_VERSION"
-    mv "$COUNTLY_DIR/log/countly-api.log" "$COUNTLY_DIR/log/logs.$COUNTLY_VERSION/countly-api.log"
-    mv "$COUNTLY_DIR/log/countly-dashboard.log" "$COUNTLY_DIR/log/logs.$COUNTLY_VERSION/countly-dashboard.log"
+    mkdir -p "$USEROVO_DIR/log/logs.$USEROVO_VERSION"
+    mv "$USEROVO_DIR/log/userovo-api.log" "$USEROVO_DIR/log/logs.$USEROVO_VERSION/userovo-api.log"
+    mv "$USEROVO_DIR/log/userovo-dashboard.log" "$USEROVO_DIR/log/logs.$USEROVO_VERSION/userovo-dashboard.log"
 }
 
-countly_staging_clean (){
+userovo_staging_clean (){
     #clean failed upgrade if any
-    if [ -d "$COUNTLY_OUT/failed_$COUNTLY_DIR_NAME.$COUNTLY_VERSION" ]; then
-        rm -rf "$COUNTLY_OUT/failed_$COUNTLY_DIR_NAME.$COUNTLY_VERSION"
+    if [ -d "$USEROVO_OUT/failed_$USEROVO_DIR_NAME.$USEROVO_VERSION" ]; then
+        rm -rf "$USEROVO_OUT/failed_$USEROVO_DIR_NAME.$USEROVO_VERSION"
     fi
     
     #clean staging if any
-    if [ -d "$COUNTLY_OUT/staging_$COUNTLY_DIR_NAME.$COUNTLY_VERSION" ]; then
-        rm -rf "$COUNTLY_OUT/staging_$COUNTLY_DIR_NAME.$COUNTLY_VERSION"
+    if [ -d "$USEROVO_OUT/staging_$USEROVO_DIR_NAME.$USEROVO_VERSION" ]; then
+        rm -rf "$USEROVO_OUT/staging_$USEROVO_DIR_NAME.$USEROVO_VERSION"
     fi
 }
 
-countly_staging_recover (){
+userovo_staging_recover (){
     #check if there is previous staging 
-    if [ -d "$COUNTLY_OUT/staging_$COUNTLY_DIR_NAME.$COUNTLY_VERSION" ]; then
+    if [ -d "$USEROVO_OUT/staging_$USEROVO_DIR_NAME.$USEROVO_VERSION" ]; then
     
-        if [ -d "$COUNTLY_OUT/failed_$COUNTLY_DIR_NAME.$COUNTLY_VERSION" ]; then
+        if [ -d "$USEROVO_OUT/failed_$USEROVO_DIR_NAME.$USEROVO_VERSION" ]; then
             #remove current backup if it exists
-            rm -rf "$COUNTLY_OUT/failed_$COUNTLY_DIR_NAME.$COUNTLY_VERSION"
+            rm -rf "$USEROVO_OUT/failed_$USEROVO_DIR_NAME.$USEROVO_VERSION"
         fi
         
-        #backup current upgrade attempt countly installation
-        mv -rf "$COUNTLY_OUT/$COUNTLY_DIR_NAME" "$COUNTLY_OUT/failed_$COUNTLY_DIR_NAME.$COUNTLY_VERSION"
+        #backup current upgrade attempt userovo installation
+        mv -rf "$USEROVO_OUT/$USEROVO_DIR_NAME" "$USEROVO_OUT/failed_$USEROVO_DIR_NAME.$USEROVO_VERSION"
         
         #bring back staging to life
-        mv -rf "$COUNTLY_OUT/staging_$COUNTLY_DIR_NAME.$COUNTLY_VERSION" "$COUNTLY_OUT/$COUNTLY_DIR_NAME"
+        mv -rf "$USEROVO_OUT/staging_$USEROVO_DIR_NAME.$USEROVO_VERSION" "$USEROVO_OUT/$USEROVO_DIR_NAME"
         
         #restart process
-        countly restart
+        userovo restart
     else
         echo "No staging available to recover"
     fi

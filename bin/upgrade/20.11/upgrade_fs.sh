@@ -4,7 +4,7 @@ echo "Running filesystem modifications"
 
 VER="20.11"
 
-CONTINUE="$(countly check before upgrade fs "$VER")"
+CONTINUE="$(userovo check before upgrade fs "$VER")"
 
 if [ "$CONTINUE" != "1" ] && [ "$1" != "combined" ]
 then
@@ -74,39 +74,39 @@ then
 
     (cd "$DIR/.." && sudo npm install --unsafe-perm && sudo npm install argon2 --build-from-source)
 
-    countly plugin upgrade star-rating
-    countly plugin upgrade users
-    countly plugin upgrade consolidate
-    countly plugin upgrade two-factor-auth
-    countly plugin upgrade web
-    countly plugin upgrade active_directory
-    countly plugin upgrade crash_symbolication
-    countly plugin upgrade concurrent_users
+    userovo plugin upgrade star-rating
+    userovo plugin upgrade users
+    userovo plugin upgrade consolidate
+    userovo plugin upgrade two-factor-auth
+    userovo plugin upgrade web
+    userovo plugin upgrade active_directory
+    userovo plugin upgrade crash_symbolication
+    userovo plugin upgrade concurrent_users
 
     sudo bash "$DIR/scripts/install.nghttp2.sh"
-    countly plugin upgrade push
+    userovo plugin upgrade push
     (cd "$DIR/../plugins/push/api/parts/apn" && sudo npm install --unsafe-perm)
 
     #enable new plugins
-    countly plugin enable activity-map
-    countly plugin enable config-transfer
-    countly plugin enable consolidate
-    countly plugin enable data-manager
-    countly plugin enable hooks
-    countly plugin enable surveys
+    userovo plugin enable activity-map
+    userovo plugin enable config-transfer
+    userovo plugin enable consolidate
+    userovo plugin enable data-manager
+    userovo plugin enable hooks
+    userovo plugin enable surveys
 
     #get web sdk
-    countly update sdk-web
+    userovo update sdk-web
 
-    #install dependencies, process files and restart countly
+    #install dependencies, process files and restart userovo
     if [ "$1" != "combined" ]; then
-        countly upgrade;
+        userovo upgrade;
     else
-        countly task dist-all;
+        userovo task dist-all;
     fi
 
     #call after check
-    countly check after upgrade fs "$VER"
+    userovo check after upgrade fs "$VER"
 elif [ "$CONTINUE" == "0" ]
 then
     echo "Filesystem is already upgraded to $VER"

@@ -15,20 +15,20 @@ before_install:
 - mkdir /tmp/data
 - ${PWD}/mongodb-linux-x86_64-ubuntu1804-${MONGODB}/bin/mongod --dbpath /tmp/data --bind_ip 127.0.0.1 --logpath ${PWD}/mongod.log &> /dev/null &
 - until nc -z localhost 27017; do echo Waiting for MongoDB; sleep 1; done
-install: sudo bash ./bin/countly.install_travis.sh
+install: sudo bash ./bin/userovo.install_travis.sh
 before_script:
 - nodejs --version
 - ${PWD}/mongodb-linux-x86_64-ubuntu1804-${MONGODB}/bin/mongod --version
 - cat ${PWD}/mongod.log
 - sudo rm -rf ./node_modules
 - sudo npm install --unsafe-perm
-- sudo countly restart
+- sudo userovo restart
 script:
-- countly shellcheck
-- sudo countly test
+- userovo shellcheck
+- sudo userovo test
 after_script:
-- cat log/countly-api.log
-- cat log/countly-dashboard.log
+- cat log/userovo-api.log
+- cat log/userovo-dashboard.log
 - cat ${PWD}/mongod.log
 after_success:
 - cd $TRAVIS_BUILD_DIR

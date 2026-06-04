@@ -1,5 +1,5 @@
 const plugins = require("../../../../pluginManager.js");
-const request = require("countly-request")(plugins.getConfig("security"));
+const request = require("userovo-request")(plugins.getConfig("security"));
 const utils = require("../../utils");
 const common = require('../../../../../api/utils/common.js');
 const ssrfProtection = require('../../../../../api/utils/ssrf-protection');

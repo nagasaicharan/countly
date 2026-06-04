@@ -3,7 +3,7 @@ import { Collection, Db, ObjectId } from "mongodb";
 import { Params } from "./requestProcessor";
 import { PluginManager, Database } from "./pluginManager";
 import { Logger } from "./log";
-import { CountlyAPIConfig } from "./config";
+import { UserovoAPIConfig } from "./config";
 
 /** Node.js Request object */
 export interface req {
@@ -297,9 +297,9 @@ export interface Common {
     dbEventMap: DbEventMap;
 
     /**
-     * Default {@link countlyConfig} object for API server
+     * Default {@link userovoConfig} object for API server
      */
-    config: CountlyAPIConfig;
+    config: UserovoAPIConfig;
 
     /** Reference to moment-timezone which combines moment.js with timezone support */
     moment: typeof import('moment-timezone');
@@ -329,7 +329,7 @@ export interface Common {
 
     /**
      * Fetches nested property values from an obj.
-     * @param {object} obj - standard countly metric object
+     * @param {object} obj - standard userovo metric object
      * @param {string} desc - dot separate path to fetch from object
      * @returns {object} fetched object from provided path
      * @example
@@ -351,7 +351,7 @@ export interface Common {
     isNumber: (n: any) => boolean;
 
     /**
-     * This default Countly behavior of type conversion for storing proeprties accepted through API requests
+     * This default Userovo behavior of type conversion for storing proeprties accepted through API requests
      * dealing with numbers as strings and too long numbers
      * @param {any} value - value to convert to usable type
      * @param {boolean} preventParsingToNumber - do not change value to number (e.g. "1", ["1"]);
@@ -425,7 +425,7 @@ export interface Common {
 
     /**
      * Modifies provided object in the format object["2012.7.20.property"] = increment. 
-     * Usualy used when filling up Countly metric model data
+     * Usualy used when filling up Userovo metric model data
      * @param {Params} params - {@link Params} object
      * @param {object} object - object to fill
      * @param {string} property - meric value or segment or property to fill/increment
@@ -556,7 +556,7 @@ export interface Common {
 
     /**
      * Modifies provided object filling properties used in zero documents in the format object["2012.7.20.property"] = increment. 
-     * Usualy used when filling up Countly metric model zero document
+     * Usualy used when filling up Userovo metric model zero document
      * @param {Params} params - {@link params} object
      * @param {object} object - object to fill
      * @param {string} property - meric value or segment or property to fill/increment
@@ -574,7 +574,7 @@ export interface Common {
 
     /**
      * Modifies provided object filling properties used in monthly documents in the format object["2012.7.20.property"] = increment. 
-     * Usualy used when filling up Countly metric model monthly document
+     * Usualy used when filling up Userovo metric model monthly document
      * @param {Params} params - {@link params} object
      * @param {object} object - object to fill
      * @param {string} property - meric value or segment or property to fill/increment
@@ -591,7 +591,7 @@ export interface Common {
     fillTimeObjectMonth: (params: Params, object: any, property: string | string[], increment?: number, forceHour?: boolean) => boolean;
 
     /**
-     * Record data in Countly standard metric model
+     * Record data in Userovo standard metric model
      * Can be used by plugins to record data, similar to sessions and users, with optional segments
      * @param {Params} params - {@link params} object
      * @param {string} collection - name of the collections where to store data
@@ -625,7 +625,7 @@ export interface Common {
     setCustomMetric: (params: Params, collection: string, id: string, metrics: string[], value?: number, segments?: any, uniques?: string[], lastTimestamp?: number) => void;
 
     /**
-     * Record measurement in Countly standard metric model
+     * Record measurement in Userovo standard metric model
      * Can be used by plugins to record measurements, similar to temperature, it will record min/max/avg values
      * Does not support unique values like users
      * @param {Params} params - {@link params} object
@@ -641,7 +641,7 @@ export interface Common {
     recordCustomMeasurement: (params: Params, collection: string, id: string, metrics: string[], value?: number, segments?: any) => void;
 
     /**
-     * Record data in Countly standard metric model
+     * Record data in Userovo standard metric model
      * Can be used by plugins to record data, similar to sessions and users, with optional segments
      * @param {Params} params - {@link params} object
      * @param {object} props - object defining what to record
@@ -948,13 +948,13 @@ export interface Common {
     licenseAssign: (req: any, check?: { error?: any, notify?: any[] }) => void;
 
     /**
-     * Standard number formatter, taken from frontend's countly.common.js
-     * @memberof countlyCommon
+     * Standard number formatter, taken from frontend's userovo.common.js
+     * @memberof userovoCommon
      * @param {number} x - number to format
      * @returns {string} formatted number
      * @example
      * //outputs 1,234,567
-     * countlyCommon.formatNumber(1234567);
+     * userovoCommon.formatNumber(1234567);
      */
     formatNumber: (x: number) => string;
 

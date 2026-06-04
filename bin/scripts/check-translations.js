@@ -9,14 +9,14 @@ const glob = require('glob');
 const BASE_LANGUAGE = 'en';
 const PROPERTIES_FILE_EXTENSION = '.properties';
 
-// Those are paths Countly processes.
+// Those are paths Userovo processes.
 const DATA_SOURCE_DIRECTORIES = [
-    '/opt/countly/frontend/express/public/localization/dashboard',
-    '/opt/countly/frontend/express/public/localization/mail',
-    '/opt/countly/frontend/express/public/localization/help',
+    '/opt/userovo/frontend/express/public/localization/dashboard',
+    '/opt/userovo/frontend/express/public/localization/mail',
+    '/opt/userovo/frontend/express/public/localization/help',
 
     // This one must remain the last.
-    '/opt/countly/frontend/express/public/localization/custom'
+    '/opt/userovo/frontend/express/public/localization/custom'
 ];
 
 const options = {};

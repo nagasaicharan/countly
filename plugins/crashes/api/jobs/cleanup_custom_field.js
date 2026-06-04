@@ -7,11 +7,11 @@ const { cleanupCustomField, DEFAULT_MAX_CUSTOM_FIELD_KEYS } = require('../parts/
 /** class CleanupCustomFieldJob */
 class CleanupCustomFieldJob extends job.Job {
     /** function run
-     * @param {object} countlyDb - db connection object
+     * @param {object} userovoDb - db connection object
      * @param {function} doneJob - function to call when finishing Job
      * @param {function} progressJob - fnction to call while running job
     */
-    run(countlyDb, doneJob, progressJob) {
+    run(userovoDb, doneJob, progressJob) {
         var total = 0;
         var current = 0;
         var bookmark = '';
@@ -40,13 +40,13 @@ class CleanupCustomFieldJob extends job.Job {
             return doneJob();
         }
 
-        pluginManager.loadConfigs(countlyDb, async() => {
+        pluginManager.loadConfigs(userovoDb, async() => {
             const crashConfig = pluginManager.getConfig('crashes');
             const activateJob = crashConfig.activate_custom_field_cleanup_job;
             const maxCustomFieldKeys = crashConfig.max_custom_field_keys || DEFAULT_MAX_CUSTOM_FIELD_KEYS;
 
             if (activateJob) {
-                await cleanupCustomField(countlyDb, maxCustomFieldKeys);
+                await cleanupCustomField(userovoDb, maxCustomFieldKeys);
             }
 
             return endJob();

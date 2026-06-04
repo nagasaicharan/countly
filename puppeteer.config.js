@@ -1,6 +1,6 @@
 const path = require('path');
-const countlyDir = __dirname;
-const puppeteerInstallPath = path.join(countlyDir, '.cache', 'puppeteer');
+const userovoDir = __dirname;
+const puppeteerInstallPath = path.join(userovoDir, '.cache', 'puppeteer');
 /**
 * @type {import("puppeteer").Configuration}
 */

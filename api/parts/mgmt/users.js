@@ -7,11 +7,11 @@
 var usersApi = {},
     common = require('./../../utils/common.js'),
     mail = require('./mail.js'),
-    countlyConfig = require('./../../../frontend/express/config.js'),
+    userovoConfig = require('./../../../frontend/express/config.js'),
     plugins = require('../../../plugins/pluginManager.js'),
     { hasAdminAccess, getUserApps, getAdminApps, hasReadRight } = require('./../../utils/rights.js');
 
-const countlyCommon = require('../../lib/countly.common.js');
+const userovoCommon = require('../../lib/userovo.common.js');
 const log = require('../../utils/log.js')('core:mgmt.users');
 const _ = require('lodash');
 
@@ -249,7 +249,7 @@ usersApi.createUser = async function(params) {
     **/
     async function createUser() {
         //var passwordNoHash = newMember.password;
-        var secret = countlyConfig.passwordSecret || "";
+        var secret = userovoConfig.passwordSecret || "";
         var accessTypes = ["c", "r", "u", "d"];
         newMember.password = await common.argon2Hash(newMember.password + secret);
         newMember.password_changed = 0;
@@ -493,7 +493,7 @@ usersApi.updateUser = async function(params) {
     }
 
     if (updatedMember.password) {
-        var secret = countlyConfig.passwordSecret || "";
+        var secret = userovoConfig.passwordSecret || "";
         passwordNoHash = updatedMember.password;
         updatedMember.password = await common.argon2Hash(updatedMember.password + secret);
         if (params.member._id !== params.qstring.args.user_id) {
@@ -911,7 +911,7 @@ usersApi.saveNote = async function(params) {
             'type': 'String',
         },
         'color': {
-            // Frontend (countly.common.notes.js COLOR_TAGS) sends a numeric
+            // Frontend (userovo.common.notes.js COLOR_TAGS) sends a numeric
             // index 1..5. URL query callers may send "5" as a string.
             // Mirror the ts handling — IntegerString accepts both.
             'required': true,
@@ -971,7 +971,7 @@ usersApi.saveNote = async function(params) {
             }
             else {
                 if (res && res.length) {
-                    note.indicator = countlyCommon.stringIncrement(res[0].indicator);
+                    note.indicator = userovoCommon.stringIncrement(res[0].indicator);
                 }
                 else {
                     note.indicator = "A";
@@ -1066,8 +1066,8 @@ usersApi.fetchUserAppIds = async function(params) {
 * @returns {boolean} true
 **/
 usersApi.fetchNotes = async function(params) {
-    countlyCommon.getPeriodObj(params);
-    // const timestampRange = countlyCommon.getTimestampRangeQuery(params, false);
+    userovoCommon.getPeriodObj(params);
+    // const timestampRange = userovoCommon.getTimestampRangeQuery(params, false);
 
     let appIds = [];
     let filteredAppIds = [];
@@ -1156,7 +1156,7 @@ usersApi.fetchNotes = async function(params) {
                         {full_name: 1})
                         .toArray(function(err2, members) {
                             if (err2) {
-                                return common.returnMessage(params, 503, 'fatch countly members for notes failed');
+                                return common.returnMessage(params, 503, 'fatch userovo members for notes failed');
                             }
                             notes = notes.map((n) => {
                                 n.owner_name = 'Anonymous';

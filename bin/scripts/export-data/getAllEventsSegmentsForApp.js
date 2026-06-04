@@ -1,13 +1,13 @@
 /**
  * Output list of app names, event keys, and segments.
- * Server: countly
+ * Server: userovo
  * Path: bin/scripts/export-data
  * Command: node getAllEventsSegmentsForApp.js
  */
 
 var plugins = require("../../../plugins/pluginManager.js");
 
-plugins.dbConnection("countly").then(function(db) {
+plugins.dbConnection("userovo").then(function(db) {
     db.collection("events").find().toArray(function(errNoEvents, events) {
         db.collection("apps").find({}, {name: 1}).toArray(function(errNoApps, names) {
 

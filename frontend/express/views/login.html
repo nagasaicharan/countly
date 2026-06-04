@@ -13,7 +13,8 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <meta name="referrer" content="no-referrer">
-	<link href='stylesheets/pre-login/main.css' rel='stylesheet' type='text/css'>
+	<link href='stylesheets/pre-login/main.css?v=userovo-base-20260604' rel='stylesheet' type='text/css'>
+	<link href='stylesheets/pre-login/login.css?v=userovo-login-20260604-1' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="stylesheets/vue/clyvue.css" type='text/css'>
 	<link rel="icon" type="image/png" href="<%- countlyFavicon %>">
     <% if (themeFiles && themeFiles.css) { %>
@@ -27,7 +28,7 @@
 	<style><%- inject_template.css %></style>
 	<% } %>
 </head>
-<body>
+<body class="userovo-login-page">
 	<div class="wrapper">
 		<div id="top-container">
 			<div class="top-button" id="select-lang" data-test-id="login-select-lang">
@@ -68,11 +69,11 @@
 					<h1 style="font-weight: 500;" id="header" data-test-id="login-sign-in" data-localize="login.form-header">Sign In</h1>
 					<div></div>
 					<div>
-						<p style="float:left;color: #333C48;font-weight: 500;margin-bottom:8px" data-localize="login.email-adress-or-username" data-test-id="login-username-label"></p>
+						<p style="float:left;color: #172554;font-weight: 500;margin-bottom:8px" data-localize="login.email-adress-or-username" data-test-id="login-username-label"></p>
 						<input tabindex="1" type="text" autocapitalize="off" name="username" placeholder="Enter your username or email" data-test-id="login-username" data-localize="placeholder.username-email" autocomplete="<% if(security.autocomplete) {%>on<%} else { %>off<%}%>"/>
 						</div>
 					<div>
-						<div style="display: flex; justify-content: space-between;"><p style="color: #333C48;font-weight: 500;margin-bottom: 8px;" data-localize="login.password" data-test-id="login-password-label"></p><p style="margin-bottom: 8px;"><a tabindex="4" id="forgot-password" data-test-id="login-forgot-password" href="./forgot" data-localize="login.forgot"></a></p></div>
+						<div style="display: flex; justify-content: space-between;"><p style="color: #172554;font-weight: 500;margin-bottom: 8px;" data-localize="login.password" data-test-id="login-password-label"></p><p style="margin-bottom: 8px;"><a tabindex="4" id="forgot-password" data-test-id="login-forgot-password" href="./forgot" data-localize="login.forgot"></a></p></div>
 						<input tabindex="2" name="password" type="password" placeholder="Enter your password" data-test-id="login-password" data-localize="placeholder.password" autocomplete="<% if(security.autocomplete) {%>on<%} else { %>off<%}%>"/>
 					</div>
 					<% if (typeof inject_template.form != "undefined") { %>
@@ -93,7 +94,7 @@
 		<div class="footer" data-test-id="login-footer">
 			<div>
 				<p style="margin: 0px;" data-test-id="login-footer-copyright">© <%= new Date().getFullYear() %> <%- countlyTitle %></p>
-				<div style="margin: 0px; color: #0166D6;">
+				<div style="margin: 0px; color: #2563EB;">
 					<% if (countlyPage) { %> <a data-test-id="login-footer-countly" href="<%- countlyPage %>"> <%- countlyTitle %> </a> <% }%>
                     <% if (featureRequestLink) { %> <a data-test-id="login-footer-terms" href="<%- featureRequestLink %>" data-localize="login.terms"></a> <% }%>
                     <% if (feedbackLink) { %> <a data-test-id="login-footer-privacy" href="<%- feedbackLink %>" data-localize="login.privacy"></a> <% }%>
@@ -171,7 +172,7 @@
 		$(document).ready(function() {
 			$("*").click(function(event){
 				if ($(event.target).is(".top-button") || $(event.target).is("#active-lang") && $(".top-button").hasClass("active")) {
-					$('#active-lang').css('border','1px solid #81868D');
+					$('#active-lang').css('border','1px solid #475569');
 				}
 				else{
 					$('#active-lang').css('border','');

@@ -1,5 +1,5 @@
 export default {
-    LOGO: 'countly-logo',
+    LOGO: 'userovo-logo',
     PAGE_TITLE: 'page-title',
     PAGE_DESC_NEWSLETTER: 'page-description-newsletter',
     PAGE_QUESTION_NEWSLETTER: 'page-question-newsletter',

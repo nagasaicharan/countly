@@ -1,5 +1,7 @@
 <div>
-    <div class="setup-logo" data-test-id="countly-logo"></div>
+    <div class="setup-logo" data-test-id="countly-logo">
+        <img src="images/pre-login/countly-logo-dark.svg" alt="Countly" style="display:block;width:260px;height:70px;object-fit:contain;" />
+    </div>
     <div id="initial-setup" data-test-id="initial-setup" class="centered-content">
         <div v-if="!isPopulating" class="bu-is-flex bu-is-flex-direction-column bu-is-align-items-center">
             <div class="bu-is-size-4" data-test-id="initial-setup-title">
@@ -105,7 +107,7 @@
             </video>
             <img src="./images/dashboard/onboarding/video-placeholder.svg" data-test-id="populator-progress-bar-img" class="bu-is-block bu-mx-auto" v-else/>
             <template v-if="!isPopulatorFinished">
-                <cly-progress-bar :percentage="populatorProgress" data-test-id="populator-progress" :color="'#0166D6'" :height="16" class="bu-mt-4 populator-start-modal-wrapper__proggress-bar"></cly-progress-bar>
+                <cly-progress-bar :percentage="populatorProgress" data-test-id="populator-progress" :color="'#2563EB'" :height="16" class="bu-mt-4 populator-start-modal-wrapper__proggress-bar"></cly-progress-bar>
                 <div class="setup-byline" data-test-id="populator-progress-text">Populating data for your app</div>
             </template>
             <el-button

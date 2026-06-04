@@ -92,7 +92,7 @@ catch (ex) {
             user_query = Object.assign(user_query, cohortQuery);
         }
 
-        const countlyDb = common.db;
+        const userovoDb = common.db;
         const sp = plugins.getConfig("slipping-away-users");
         const periods = [sp.p1, sp.p2, sp.p3, sp.p4, sp.p5];
         validateRead(params, FEATURE_NAME, function() {
@@ -115,7 +115,7 @@ catch (ex) {
 
             conditions.forEach((condition) => {
                 tasks.push(new BPromise(function(resolve, reject) {
-                    countlyDb.collection('app_users' + app_id).count(condition, function(err, count) {
+                    userovoDb.collection('app_users' + app_id).count(condition, function(err, count) {
                         if (err) {
                             return reject(err);
                         }

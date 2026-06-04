@@ -1,8 +1,8 @@
 /**
  *  Sets index on cd field if it does not exists and stores retention period in database. Nightly job will clear data based on set  retention period.
- *  Server: countly
- *  Path: countly dir/bin/scripts/expire-data
- *  Command: node countly_multi_app_expireData.js
+ *  Server: userovo
+ *  Path: userovo dir/bin/scripts/expire-data
+ *  Command: node userovo_multi_app_expireData.js
  */
 
 var EXPIRE_AFTER = 60 * 60 * 24 * 365; //1 year in seconds
@@ -11,10 +11,10 @@ var INDEX_NAME = "cd_1";
 var Promise = require("bluebird"),
     plugins = require('../../../plugins/pluginManager.js');
 
-//var db = plugins.dbConnection("countly");
-//var db_drill = plugins.dbConnection("countly_drill");
+//var db = plugins.dbConnection("userovo");
+//var db_drill = plugins.dbConnection("userovo_drill");
 
-Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_drill")]).spread(function(db, db_drill) {
+Promise.all([plugins.dbConnection("userovo"), plugins.dbConnection("userovo_drill")]).spread(function(db, db_drill) {
 
     var collection = "drill_events";
     console.log("processing", collection);

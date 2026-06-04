@@ -50,8 +50,8 @@ plugins.setConfigs("logger", {
 
     var removeCookieAndTokenFromHeader = function(header) {
         var cleanHeader = Object.assign({}, header);
-        if (cleanHeader["countly-token"]) {
-            cleanHeader["countly-token"] = "";
+        if (cleanHeader["userovo-token"]) {
+            cleanHeader["userovo-token"] = "";
         }
         if (cleanHeader.cookie) {
             cleanHeader.cookie = "";

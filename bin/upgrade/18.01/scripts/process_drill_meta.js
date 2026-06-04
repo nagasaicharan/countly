@@ -3,7 +3,7 @@ var async = require("async");
 var crypto = require("crypto");
 var Promise = require("bluebird");
 
-Promise.all([pluginManager.dbConnection("countly"),pluginManager.dbConnection("countly_drill")]).spread(function(countlyDb, db){
+Promise.all([pluginManager.dbConnection("userovo"),pluginManager.dbConnection("userovo_drill")]).spread(function(userovoDb, db){
     var reg = /^drill_events\.*/;
     
     var preset_sg = {
@@ -262,8 +262,8 @@ Promise.all([pluginManager.dbConnection("countly"),pluginManager.dbConnection("c
     }
     
     setTimeout(function() {
-        pluginManager.loadConfigs(countlyDb, function() {
-            countlyDb.close();
+        pluginManager.loadConfigs(userovoDb, function() {
+            userovoDb.close();
             drillConfigs.list_limit = pluginManager.getConfig("drill").list_limit || drillConfigs.list_limit;
             drillConfigs.big_list_limit = pluginManager.getConfig("drill").big_list_limit || drillConfigs.big_list_limit;
             db.collections(function(err, results) {

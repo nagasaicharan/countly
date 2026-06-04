@@ -1,4 +1,4 @@
-const request = (countlyToken, appId, widgetName) => {
+const request = (userovoToken, appId, widgetName) => {
     const baseUrl = Cypress.config('baseUrl');
     const apiUrl = `${baseUrl}/i/feedback/widgets/create`;
 
@@ -6,7 +6,7 @@ const request = (countlyToken, appId, widgetName) => {
         method: 'POST',
         url: apiUrl,
         headers: {
-            'Countly-Token': countlyToken
+            'Userovo-Token': userovoToken
         },
         body: {
             popup_header_text: widgetName,

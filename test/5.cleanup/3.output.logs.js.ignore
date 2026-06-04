@@ -1,9 +1,9 @@
 var fs = require('fs');
 
 describe('Outputing logs', function(){
-	describe('countly-dashboard.log', function(){
+	describe('userovo-dashboard.log', function(){
 		it('should output', function(done){
-			fs.readFile('log/countly-dashboard.log', 'utf8', function (err,data) {
+			fs.readFile('log/userovo-dashboard.log', 'utf8', function (err,data) {
 				if (err) {
 					console.log(err);
 				}
@@ -12,9 +12,9 @@ describe('Outputing logs', function(){
 			});
 		});
 	});
-	describe('countly-api.log', function(){
+	describe('userovo-api.log', function(){
 		it('should output', function(done){
-			fs.readFile('log/countly-api.log', 'utf8', function (err,data) {
+			fs.readFile('log/userovo-api.log', 'utf8', function (err,data) {
 				if (err) {
 					console.log(err);
 				}

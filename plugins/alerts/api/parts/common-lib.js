@@ -190,7 +190,7 @@ async function compileEmail(result) {
         metrics.push({ key: "Value before", value: formatMetricValue(metricValueBefore) });
     }
     return EMAIL_TEMPLATE({
-        title: `Countly Alert`,
+        title: `Userovo Alert`,
         alertName: alert.alertName,
         alertDataType: alert.alertDataType,
         alertDataSubType: alert.alertDataSubType,

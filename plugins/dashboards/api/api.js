@@ -1445,7 +1445,7 @@ plugins.setConfigs("dashboards", {
             var member = params.member;
 
             versionInfo.page = (!versionInfo.title) ? "http://count.ly" : null;
-            versionInfo.title = versionInfo.title || "Countly";
+            versionInfo.title = versionInfo.title || "Userovo";
 
             if (report.report_type === "dashboards") {
                 var dashboardId = report.dashboards;
@@ -1484,7 +1484,7 @@ plugins.setConfigs("dashboards", {
                                     var rep = opt.report || {};
                                     var reportDateRange = rep.date_range || "30days";
                                     // eslint-disable-next-line no-undef
-                                    countlyCommon.setPeriod(reportDateRange);
+                                    userovoCommon.setPeriod(reportDateRange);
                                     // eslint-disable-next-line no-undef
                                     var app = window.app;
                                     app.activeView.vm.$emit("cly-date-change");
@@ -1915,12 +1915,12 @@ plugins.setConfigs("dashboards", {
 
     /**
      * Get emaillist for view & edit permission
-     * @param {Object} member - countly member object
+     * @param {Object} member - userovo member object
      * @param {String} shareWith - share type
      * @param {Array} sharedEmailEdit - email address list shared to edit 
      * @param {Array} sharedEmailView - email address list shared to view
-     * @param {Array} sharedUserGroupEdit - group ids from countly user group
-     * @param {Array} sharedUserGroupView - group ids from countly user group 
+     * @param {Array} sharedUserGroupEdit - group ids from userovo user group
+     * @param {Array} sharedUserGroupView - group ids from userovo user group 
      * @returns {Object} {viewEmailList, editEmailList} - email list for view & edit permission
      */
     async function getEmailList(member, shareWith, sharedEmailEdit, sharedEmailView, sharedUserGroupEdit, sharedUserGroupView) {
@@ -1971,7 +1971,7 @@ plugins.setConfigs("dashboards", {
         const templateString = await readReportTemplate();
 
         versionInfo.page = (!versionInfo.title) ? "http://count.ly" : null;
-        versionInfo.title = versionInfo.title || "Countly";
+        versionInfo.title = versionInfo.title || "Userovo";
 
 
         localize.getProperties(member.lang, function(gpErr, props) {

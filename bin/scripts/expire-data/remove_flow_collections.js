@@ -1,22 +1,22 @@
 /**
  *  Remove old flow collections after running merge_flow_collections script
- *  Server: countly
- *  Path: countly dir/bin/upgrade/DEV/scripts/remove_flow_collections
+ *  Server: userovo
+ *  Path: userovo dir/bin/upgrade/DEV/scripts/remove_flow_collections
  *  Command: node remove_flow_collections.js
  */
 
 const pluginManager = require('../../../../plugins/pluginManager');
 
-pluginManager.dbConnection().then(async(countlyDb) => {
+pluginManager.dbConnection().then(async(userovoDb) => {
     try {
-        let allCollections = await countlyDb.listCollections().toArray();
+        let allCollections = await userovoDb.listCollections().toArray();
         let collectionNames = allCollections.map(o => o.name);
         const flowSchemaCollections = collectionNames.filter(x => x.startsWith('flowSchema'));
         const flowDataCollections = collectionNames.filter(x => x.startsWith('flowData'));
 
         try {
             for (const collectionName of flowSchemaCollections) {
-                await countlyDb.collection(collectionName).drop();
+                await userovoDb.collection(collectionName).drop();
                 console.log('Finished removing flowSchema collections.');
             }
         }
@@ -25,7 +25,7 @@ pluginManager.dbConnection().then(async(countlyDb) => {
         }
         try {
             for (const collectionName of flowDataCollections) {
-                await countlyDb.collection(collectionName).drop();
+                await userovoDb.collection(collectionName).drop();
                 console.log('Finished removing flowData collections.');
             }
         }
@@ -37,6 +37,6 @@ pluginManager.dbConnection().then(async(countlyDb) => {
         console.log(`Error removing flow collections: ${error}`);
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
     }
 });

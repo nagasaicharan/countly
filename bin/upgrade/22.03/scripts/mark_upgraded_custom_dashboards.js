@@ -4,12 +4,12 @@ var path = require('path');
 
 console.log("Upgrading app_users data");
 
-pluginManager.dbConnection().then(async (countlyDb) => {
-        await countlyDb.collection('widgets').updateMany(
+pluginManager.dbConnection().then(async (userovoDb) => {
+        await userovoDb.collection('widgets').updateMany(
             { gridsize: { $exists : false }},
             {
                 $set: { gridsize: 4 }
             }
         );
-    countlyDb.close();
+    userovoDb.close();
 });

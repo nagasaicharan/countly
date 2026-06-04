@@ -2,16 +2,16 @@ var pluginManager = require('../pluginManager.js');
 
 console.log("Installing Consolidate Plugin");
 
-pluginManager.dbConnection().then(function(countlyDb) {
-    countlyDb.collection('apps').updateMany({'plugins.consolidate': {$exists: false}},
+pluginManager.dbConnection().then(function(userovoDb) {
+    userovoDb.collection('apps').updateMany({'plugins.consolidate': {$exists: false}},
         {$set: {'plugins.consolidate': []}},
         async function() {
             // get config for consolidate legacy
-            const res = await countlyDb.collection('plugins').findOne({_id: 'plugins'}, {projection: {'consolidate': 1}});
+            const res = await userovoDb.collection('plugins').findOne({_id: 'plugins'}, {projection: {'consolidate': 1}});
             if (res && res.consolidate && res.consolidate.app) {
                 // migrate to app specific documents
                 try {
-                    await countlyDb.collection('apps').updateMany(
+                    await userovoDb.collection('apps').updateMany(
                         {_id: { $ne: res.consolidate.app } },
                         {$addToSet: {'plugins.consolidate': res.consolidate.app + ""}}
                     );
@@ -23,9 +23,9 @@ pluginManager.dbConnection().then(function(countlyDb) {
                 }
             }
             // remove legacy config
-            await countlyDb.collection('plugins').updateOne({_id: 'plugins'}, {$unset: {'consolidate': ''}});
+            await userovoDb.collection('plugins').updateOne({_id: 'plugins'}, {$unset: {'consolidate': ''}});
             console.log("Installing Consolidate Plugin Finished");
-            countlyDb.close();
+            userovoDb.close();
             return;
         }
     );

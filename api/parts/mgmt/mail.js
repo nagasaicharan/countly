@@ -120,7 +120,7 @@ function getPluginConfig() {
 **/
 mail.sendMail = function(message, callback) {
     const whiteLabelingConfig = getPluginConfig();
-    message.from = whiteLabelingConfig || config.mail && config.mail.strings && config.mail.strings.from || message.from || "Countly";
+    message.from = whiteLabelingConfig || config.mail && config.mail.strings && config.mail.strings.from || message.from || "Userovo";
     mail.smtpTransport.sendMail(message, function(error) {
         if (error) {
             console.log('Error sending email');
@@ -143,7 +143,7 @@ mail.sendMessage = function(to, subject, message, callback) {
     const whiteLabelingConfig = getPluginConfig();
     mail.sendMail({
         to: to,
-        from: whiteLabelingConfig || config.mail && config.mail.strings && config.mail.strings.from || "Countly",
+        from: whiteLabelingConfig || config.mail && config.mail.strings && config.mail.strings.from || "Userovo",
         subject: subject || "",
         html: message || ""
     }, callback);
@@ -272,7 +272,7 @@ mail.sendTimeBanWarning = function(member, db) {
         callback: function(err, token) {
             mail.lookup(function(err2, host) {
                 localize.getProperties(member.lang, function(err3, properties) {
-                    var subject = localize.format(properties['mail.time-ban-subject'], versionInfo.title || "Countly");
+                    var subject = localize.format(properties['mail.time-ban-subject'], versionInfo.title || "Userovo");
                     var message = localize.format(properties["mail.time-ban"], mail.escapedHTMLString(mail.getUserFirstName(member)), host, token);
                     mail.sendMessage(member.email, subject, message);
                 });

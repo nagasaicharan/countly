@@ -6,8 +6,8 @@ var	common = require('../../../api/utils/common.js'),
     crypto = require('crypto');
 
 
-plugins.dbConnection().then((countlyDb) => {
-    common.db = countlyDb;
+plugins.dbConnection().then((userovoDb) => {
+    common.db = userovoDb;
     
     common.db.collection('events').find({}, {list: 1}).toArray(function(err, events) {
         if (!err && events && events.length) {

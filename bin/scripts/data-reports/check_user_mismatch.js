@@ -1,7 +1,7 @@
 /**
  *  Script checks if there are no user list differences between drill and app_users
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/data-reports
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/data-reports
  *  Command: node check_user_mismatch.js
  * 
  * Before running script set eventKey and appID and modify query if needed. It is recommended to do not choose too wide date range. if there is alot of data as script will not be able to run validation query if it matches close to 1M users.
@@ -18,7 +18,7 @@ var union_with_old_collection = false; //False if all sessions are stored in dri
 
 console.log("Running for:" + appID + " " + eventKey + " " + JSON.stringify(query));
 
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
 
     var pipeline = [];
     var query2 = JSON.parse(JSON.stringify(query));
@@ -35,7 +35,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
     drillDb.collection("drill_events").aggregate(pipeline, function(err, res) {
         if (err) {
             console.log(err);
-            countlyDb.close();
+            userovoDb.close();
             drillDb.close();
         }
         else {
@@ -43,10 +43,10 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
             res = res[0] || {};
             res = res.uid || [];
             if (res.length > 0) {
-                countlyDb.collection("app_users" + appID).find({"uid": {"$in": res}}, {"uid": 1, "_id": 1}).toArray(function(err, users) {
+                userovoDb.collection("app_users" + appID).find({"uid": {"$in": res}}, {"uid": 1, "_id": 1}).toArray(function(err, users) {
                     if (err) {
                         console.log(err);
-                        countlyDb.close();
+                        userovoDb.close();
                         drillDb.close();
                     }
                     else {
@@ -57,7 +57,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                         else {
                             console.log("MISMATCHED COUNT");
                             console.log("Users in drill: " + res.length);
-                            console.log("Users in countly: " + users.length);
+                            console.log("Users in userovo: " + users.length);
                         }
                         console.log("checking which users don't have document in app_users collection...");
 
@@ -79,7 +79,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                             console.log("All users matched");
                         }
 
-                        countlyDb.close();
+                        userovoDb.close();
                         drillDb.close();
                     }
                 });

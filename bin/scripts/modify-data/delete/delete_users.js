@@ -1,7 +1,7 @@
 /**
  *  Delete users in bacthes for specific query
- *  Server: countly
- *  Path: countly dir/bin/scripts/modify-data/delete
+ *  Server: userovo
+ *  Path: userovo dir/bin/scripts/modify-data/delete
  *  Command: node delete_users.js
  */
 
@@ -21,9 +21,9 @@ const rl = readline.createInterface({
 });
 
 var Promise = require("bluebird");
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).spread(function(countlyDb, countlyDrill) {
-    common.db = countlyDb;
-    common.drillDb = countlyDrill;
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).spread(function(userovoDb, userovoDrill) {
+    common.db = userovoDb;
+    common.drillDb = userovoDrill;
     app_users.count(APP_ID, QUERY, function(err, res) {
         console.log("deleting", res, "users");
         rl.question("Are you sure ? ", function(answer) {
@@ -47,14 +47,14 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                     });
                 }, function(err) {
                     console.log("Done", err);
-                    countlyDb.close();
-                    countlyDrill.close();
+                    userovoDb.close();
+                    userovoDrill.close();
                     rl.close();
                 });
             }
             else {
-                countlyDb.close();
-                countlyDrill.close();
+                userovoDb.close();
+                userovoDrill.close();
                 rl.close();
             }
         });

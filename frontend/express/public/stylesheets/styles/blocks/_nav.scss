@@ -1,8 +1,8 @@
 @use "../base/typography-variables" as t;
 
-$default-color: #81868D;
-$primary-color: #0166D6;
-$secondary-color: #333C48;
+$default-color: #475569;
+$primary-color: #2563EB;
+$secondary-color: #172554;
 
 .cly-vue-tabs {
     &__primary-tab-list {
@@ -40,7 +40,7 @@ $secondary-color: #333C48;
 
         &--primary-active {
             color: $primary-color;
-            background-color: #E1EFFF;
+            background-color: #EEF6FF;
         }
 
         &--secondary-active {

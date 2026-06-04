@@ -2,7 +2,7 @@ var common = require('../../../api/utils/common.js'),
     log = common.log('dbviewer:api'),
     async = require('async'),
     plugins = require('../../pluginManager.js'),
-    countlyFs = require('../../../api/utils/countlyFs.js'),
+    userovoFs = require('../../../api/utils/userovoFs.js'),
     _ = require('underscore'),
     taskManager = require('../../../api/utils/taskmanager.js'),
     { getCollectionName, dbUserHasAccessToCollection, dbLoadEventsData, validateUser, getUserApps, validateGlobalAdmin, hasReadRight, getBaseAppFilter } = require('../../../api/utils/rights.js'),
@@ -116,13 +116,13 @@ var spawn = require('child_process').spawn,
      *      "v":2,
      *      "key":{"_id":1},
      *      "name":"_id_",
-     *      "ns":"countly.app_crashes625ef06c0aff525c2e9dc10a"
+     *      "ns":"userovo.app_crashes625ef06c0aff525c2e9dc10a"
      *    },
      *    {
      *      "v":2,
      *      "key":{"group":1},
      *      "name":"group_1",
-     *      "ns":"countly.app_crashes625ef06c0aff525c2e9dc10a",
+     *      "ns":"userovo.app_crashes625ef06c0aff525c2e9dc10a",
      *      "background":true
      *    }
      *  ]
@@ -136,7 +136,7 @@ var spawn = require('child_process').spawn,
      * }
      */
     plugins.register("/o/db", function(ob) {
-        var dbs = { countly: common.db, countly_drill: common.drillDb, countly_out: common.outDb, countly_fs: countlyFs.gridfs.getHandler() };
+        var dbs = { userovo: common.db, userovo_drill: common.drillDb, userovo_out: common.outDb, userovo_fs: userovoFs.gridfs.getHandler() };
         var params = ob.params;
         var paths = ob.paths;
         var dbNameOnParam = params.qstring.dbs || params.qstring.db;
@@ -667,7 +667,7 @@ var spawn = require('child_process').spawn,
   * @param  {Object} params - params object
   */
     function fetchMongoTop(params) {
-        var dbParams = plugins.getDbConnectionParams('countly');
+        var dbParams = plugins.getDbConnectionParams('userovo');
         var args = constructDbArgs(dbParams);
         child = spawn('mongotop', args);
         child.stdout.setEncoding('utf8');
@@ -696,7 +696,7 @@ var spawn = require('child_process').spawn,
   * @param  {Object} params - params object
   */
     function fetchMongoStat(params) {
-        var dbParams = plugins.getDbConnectionParams('countly');
+        var dbParams = plugins.getDbConnectionParams('userovo');
         var args = constructDbArgs(dbParams);
         child = spawn('mongostat', args);
         child.stdout.setEncoding('utf8');

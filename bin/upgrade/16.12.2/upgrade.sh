@@ -6,12 +6,12 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
 bash "$DIR/scripts/detect.init.sh"
 
 #upgrade plugins
-countly plugin upgrade push
+userovo plugin upgrade push
 
-countly update sdk-web
+userovo update sdk-web
 
 #add indexes
 nodejs "$DIR/scripts/add_indexes.js"
 
-#install dependencies, process files and restart countly
-countly upgrade
+#install dependencies, process files and restart userovo
+userovo upgrade

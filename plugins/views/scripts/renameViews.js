@@ -1,5 +1,5 @@
 /**
-Path to file: {COUNTLY DIR}/plugins/views/scripts/renameViews.js
+Path to file: {USEROVO DIR}/plugins/views/scripts/renameViews.js
 Script renames views for app. 
 Please fill correct app id.
 After this script there is need to run fixViews.js to merge views.(In case renaming creates two views with same name)
@@ -7,8 +7,8 @@ After this script there is need to run fixViews.js to merge views.(In case renam
 var pluginManager = require('../../pluginManager.js'),
     crypto = require('crypto'),
     Promise = require("bluebird"),
-    countlyDb,
-    countly_drill,
+    userovoDb,
+    userovo_drill,
     drillCommon = require('../../drill/api/common.js');
 
 
@@ -46,7 +46,7 @@ function merge_drill_data(viewdata, callback) {
     Promise.each(updateEvents, function(eventdata) {
         return new Promise(function(resolveSub/*, rejectSub*/) {
             console.log("Updating events in " + eventdata.collection + " : " + JSON.stringify(eventdata.setO));
-            countly_drill.collection(eventdata.collection).update(eventdata.updateO, {"$set": eventdata.setO}, {multi: true}, function(errEvents) {
+            userovo_drill.collection(eventdata.collection).update(eventdata.updateO, {"$set": eventdata.setO}, {multi: true}, function(errEvents) {
                 if (errEvents) {
                     console.log(errEvents);
                 }
@@ -62,7 +62,7 @@ function merge_drill_data(viewdata, callback) {
                 if (eventdata.key === "meta_up") {
                     eventHash = "up";
                 }
-                countly_drill.collection(collectionMeta).findOne({"_id": "meta_" + eventHash}, function(err3, meta_event) {
+                userovo_drill.collection(collectionMeta).findOne({"_id": "meta_" + eventHash}, function(err3, meta_event) {
                     if (err3) {
                         console.log(err3);
                     }
@@ -81,11 +81,11 @@ function merge_drill_data(viewdata, callback) {
                     var keynew;
                     var updateObj = {$set: {}, $unset: {}};
                     if (type === 'l') {
-                        keyold = [eventdata.segment] + ".values." + countlyDb.encode(eventdata.oldvalue);
-                        keynew = [eventdata.segment] + ".values." + countlyDb.encode(eventdata.newvalue);
+                        keyold = [eventdata.segment] + ".values." + userovoDb.encode(eventdata.oldvalue);
+                        keynew = [eventdata.segment] + ".values." + userovoDb.encode(eventdata.newvalue);
                         updateObj["$set"][keynew] = true;
                         updateObj["$unset"][keyold] = true;
-                        countly_drill.collection(collectionMeta).update({"_id": "meta_" + eventHash}, updateObj, function(err4) {
+                        userovo_drill.collection(collectionMeta).update({"_id": "meta_" + eventHash}, updateObj, function(err4) {
                             if (err4) {
                                 console.log(err4);
                             }
@@ -93,11 +93,11 @@ function merge_drill_data(viewdata, callback) {
                         });
                     }
                     else if (type === 'bl' && eventdata.key === "meta_up") { //because for sg we go to string when limit reached
-                        keyold = "values." + countlyDb.encode(eventdata.oldvalue);
-                        keynew = "values." + countlyDb.encode(eventdata.newvalue);
+                        keyold = "values." + userovoDb.encode(eventdata.oldvalue);
+                        keynew = "values." + userovoDb.encode(eventdata.newvalue);
                         updateObj["$set"][keynew] = true;
                         updateObj["$unset"][keyold] = true;
-                        countly_drill.collection(collectionMeta).update({"_id": "meta_" + eventHash + "_up.lv"}, updateObj, function(err5) {
+                        userovo_drill.collection(collectionMeta).update({"_id": "meta_" + eventHash + "_up.lv"}, updateObj, function(err5) {
                             if (err5) {
                                 console.log(err5);
                             }
@@ -120,7 +120,7 @@ function merge_drill_data(viewdata, callback) {
 
 function check_renames(done) {
     console.log("Check if there are not unfinished renaming processes");
-    countlyDb.collection('app_viewsmeta_renames').find({}).toArray(function(err, merges) {
+    userovoDb.collection('app_viewsmeta_renames').find({}).toArray(function(err, merges) {
         if (err) {
             console.log(err);
         }
@@ -131,7 +131,7 @@ function check_renames(done) {
             Promise.each(merges, function(merge) {
                 return new Promise(function(resolve/*, reject*/) {
                     merge_drill_data(merge, function() {
-                        countlyDb.collection('app_viewsmeta_renames').remove({_id: merge._id}, function() {
+                        userovoDb.collection('app_viewsmeta_renames').remove({_id: merge._id}, function() {
                             resolve();
                         });
                     });
@@ -143,15 +143,15 @@ function check_renames(done) {
     });
 }
 
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).spread(function(db, db_drill) {
-    countlyDb = db;
-    countly_drill = db_drill;
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).spread(function(db, db_drill) {
+    userovoDb = db;
+    userovo_drill = db_drill;
     check_renames(function() {
-        countlyDb.collection('views').find({_id: countlyDb.ObjectID(appId)}).toArray(function(err, viewBase) {
-            countlyDb.collection("app_viewsmeta" + appId).find({$or: [{'view': {$regex: fromValue}}, {'url': {$regex: fromValue}}]}).toArray(function(err, res) {
+        userovoDb.collection('views').find({_id: userovoDb.ObjectID(appId)}).toArray(function(err, viewBase) {
+            userovoDb.collection("app_viewsmeta" + appId).find({$or: [{'view': {$regex: fromValue}}, {'url': {$regex: fromValue}}]}).toArray(function(err, res) {
                 if (err) {
                     console.log(err);
-                    countlyDb.close();
+                    userovoDb.close();
                 }
                 else {
                     if (res && res.length > 0) {
@@ -172,7 +172,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                                     ob["url"] = viewdata.url;
                                 }
 
-                                countlyDb.collection('app_viewsmeta_renames').insert(ob, function(err) {
+                                userovoDb.collection('app_viewsmeta_renames').insert(ob, function(err) {
                                     if (err) {
                                         if (err.code !== 11000) {
                                             console.log(err);
@@ -181,24 +181,24 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                                     console.log("Try renaming in app_viewsmeta");
                                     console.log(viewdata._id);
                                     console.log(JSON.stringify(setOb));
-                                    countlyDb.collection("app_viewsmeta" + appId).update({_id: countlyDb.ObjectID(viewdata._id)}, {$set: setOb}, function(err) {
+                                    userovoDb.collection("app_viewsmeta" + appId).update({_id: userovoDb.ObjectID(viewdata._id)}, {$set: setOb}, function(err) {
                                         if (err) {
                                             console.log("Couldn't rename");
                                             //we have error  - need to merge views.
                                             //get current view with that name
-                                            countlyDb.collection("app_viewsmeta" + appId).findOne({"view": ob.to}, function(err, newview) {
+                                            userovoDb.collection("app_viewsmeta" + appId).findOne({"view": ob.to}, function(err, newview) {
                                                 console.log(newview);
                                                 console.log("Add to merge list: " + ob.to);
-                                                var iOb = {_id: newview._id + "_" + appId, "view": ob.to, "base": countlyDb.ObjectID(newview._id), mergeIn: [viewdata._id], "appID": appId, "segments": viewBase.segments};
+                                                var iOb = {_id: newview._id + "_" + appId, "view": ob.to, "base": userovoDb.ObjectID(newview._id), mergeIn: [viewdata._id], "appID": appId, "segments": viewBase.segments};
 
-                                                countlyDb.collection('app_viewsmeta_merges').insert(iOb, function(err) {
+                                                userovoDb.collection('app_viewsmeta_merges').insert(iOb, function(err) {
                                                     if (err) {
                                                         if (err.code !== 11000) {
                                                             console.log(err);
                                                         }
                                                     }
                                                     merge_drill_data(viewdata, function() {
-                                                        countlyDb.collection('app_viewsmeta_renames').remove({_id: ob._id}, function() {
+                                                        userovoDb.collection('app_viewsmeta_renames').remove({_id: ob._id}, function() {
                                                             resolve();
                                                         });
                                                     });
@@ -208,7 +208,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                                         }
                                         else {
                                             merge_drill_data(viewdata, function() {
-                                                countlyDb.collection('app_viewsmeta_renames').remove({_id: ob._id}, function() {
+                                                userovoDb.collection('app_viewsmeta_renames').remove({_id: ob._id}, function() {
                                                     resolve();
                                                 });
                                             });
@@ -218,19 +218,19 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                             });
                         }).then(function() {
                             console.log("finished");
-                            countlyDb.close();
+                            userovoDb.close();
 
-                            if (countly_drill) {
-                                countly_drill.close();
+                            if (userovo_drill) {
+                                userovo_drill.close();
                             }
                         });
                     }
                     else {
                         console.log("Couldn't find any view to rename");
-                        countlyDb.close();
+                        userovoDb.close();
 
-                        if (countly_drill) {
-                            countly_drill.close();
+                        if (userovo_drill) {
+                            userovo_drill.close();
                         }
                     }
                 }

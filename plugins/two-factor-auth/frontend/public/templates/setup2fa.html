@@ -21,11 +21,11 @@
             background-color: #FFF;
         }
         
-        #countly-logo {
+        #userovo-logo {
             margin: 15px 50px;
         }
 
-        #countly-logo img {
+        #userovo-logo img {
             width: 120px;
         }
 
@@ -38,18 +38,18 @@
             width: auto;
         }
     </style>
-	<link rel="icon" type="image/png" href="<%- countlyFavicon %>">
+	<link rel="icon" type="image/png" href="<%- userovoFavicon %>">
     <% if (themeFiles && themeFiles.css) { %>
         <% for(var i=0, l=themeFiles.css.length; i<l; i++) {%>
     <link href='<%= themeFiles.css[i]%>' rel='stylesheet' type='text/css'>
         <% } %>
     <% } %>
-	<title><%- countlyTitle %></title>
-	<script>window.countlyGlobal = window.countlyGlobal || {}; countlyGlobal["cdn"] = "<%- cdn %>";</script>
+	<title><%- userovoTitle %></title>
+	<script>window.userovoGlobal = window.userovoGlobal || {}; userovoGlobal["cdn"] = "<%- cdn %>";</script>
 </head>
 <body>
-    <div id="countly-logo">
-        <img src="images/dashboard/countly_logo.svg"/>
+    <div id="userovo-logo">
+        <img src="images/dashboard/userovo_logo.svg"/>
     </div>
     <div id="two-factor-auth-setup">
         <div class="row title" data-localize="two-factor-auth.setup_auth_to_continue"></div>
@@ -101,7 +101,7 @@
 	<script language="javascript" type="text/javascript" src="javascripts/utils/jquery.xss.js"></script>
 	<script language="javascript" type="text/javascript" src="javascripts/pre-login.js"></script>
     <script>
-        addLocalization('two-factor-auth', countlyGlobal['cdn'] + 'two-factor-auth/localization/');
+        addLocalization('two-factor-auth', userovoGlobal['cdn'] + 'two-factor-auth/localization/');
     </script>
     <% if (themeFiles && themeFiles.js) { %>
         <% for(var i=0, l=themeFiles.js.length; i<l; i++) {%>

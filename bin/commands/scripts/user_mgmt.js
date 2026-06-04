@@ -1,5 +1,5 @@
 var manager = require('../../../plugins/pluginManager.js'),
-    countlyConfig = require('../../../frontend/express/config.js'),
+    userovoConfig = require('../../../frontend/express/config.js'),
     crypto = require('crypto'),
     argon2 = require('argon2');
 
@@ -25,7 +25,7 @@ manager.dbConnection().then((db) => {
                 db.close();
             }
             else {
-                var secret = countlyConfig.passwordSecret || "";
+                var secret = userovoConfig.passwordSecret || "";
                 argon2Hash(myArgs[2] + secret).then(password_ARGON2 => {
                     var doc = { "full_name": myArgs[1], "username": myArgs[1], "password": password_ARGON2, "email": myArgs[1], "global_admin": true };
                     crypto.randomBytes(48, function(errorBuff, buffer) {
@@ -46,7 +46,7 @@ manager.dbConnection().then((db) => {
         });
     }
     else if (myArgs[0] == "delete" && myArgs[1] && myArgs[2]) {
-        var secret = countlyConfig.passwordSecret || "";
+        var secret = userovoConfig.passwordSecret || "";
         db.collection('members').findOne({ username: { $eq: myArgs[1] } }, function(err, member) {
             if (err) {
                 console.log(err);

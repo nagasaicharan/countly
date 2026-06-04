@@ -1,10 +1,10 @@
 
 var pluginManager = require('../../plugins/pluginManager');
-var request = require('countly-request')(pluginManager.getConfig("security"));
+var request = require('userovo-request')(pluginManager.getConfig("security"));
 var should = require('should');
 const testUtils = require("../testUtils");
 
-describe('Countly Request', () => {
+describe('Userovo Request', () => {
 
     it('Make sure options converted correctly', () => {
         const optionsWithoutBaseURL = {
@@ -72,7 +72,7 @@ describe('Countly Request', () => {
     });
 
     it('Make post request', () => {
-        request.post('https://countly', function(err, res/*, body*/) {
+        request.post('https://userovo', function(err, res/*, body*/) {
             should.not.exist(err);
             should.exist(res);
 

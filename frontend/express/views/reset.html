@@ -45,7 +45,9 @@
 					</div>
 				</div>
 			</div>
-			<div id="login-logo"></div>
+			<div id="login-logo">
+				<img src="images/pre-login/countly-logo-dark.svg" alt="Userovo" />
+			</div>
 		</div>
 		<% if (message){ %>
 			<div class="cly-vue-notification__alert-box cly-vue-notification__alert-box__alert-text--light-destructive" style="display: none; min-width: 300px; max-width: fit-content; margin:auto;">
@@ -59,16 +61,16 @@
 			</div>
 		<% } %>
 		<h1 style="font-weight: 500; text-align: center; line-height: 48px;" id="header" data-localize="reset.new-password"></h1>
-		<div style="font-size: 14px; color: #333C48; text-align: center; width: 332px; margin: 0 auto 32px; line-height: 21px;" data-localize="reset.explanation"></div>
+		<div style="font-size: 14px; color: #162033; text-align: center; width: 332px; margin: 0 auto 32px; line-height: 21px;" data-localize="reset.explanation"></div>
 		<div id="forgot-form" style="width:300px; margin:auto;">
 			<div>
 				<form id="reset-password-form" method="POST" action="../reset">
 					<div>
-						<p style="float:left;color: #333C48;font-weight: 500;margin-bottom: 8px;margin-top: 0;" data-localize="login.password"></p>
+						<p style="float:left;color: #162033;font-weight: 500;margin-bottom: 8px;margin-top: 0;" data-localize="login.password"></p>
 						<input type="password" name="password" placeholder="Password" data-localize="placeholder.new-password" autocomplete="<% if(security.autocomplete) {%>on<%} else { %>off<%}%>"/>
 					</div>
 					<div>
-						<p style="float:left;color: #333C48;font-weight: 500;margin-bottom:8px" data-localize="reset.confirm-password"></p>
+						<p style="float:left;color: #162033;font-weight: 500;margin-bottom:8px" data-localize="reset.confirm-password"></p>
 						<input type="password" name="again" placeholder="Again" data-localize="placeholder.again" autocomplete="<% if(security.autocomplete) {%>on<%} else { %>off<%}%>"/>
 					</div>
 					<% if (typeof inject_template.form != "undefined") { %>
@@ -94,7 +96,7 @@
 		<div class="footer">
 			<div>
 				<p style="margin: 0px;">© <%= new Date().getFullYear() %> <%- countlyTitle %></p>
-				<div style="margin: 0px; color: #0166D6;">
+				<div style="margin: 0px; color: #2563EB;">
 					<% if (countlyPage) { %> <a href="<%- countlyPage %>"> <%- countlyTitle %> </a> <% }%>
                     <% if (featureRequestLink) { %> <a href="<%- featureRequestLink %>" data-localize="login.terms"></a> <% }%>
                     <% if (feedbackLink) { %> <a href="<%- feedbackLink %>" data-localize="login.privacy"></a> <% }%>
@@ -157,7 +159,7 @@
 		$(document).ready(function() {
 			$("*").click(function(event){
 				if ($(event.target).is(".top-button") || $(event.target).is("#active-lang") && $(".top-button").hasClass("active")) {
-					$('#active-lang').css('border','1px solid #81868D');
+					$('#active-lang').css('border','1px solid #475569');
 				}
 				else{
 					$('#active-lang').css('border','');

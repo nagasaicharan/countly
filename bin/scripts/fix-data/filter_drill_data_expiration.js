@@ -1,7 +1,7 @@
 /**
  *  Description: This script is used to remove all documents without cd field from drill_events collections
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/fix-data
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/fix-data
  *  Command: node filter_drill_data_expiration.js
  */
 
@@ -10,7 +10,7 @@ var DRY_RUN = true;
 const asyncjs = require("async");
 const pluginManager = require('../../../plugins/pluginManager.js');
 
-pluginManager.dbConnection("countly_drill").then(async function(drillDb) {
+pluginManager.dbConnection("userovo_drill").then(async function(drillDb) {
     console.log("Connected to database.");
     //get all drill collections
     try {

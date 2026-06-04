@@ -3061,14 +3061,14 @@ describe('Testing Crashes', function() {
             const crashData = {
                 "_architecture": "arm64",
                 "_binary_images": {
-                    "CountlyTestApp-iOS": {
-                        "bn": "countlyTestApp-iOS",
+                    "UserovoTestApp-iOS": {
+                        "bn": "userovoTestApp-iOS",
                         "la": "0x104C80000",
                         "id": "757F024F-EA35-3322-9E77-3AE793023AC3"
                     }
                 },
-                "_error": "CoreFoundation                      0x00000001e5669ebc <redacted> + 252\nlibobjc.A.dylib                     0x00000001e4839a50 objc_exception_throw + 56\nCoreFoundation                      0x00000001e55e1384 _CFArgv + 0\nCoreFoundation                      0x00000001e557157c <redacted> + 0\nCountlyTestApp-iOS                  0x0000000104c8910c CountlyTestApp-iOS + 37132\nCountlyTestApp-iOS                  0x0000000104c9a8c0 CountlyTestApp-iOS + 108736\nUIKitCore                           0x0000000212b62458 <redacted> + 1348\nUIKitCore                           0x0000000212b626bc <redacted> + 268\nUIKitCore                           0x000000021296087c <redacted> + 296\nUIKitCore                           0x000000021294e878 <redacted> + 384\nUIKitCore                           0x000000021297d880 <redacted> + 132\nCoreFoundation                      0x00000001e55f96bc <redacted> + 32\nCoreFoundation                      0x00000001e55f4350 <redacted> + 412\nCoreFoundation                      0x00000001e55f48f0 <redacted> + 1264\nCoreFoundation                      0x00000001e55f40e0 CFRunLoopRunSpecific + 436\nGraphicsServices                    0x00000001e786d584 GSEventRunModal + 100\nUIKitCore                           0x0000000212954c00 UIApplicationMain + 212\nCountlyTestApp-iOS                  0x0000000104ca2c3c CountlyTestApp-iOS + 142396\nlibdyld.dylib                       0x00000001e50b2bb4 <redacted> + 4",
-                "_executable_name": "CountlyTestApp-iOS",
+                "_error": "CoreFoundation                      0x00000001e5669ebc <redacted> + 252\nlibobjc.A.dylib                     0x00000001e4839a50 objc_exception_throw + 56\nCoreFoundation                      0x00000001e55e1384 _CFArgv + 0\nCoreFoundation                      0x00000001e557157c <redacted> + 0\nUserovoTestApp-iOS                  0x0000000104c8910c UserovoTestApp-iOS + 37132\nUserovoTestApp-iOS                  0x0000000104c9a8c0 UserovoTestApp-iOS + 108736\nUIKitCore                           0x0000000212b62458 <redacted> + 1348\nUIKitCore                           0x0000000212b626bc <redacted> + 268\nUIKitCore                           0x000000021296087c <redacted> + 296\nUIKitCore                           0x000000021294e878 <redacted> + 384\nUIKitCore                           0x000000021297d880 <redacted> + 132\nCoreFoundation                      0x00000001e55f96bc <redacted> + 32\nCoreFoundation                      0x00000001e55f4350 <redacted> + 412\nCoreFoundation                      0x00000001e55f48f0 <redacted> + 1264\nCoreFoundation                      0x00000001e55f40e0 CFRunLoopRunSpecific + 436\nGraphicsServices                    0x00000001e786d584 GSEventRunModal + 100\nUIKitCore                           0x0000000212954c00 UIApplicationMain + 212\nUserovoTestApp-iOS                  0x0000000104ca2c3c UserovoTestApp-iOS + 142396\nlibdyld.dylib                       0x00000001e50b2bb4 <redacted> + 4",
+                "_executable_name": "UserovoTestApp-iOS",
                 "_os_version": "12.0.0",
                 "_app_version": "77.0.0",
                 "_os": "iOS",
@@ -3096,7 +3096,7 @@ describe('Testing Crashes', function() {
         it('should return double newline flutter stacktrace correctly', async() => {
             const crashData = {
                 // this is a malformed stacktrace from sdk with two newlines after the first line
-                '_error': 'java.lang.Exception: IntegerDivisionByOneException\n\n%230      int (dart:core-patch/integers.dart:30:7)\n%231      CrashReportingPage.dividedByZero (package:countly_flutter_example/page_crash_reporting.dart:49:31)\n%232      _InkResponseState.handleTap (package:flutter/src/material/ink_well.dart:1183:21)',
+                '_error': 'java.lang.Exception: IntegerDivisionByOneException\n\n%230      int (dart:core-patch/integers.dart:30:7)\n%231      CrashReportingPage.dividedByZero (package:userovo_flutter_example/page_crash_reporting.dart:49:31)\n%232      _InkResponseState.handleTap (package:flutter/src/material/ink_well.dart:1183:21)',
                 '_os_version': '8.2',
                 '_os': 'Android',
                 '_app_version': '78.0.0',
@@ -3121,7 +3121,7 @@ describe('Testing Crashes', function() {
         it('should return normal flutter stacktrace correctly', async() => {
             const crashData = {
                 // this is how a normal stacktrace should look like with just one newline after the first line
-                '_error': 'java.lang.Exception: IntegerDivisionByOneException\n%230      int (dart:core-patch/integers.dart:30:7)\n%231      CrashReportingPage.dividedByZero (package:countly_flutter_example/page_crash_reporting.dart:49:31)\n%232      _InkResponseState.handleTap (package:flutter/src/material/ink_well.dart:1183:21)',
+                '_error': 'java.lang.Exception: IntegerDivisionByOneException\n%230      int (dart:core-patch/integers.dart:30:7)\n%231      CrashReportingPage.dividedByZero (package:userovo_flutter_example/page_crash_reporting.dart:49:31)\n%232      _InkResponseState.handleTap (package:flutter/src/material/ink_well.dart:1183:21)',
                 '_os_version': '8.2',
                 '_os': 'Android',
                 '_app_version': '78.0.0',

@@ -11,7 +11,7 @@
 /* global db, print, quit */
 
 // Set the database name
-const dbName = "countly_drill";
+const dbName = "userovo_drill";
 
 // Set to true for dry run, false to actually delete collections
 const dryRun = true;

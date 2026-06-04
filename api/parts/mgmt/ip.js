@@ -17,7 +17,7 @@ const log = require('../../utils/log.js')('core:api');
  */
 ip.getHost = function(callback) {
     // If host is set in config.js use that, otherwise get the external IP from ifconfig.me
-    var domain = plugins.getConfig("api").domain || process.env.COUNTLY_CONFIG_HOSTNAME,
+    var domain = plugins.getConfig("api").domain || process.env.USEROVO_CONFIG_HOSTNAME,
         offlineMode = plugins.getConfig("api").offline_mode;
     if (domain) {
         if (domain.indexOf("://") === -1) {

@@ -1,5 +1,5 @@
 var exported = {},
-    countlyConfig = require("../../../frontend/express/config"),
+    userovoConfig = require("../../../frontend/express/config"),
     path = require('path'),
     fs = require('fs'),
     ejs = require('ejs');
@@ -23,7 +23,7 @@ var exported = {},
             "demo-navigation-1.html",
             "demo-navigation-2.html",
         ];
-        app.get(countlyConfig.path + '/populator/:id/:page', function(req, res) {
+        app.get(userovoConfig.path + '/populator/:id/:page', function(req, res) {
             let url = 'public/templates/demo-page.html';
             let pageIndex;
             if (predefinedTypes.includes(req.params.page)) {

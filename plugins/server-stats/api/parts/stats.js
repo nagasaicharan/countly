@@ -22,7 +22,7 @@ const internalEventsEnum =
 
 /**
 * Saves session and event count information to server_stats_data_points
-* collection in countly database
+* collection in userovo database
 
 * Sample document is like below where a is the app id, m is the month,
 * e is event count and s is the session count
@@ -235,7 +235,7 @@ function punchCard(db, filter, options) {
  *  @param {object} filter - to filter documents
  *  @param {object} options - array with periods
  *  @param {boolean} options.monthlyBreakdown - if true, will calculate monthly data points breakdown for all apps (used to get license metric)
- *  @param {string} options.license_hosting - client hosting type, could be countly hosted or self hosted. This will determine how consolidated data points should be added to total data points
+ *  @param {string} options.license_hosting - client hosting type, could be userovo hosted or self hosted. This will determine how consolidated data points should be added to total data points
  *  @param {boolean} options.dailyDates - array of dates in YYYY:M:D format for daily data points (used to get data points for last 30 days)
  *  @param {function} callback - callback
  */
@@ -263,8 +263,8 @@ function fetchDatapoints(db, filter, options, callback) {
                     }
 
                     if (/^\[CLY\]_consolidated/.test(current._id)) {
-                        // do not count consolidated dp for countly hosted clients
-                        if (options.license_hosting === 'Countly-Hosted') {
+                        // do not count consolidated dp for userovo hosted clients
+                        if (options.license_hosting === 'Userovo-Hosted') {
                             dp = 0;
                         }
                         // subtract consolidated dp for self hosted clients to get natural dp
@@ -280,7 +280,7 @@ function fetchDatapoints(db, filter, options, callback) {
                         acc[current.m] = dp;
                     }
 
-                    if (options.dailyDates && options.dailyDates.length && current.m && (!/^\[CLY\]_consolidated/.test(current._id) || options.license_hosting === 'Countly-Hosted')) {
+                    if (options.dailyDates && options.dailyDates.length && current.m && (!/^\[CLY\]_consolidated/.test(current._id) || options.license_hosting === 'Userovo-Hosted')) {
                         if (!acc.daily) {
                             acc.daily = {};
                         }

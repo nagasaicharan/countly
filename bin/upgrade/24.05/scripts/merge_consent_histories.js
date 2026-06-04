@@ -29,18 +29,18 @@ function mergeConsentHistoryCollections(collections, db) {
     return Promise.allSettled(processes);
 }
 
-pluginManager.dbConnection().then(async(countlyDb) => {
+pluginManager.dbConnection().then(async(userovoDb) => {
     try {
-        countlyDb.collection('consent_history').ensureIndex({device_id: 1}, function() {});
-        countlyDb.collection('consent_history').ensureIndex({uid: 1}, function() {});
-        countlyDb.collection('consent_history').ensureIndex({type: 1}, function() {});
-        countlyDb.collection('consent_history').ensureIndex({ts: 1}, function() {});
+        userovoDb.collection('consent_history').ensureIndex({device_id: 1}, function() {});
+        userovoDb.collection('consent_history').ensureIndex({uid: 1}, function() {});
+        userovoDb.collection('consent_history').ensureIndex({type: 1}, function() {});
+        userovoDb.collection('consent_history').ensureIndex({ts: 1}, function() {});
 
-        let consentCollections = await countlyDb.listCollections().toArray();
+        let consentCollections = await userovoDb.listCollections().toArray();
         let collectionNames = consentCollections.map(o => o.name);
         const consentHistoryCollections = (collectionNames.filter(x => x.startsWith('consent_history'))).filter(x => !x.endsWith('consent_history'));
         try {
-            const result = await mergeConsentHistoryCollections(consentHistoryCollections, countlyDb);
+            const result = await mergeConsentHistoryCollections(consentHistoryCollections, userovoDb);
             const faileds = result.filter(x=>x.status === 'rejected');
             if (faileds.length) {
                 throw new Error(faileds.map(x=>x.reason).join('\n'));
@@ -55,6 +55,6 @@ pluginManager.dbConnection().then(async(countlyDb) => {
         console.log(`Error merging consent_historyAPPID collections: ${error}`);
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
     }
 });

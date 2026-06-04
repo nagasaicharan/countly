@@ -13,18 +13,18 @@ cp "$DIR/config/nginx.conf" /etc/nginx/nginx.conf
 sudo nginx -s reload
 
 #upgrade existing plugins
-countly plugin upgrade push
+userovo plugin upgrade push
 
 #enable new plugins
-countly plugin enable alerts
-countly plugin enable cohorts
-countly plugin enable crash_symbolication
-countly plugin enable groups
-countly plugin enable plugin-upload
-countly plugin enable white-labeling
+userovo plugin enable alerts
+userovo plugin enable cohorts
+userovo plugin enable crash_symbolication
+userovo plugin enable groups
+userovo plugin enable plugin-upload
+userovo plugin enable white-labeling
 
 #update web-sdk
-countly update sdk-web
+userovo update sdk-web
 
-#install dependencies, process files and restart countly
-countly upgrade
+#install dependencies, process files and restart userovo
+userovo upgrade

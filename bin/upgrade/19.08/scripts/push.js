@@ -11,7 +11,7 @@ const { getAdminApps } = require('../../../../api/utils/rights.js');
 console.log('Installing push plugin');
 
 var dir = path.resolve(__dirname, '');
-fs.unlink(dir + '/../../../../plugins/push/frontend/public/javascripts/countly.models.js', function() {});
+fs.unlink(dir + '/../../../../plugins/push/frontend/public/javascripts/userovo.models.js', function() {});
 fs.unlink(dir + '/../../../../plugins/push/api/jobs/check.js', function() {});
 fs.unlink(dir + '/../../../../plugins/push/api/jobs/send.js', function() {});
 fs.unlink(dir + '/../../../../plugins/push/api/jobs/cleanup.js', function() {});

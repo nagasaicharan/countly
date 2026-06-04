@@ -1,5 +1,5 @@
 /**
-Put me in {countly dir}/bin/scripts/expire-data/clear_timeline.js
+Put me in {userovo dir}/bin/scripts/expire-data/clear_timeline.js
 To run it go to scripts folder and run:
 node clear_timeline.js
 
@@ -48,12 +48,12 @@ var app_list = []; //valid app_ids here. If empty array passed script will proce
 var dry_run = false; //if true, will not delete anything, just show what dates should be deleted.
 
 
-Promise.all([pluginManager.dbConnection("countly")]).then(async function([countlyDb]) {
-    getAppList({db: countlyDb}, function(err, apps) {
+Promise.all([pluginManager.dbConnection("userovo")]).then(async function([userovoDb]) {
+    getAppList({db: userovoDb}, function(err, apps) {
         if (err) {
             console.log(err);
             console.log("Could not connect to databases. Exiting script. ");
-            countlyDb.close();
+            userovoDb.close();
         }
         else {
             var tsMax = getPeriod(keepPeriod);
@@ -64,7 +64,7 @@ Promise.all([pluginManager.dbConnection("countly")]).then(async function([countl
                     console.log("collecting ids to delete");
 
                     var pipeline = [{"$match": {"app_id": (app._id + "")}}, {"$group": {"_id": {"$arrayElemAt": [{"$split": ["$_id", "_"]}, 1]}}}];
-                    countlyDb.collection("timelineStatus").aggregate(pipeline, function(err, dates) {
+                    userovoDb.collection("timelineStatus").aggregate(pipeline, function(err, dates) {
                         console.log("ids collected: " + dates.length);
                         if (err) {
                             console.log(err);
@@ -129,7 +129,7 @@ Promise.all([pluginManager.dbConnection("countly")]).then(async function([countl
                             }
                             else {
                                 console.log("clering timeline Data collection...");
-                                countlyDb.collection("eventTimes" + app._id).remove({"_id": {"$in": regex}}, function(err0, res0) {
+                                userovoDb.collection("eventTimes" + app._id).remove({"_id": {"$in": regex}}, function(err0, res0) {
                                     if (err0) {
                                         console.e.log(err0);
                                         console.log("Data deletion failied. Skipping this App.");
@@ -138,9 +138,9 @@ Promise.all([pluginManager.dbConnection("countly")]).then(async function([countl
                                     else {
                                         console.log(JSON.stringify(res0));
                                         console.log("Process could take long time. Clering timelineStatus....");
-                                        countlyDb.collection("timelineStatus").remove({"app_id": (app._id + ""), "_id": {"$in": ids}}, function(err1, res) {
+                                        userovoDb.collection("timelineStatus").remove({"app_id": (app._id + ""), "_id": {"$in": ids}}, function(err1, res) {
                                             console.log(JSON.stringify(res));
-                                            countlyDb.collection("timelineStatus").ensureIndex({"app_id": 1}, function() {});
+                                            userovoDb.collection("timelineStatus").ensureIndex({"app_id": 1}, function() {});
                                             if (err1) {
                                                 console.log(err1);
                                             }
@@ -154,7 +154,7 @@ Promise.all([pluginManager.dbConnection("countly")]).then(async function([countl
                 });
             }).then(function() {
                 console.log("Finished");
-                countlyDb.close();
+                userovoDb.close();
             });
         }
     });

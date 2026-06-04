@@ -15,9 +15,9 @@ var reports = {
     "mergedOneByOne": []
 };
 
-function load_event_hashmap(countlyDB, callback) {
+function load_event_hashmap(userovoDB, callback) {
     var mapped = {};
-    countlyDB.collection('events').find({}, {'list': 1}).toArray(function(err, events) {
+    userovoDB.collection('events').find({}, {'list': 1}).toArray(function(err, events) {
         if (err) {
             callback(err, null);
         }
@@ -35,7 +35,7 @@ function load_event_hashmap(countlyDB, callback) {
     });
 }
 
-async function merge_data_from_collection(countlyDB, collection, mapped, resolve) {
+async function merge_data_from_collection(userovoDB, collection, mapped, resolve) {
     if (!mapped[collection]) {
         console.log("Skipping collection " + collection + " as it is not found in events list");
         reports.skipped += 1;
@@ -46,16 +46,16 @@ async function merge_data_from_collection(countlyDB, collection, mapped, resolve
         var app_id = mapped[collection].a;
         var prefix = app_id + "_" + collection.replace("events", "");
         var tscheck = Date.now().valueOf();
-        countlyDB.collection(collection).aggregate([{"$match": {"merged": {"$ne": true}}}, {"$addFields": {"_id": {"$concat": [prefix, "_", "$_id"]}, "tscheck": tscheck, "a": app_id, "e": mapped[collection].e}}, {"$merge": {"into": "events_data", "on": "_id", "whenMatched": "fail"}}], {ignore_errors: [11000]}, async function(err) {
+        userovoDB.collection(collection).aggregate([{"$match": {"merged": {"$ne": true}}}, {"$addFields": {"_id": {"$concat": [prefix, "_", "$_id"]}, "tscheck": tscheck, "a": app_id, "e": mapped[collection].e}}, {"$merge": {"into": "events_data", "on": "_id", "whenMatched": "fail"}}], {ignore_errors: [11000]}, async function(err) {
             if (err) {
                 console.log("Failed to merge with database  $merge operation. Doing each document one by one");
 
                 console.log('Removing inserted with tscheck param');
-                await countlyDB.collection(collection).deleteMany({"_id": {"$regex": "^" + prefix + "_.*"}, "tscheck": tscheck});
+                await userovoDB.collection(collection).deleteMany({"_id": {"$regex": "^" + prefix + "_.*"}, "tscheck": tscheck});
                 console.log('Processing data...');
 
                 //As it field there are already some incoming data. Process all of them one by one.
-                var cursor = await countlyDB.collection(collection).find({"merged": {"$ne": true}});
+                var cursor = await userovoDB.collection(collection).find({"merged": {"$ne": true}});
                 var doc;
                 try {
                     while ((doc = await cursor.next())) {
@@ -72,7 +72,7 @@ async function merge_data_from_collection(countlyDB, collection, mapped, resolve
                                     update["$set"]["meta_v2." + key0 + "." + value] = doc.meta_v2[key0][value];
                                     actionCounter++;
                                     if (actionCounter > maxActionCount) {
-                                        await countlyDB.collection("events_data").updateOne({"_id": doc._id}, update, {upsert: true});
+                                        await userovoDB.collection("events_data").updateOne({"_id": doc._id}, update, {upsert: true});
                                         update = {"$set": {"m": doc.m, "a": doc.a, "e": doc.e, "s": doc.s || "no-segment"}};
                                         actionCounter = 0;
                                     }
@@ -89,7 +89,7 @@ async function merge_data_from_collection(countlyDB, collection, mapped, resolve
                                             update["$inc"]["d." + day + "." + key + "." + prop] = doc.d[day][key][prop];
                                             actionCounter++;
                                             if (actionCounter > maxActionCount) {
-                                                await countlyDB.collection("events_data").updateOne({"_id": doc._id}, update, {upsert: true});
+                                                await userovoDB.collection("events_data").updateOne({"_id": doc._id}, update, {upsert: true});
                                                 update = {"$set": {"m": doc.m, "a": doc.a, "e": doc.e, "s": doc.s}};
                                                 actionCounter = 0;
                                             }
@@ -103,9 +103,9 @@ async function merge_data_from_collection(countlyDB, collection, mapped, resolve
                             }
                         }
                         if (actionCounter > 0) { //we are splitting updates to make sure update operation do not reach 16MB
-                            await countlyDB.collection("events_data").updateOne({"_id": doc._id}, update, {upsert: true});
+                            await userovoDB.collection("events_data").updateOne({"_id": doc._id}, update, {upsert: true});
                         }
-                        await countlyDB.collection(collection).updateOne({"_id": original_id}, {"$set": {"merged": true}});
+                        await userovoDB.collection(collection).updateOne({"_id": original_id}, {"$set": {"merged": true}});
                     }
                 }
                 catch (error) {
@@ -122,11 +122,11 @@ async function merge_data_from_collection(countlyDB, collection, mapped, resolve
             else {
                 reports.merged.push(collection);
                 console.log('Removing inserted with tscheck param');
-                countlyDB.collection(collection).updateMany({}, {"$set": {"merged": true}}, function(err) {
+                userovoDB.collection(collection).updateMany({}, {"$set": {"merged": true}}, function(err) {
                     if (err) {
                         console.log(err);
                     }
-                    countlyDB.collection("events_data").updateMany({"_id": {"$regex": "^" + prefix + "_.*"}}, {"$unset": {"tscheck": ""}}, function(ee) {
+                    userovoDB.collection("events_data").updateMany({"_id": {"$regex": "^" + prefix + "_.*"}}, {"$unset": {"tscheck": ""}}, function(ee) {
                         if (ee) {
                             console.log(ee);
                         }
@@ -144,13 +144,13 @@ async function merge_data_from_collection(countlyDB, collection, mapped, resolve
 
 Promise.all(
     [
-        pluginManager.dbConnection("countly")
+        pluginManager.dbConnection("userovo")
     ])
-    .spread(function(countlyDB) {
-        countlyDB.collections(function(err, colls) {
+    .spread(function(userovoDB) {
+        userovoDB.collections(function(err, colls) {
             if (err) {
                 console.log('Script failed. Exiting');
-                countlyDB.close();
+                userovoDB.close();
             }
             else {
                 //filter out list with only drill_meta collections. but not outr merged collection
@@ -162,16 +162,16 @@ Promise.all(
                 });
                 //load all
                 reports.listed = collections.length;
-                load_event_hashmap(countlyDB, function(err, mapped) {
+                load_event_hashmap(userovoDB, function(err, mapped) {
                     if (err) {
                         console.log(err);
                         console.log('Script failed. Exiting');
-                        countlyDB.close();
+                        userovoDB.close();
                     }
                     else {
                         Promise.each(collections, function(coll) {
                             return new Promise(function(resolve, reject) {
-                                merge_data_from_collection(countlyDB, coll, mapped, function(error) {
+                                merge_data_from_collection(userovoDB, coll, mapped, function(error) {
                                     if (error) {
                                         reject();
                                     }
@@ -190,7 +190,7 @@ Promise.all(
                                 console.log(JSON.stringify(reports.failed));
                             }
                             console.log("Merged collections: ", reports.mergedOneByOne.length);
-                            countlyDB.close();
+                            userovoDB.close();
                         }).catch(function(err5) {
                             console.log(err5);
                             console.log("All events collections merged");
@@ -202,7 +202,7 @@ Promise.all(
                             }
                             console.log("Merged collections: ", reports.mergedOneByOne.length);
                             console.log('Script failed. Exiting. PLEASE RERUN SCRIPT TO MIGRATE ALL DATA.');
-                            countlyDB.close();
+                            userovoDB.close();
                         });
                     }
                 });

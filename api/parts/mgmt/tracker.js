@@ -8,9 +8,9 @@ var tracker = {},
     stats = require('../data/stats.js'),
     common = require('../../utils/common.js'),
     logger = require('../../utils/log.js'),
-    countlyFs = require('../../utils/countlyFs.js'),
+    userovoFs = require('../../utils/userovoFs.js'),
     //log = logger("tracker:server"),
-    Countly = require('countly-sdk-nodejs'),
+    // Userovo = require('userovo-sdk-nodejs'),
     fs = require('fs'),
     path = require('path'),
     https = require('https'),
@@ -68,36 +68,36 @@ tracker.enable = function() {
     }
 
     if (config.device_id && config.device_id !== "localhost") {
-        Countly.init(config);
+        Userovo.init(config);
 
         //change device id if is it not domain
-        if (Countly.get_device_id() !== domain) {
-            Countly.change_id(stripTrailingSlash((domain + "").split("://").pop()), true);
+        if (Userovo.get_device_id() !== domain) {
+            Userovo.change_id(stripTrailingSlash((domain + "").split("://").pop()), true);
         }
 
         isEnabled = true;
-        Countly.user_details({"name": config.device_id });
+        Userovo.user_details({"name": config.device_id });
         if (plugins.getConfig("white-labeling") && (plugins.getConfig("white-labeling").favicon || plugins.getConfig("white-labeling").stopleftlogo || plugins.getConfig("white-labeling").prelogo)) {
             var id = plugins.getConfig("white-labeling").favicon || plugins.getConfig("white-labeling").stopleftlogo || plugins.getConfig("white-labeling").prelogo;
-            countlyFs.gridfs.getDataById("white-labeling", id, function(errWhitelabel, data) {
+            userovoFs.gridfs.getDataById("white-labeling", id, function(errWhitelabel, data) {
                 if (!errWhitelabel && data) {
                     tracker.uploadBase64FileFromGridFS(data).catch(() => {});
                 }
             });
         }
         else {
-            Countly.user_details({"picture": "./images/favicon.png" });
+            Userovo.user_details({"picture": "./images/favicon.png" });
         }
         if (plugins.getConfig("tracking").server_sessions) {
-            Countly.begin_session(true);
+            Userovo.begin_session(true);
         }
         if (plugins.getConfig("tracking").server_crashes) {
-            Countly.track_errors();
+            Userovo.track_errors();
         }
         setTimeout(function() {
             tracker.getAllData().then((custom) => {
                 if (Object.keys(custom).length) {
-                    Countly.user_details({"custom": custom });
+                    Userovo.user_details({"custom": custom });
                 }
             });
         }, 20000);
@@ -106,10 +106,10 @@ tracker.enable = function() {
 
 /**
  * Get bulk server instance
- * @returns {Object} Countly Bulk instance
+ * @returns {Object} Userovo Bulk instance
  */
 tracker.getBulkServer = function() {
-    return new Countly.Bulk({
+    return new Userovo.Bulk({
         app_key: server,
         url: url
     });
@@ -117,8 +117,8 @@ tracker.getBulkServer = function() {
 
 /**
  * Get bulk user instance
- * @param {Object} serverInstance - Countly Bulk server instance
- * @returns {Object} Countly Bulk User instance
+ * @param {Object} serverInstance - Userovo Bulk server instance
+ * @returns {Object} Userovo Bulk User instance
  */
 tracker.getBulkUser = function(serverInstance) {
     var domain = stripTrailingSlash((plugins.getConfig("api").domain + "").split("://").pop());
@@ -133,7 +133,7 @@ tracker.getBulkUser = function(serverInstance) {
 **/
 tracker.reportEvent = function(event) {
     if (isEnabled && plugins.getConfig("tracking").server_events) {
-        Countly.add_event(event);
+        Userovo.add_event(event);
     }
 };
 
@@ -143,9 +143,9 @@ tracker.reportEvent = function(event) {
 **/
 tracker.reportEventBulk = function(events) {
     if (isEnabled && plugins.getConfig("tracking").server_events) {
-        Countly.request({
+        Userovo.request({
             app_key: server,
-            device_id: Countly.get_device_id(),
+            device_id: Userovo.get_device_id(),
             events: JSON.stringify(events)
         });
     }
@@ -158,7 +158,7 @@ tracker.reportEventBulk = function(events) {
 **/
 tracker.reportUserEvent = function(id, event) {
     if (isEnabled && plugins.getConfig("tracking").user_events) {
-        Countly.request({
+        Userovo.request({
             app_key: user,
             device_id: id,
             events: JSON.stringify([event])
@@ -176,10 +176,10 @@ tracker.isEnabled = function() {
 
 /**
 * Get SDK instance
-* @returns {Object} Countly NodeJS SDK instance
+* @returns {Object} Userovo NodeJS SDK instance
 **/
 tracker.getSDK = function() {
-    return Countly;
+    return Userovo;
 };
 
 /**
@@ -239,7 +239,7 @@ tracker.collectServerData = async function() {
     props.trial = versionInfo.trial ? true : false;
     props.plugins = plugins.getPlugins();
     props.nodejs = process.version;
-    props.countly = versionInfo.version;
+    props.userovo = versionInfo.version;
     props.docker = hasDockerEnv() || hasDockerCGroup() || hasDockerMountInfo();
     var edition = "Lite";
     if (IS_FLEX) {
@@ -254,7 +254,7 @@ tracker.collectServerData = async function() {
         props.hosting = "flex";
     }
     else if (props.plugins.includes("tracker")) {
-        props.hosting = "countly-hosted";
+        props.hosting = "userovo-hosted";
     }
     if (common.db.build && common.db.build.version) {
         props.mongodb = common.db.build.version;

@@ -2,13 +2,13 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 #set test configs
-countly config "api.batch_processing" "false"
-countly config "api.batch_read_processing" "false"
-countly config "drill.record_meta" "true"
+userovo config "api.batch_processing" "false"
+userovo config "api.batch_read_processing" "false"
+userovo config "drill.record_meta" "true"
 
-countly restart
+userovo restart
 
-until nc -z localhost 3001; do echo Waiting for Countly; sleep 1; done
+until nc -z localhost 3001; do echo Waiting for Userovo; sleep 1; done
 
 #install test dependencies
 ( cd "$DIR/../../../" ; sudo npm install --unsafe-perm )

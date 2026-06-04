@@ -1,7 +1,7 @@
 const pluginManager = require('../../../../plugins/pluginManager.js'),
     { fields, platforms } = require('../../../../plugins/push/api/send/platforms');
 
-pluginManager.dbConnection('countly').then(async(db) => {
+pluginManager.dbConnection('userovo').then(async(db) => {
     try {
         let apps = await db.collection('apps').find({}, {_id: 1}).toArray(),
             fields_appusers = fields(platforms, true);

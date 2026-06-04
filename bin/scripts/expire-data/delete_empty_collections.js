@@ -1,13 +1,13 @@
 /**
- *  Description: Deletes empty collections from database.By default it checks to delete from drill database. You can further tweak it to delete from countly database by changing drill to db in parameters passed
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/expire-data
+ *  Description: Deletes empty collections from database.By default it checks to delete from drill database. You can further tweak it to delete from userovo database by changing drill to db in parameters passed
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/expire-data
  *  Command: node delete_empty_collections.js
  */
 var plugins = require("../../../plugins/pluginManager");
 var Promise = require("bluebird");
 var DRY_RUN = true; // Set this to false to perform actual drop
-Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_drill")]).spread(function(db, drill) {
+Promise.all([plugins.dbConnection("userovo"), plugins.dbConnection("userovo_drill")]).spread(function(db, drill) {
     function dropCollections(database, collections, dryRun) {
         collections.forEach(function(collection) {
             if (database.collection(collection)) {
@@ -32,7 +32,7 @@ Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_dril
         });
         console.log("Collection drop process completed.");
     }
-    // Fetch empty collections from countly_drill
+    // Fetch empty collections from userovo_drill
     let emptyCollections = [];
     drill.listCollections().toArray(function(err, collections) {
         if (err) {
@@ -49,7 +49,7 @@ Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_dril
             });
             // Once empty collections are identified, proceed with dropping
             setTimeout(() => {
-                console.log("\nDropping empty collections from countly_drill...");
+                console.log("\nDropping empty collections from userovo_drill...");
                 dropCollections(drill, emptyCollections, DRY_RUN);
                 db.close();
                 drill.close();

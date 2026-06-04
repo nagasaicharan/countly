@@ -2,24 +2,24 @@
 
 ## Overall behaviour
 
-The guides plugin is a core plugin that provides interactive, in-app walkthroughs and articles for users to help them navigate and utilise features within the Countly application.
+The guides plugin is a core plugin that provides interactive, in-app walkthroughs and articles for users to help them navigate and utilise features within the Userovo application.
 
 Guides are enabled if **enableGuides** is set to true in the CMS OR in the API config file (this allows us to enable them for a specific server). If Guides are disabled or no data is available for a specific plugin, we display the tooltip instead of the Guides button.
 
-The Guides plugin data comes from the Countly CMS. When fetched, it is stored in **Countly DB** under the **cms_cache** collection and is refreshed periodically based on the **UPDATE_INTERVAL** variable set in the backend:
+The Guides plugin data comes from the Userovo CMS. When fetched, it is stored in **Userovo DB** under the **cms_cache** collection and is refreshed periodically based on the **UPDATE_INTERVAL** variable set in the backend:
 If cms_cache is empty or the UPDATE_INTERVAL has passed, the data is fetched from the CMS. We can also force a refresh by calling the **clearCache** endpoint which clears the cms_cache collection.
 
 ## File structure
 
-File structure follows usual Countly plugin structure
+File structure follows usual Userovo plugin structure
 
 ```
 plugins/guides
 ├── api
 ├── frontend/public
 │   ├── javascripts
-│   │   ├── countly.models.js                # Guides model code; transforms backend data
-│   │   └── countly.views.js                 # Views code: handles all views/components
+│   │   ├── userovo.models.js                # Guides model code; transforms backend data
+│   │   └── userovo.views.js                 # Views code: handles all views/components
 │   ├── localization                         # Contains localization files
 │   ├── stylesheets                          # Contains stylesheets
 │   └── templates
@@ -46,8 +46,8 @@ Other relevant files:
 
 ```
 frontend
-│      ├── express/public/javascripts/countly
-│          └── countly.cms.js   # Frontend file where requests to the backend are made
+│      ├── express/public/javascripts/userovo
+│          └── userovo.cms.js   # Frontend file where requests to the backend are made
 │
 api
 ├── parts/mgmt
@@ -58,7 +58,7 @@ api
 
 ## Data structure
 
-The guides data is stored in the **Countly CMS** with the following structure:
+The guides data is stored in the **Userovo CMS** with the following structure:
 ```
 {
    "data": [
@@ -113,7 +113,7 @@ The guides data is stored in the **Countly CMS** with the following structure:
 
 ```
 
-When fetched, the data is transformed and stored in the **Countly DB (cms_cache collection)**. The data for each section is stored in a separate document with the _id: "server-guides_{sectionID}"
+When fetched, the data is transformed and stored in the **Userovo DB (cms_cache collection)**. The data for each section is stored in a separate document with the _id: "server-guides_{sectionID}"
 
 The document has the following structure:
 ```

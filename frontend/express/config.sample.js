@@ -4,14 +4,14 @@
 */
 
 /** @lends module:frontend/express/config */
-var countlyConfig = {
+var userovoConfig = {
     /**
     * MongoDB connection definition and options
     * @type {object} 
     * @property {string} [host=localhost] - host where to connect to mongodb, default localhost
     * @property {array=} replSetServers - array with multiple hosts, if you are connecting to replica set, provide this instead of host
     * @property {string=} replicaName - replica name, must provide for replica set connection to work
-    * @property {string} [db=countly] - countly database name, default countly
+    * @property {string} [db=userovo] - userovo database name, default userovo
     * @property {number} [port=27017] - port to use for mongodb connection, default 27017
     * @property {number} [max_pool_size=500] - how large pool size connection per process to create, default 500 per process, not recommended to be more than 1000 per server
     * @property {string=} username - username for authenticating user, if mongodb supports authentication
@@ -21,7 +21,7 @@ var countlyConfig = {
     */
     mongodb: {
         host: "localhost",
-        db: "countly",
+        db: "userovo",
         port: 27017,
         max_pool_size: 10,
         //username: test,
@@ -38,7 +38,7 @@ var countlyConfig = {
             '192.168.3.1:27017',
             '192.168.3.2:27017'
         ],
-        db: "countly",
+        db: "userovo",
 		replicaName: "test",
 		username: test,
 		password: test,
@@ -50,19 +50,19 @@ var countlyConfig = {
     */
     /*  or define as a url
 	//mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]
-	mongodb: "mongodb://localhost:27017/countly",
+	mongodb: "mongodb://localhost:27017/userovo",
     */
     /**
     * Default dashboard configuration
     * @type {object} 
     * @property {number} [port=6001] - dashboard port number to use, default 6001
     * @property {string} [host=localhost] - host to which to bind connection
-    * @property {boolean} use_intercom - true, to use internal communication in dashboard for communication with Countly
+    * @property {boolean} use_intercom - true, to use internal communication in dashboard for communication with Userovo
     * @property {boolean} secure_cookies - true, to use secure cookies, enable only if you have https enabled
     * @property {string} session_secret - secret used to sign the session ID cookie.
     * @property {string} [session_name=connect.sid] - name of the session cookie
     * @property {string} [theme=] - the name/folder of the theme
-    * @property {string} track - allow Countly to collect stats about amount of apps and datapoints as well as feature usage.  
+    * @property {string} track - allow Userovo to collect stats about amount of apps and datapoints as well as feature usage.  
     * Possible values are: 
     *    "all" - track all, 
     *    "GA" - track only Global admins, 
@@ -76,7 +76,7 @@ var countlyConfig = {
         secure_cookies: false,
         track: "all",
         theme: "",
-        session_secret: "countlyss",
+        session_secret: "userovoss",
         session_name: "connect.sid",
         ssl: {
             enabled: false,
@@ -121,4 +121,4 @@ var countlyConfig = {
     passwordSecret: ""
 };
 
-module.exports = require('../../api/configextender')('FRONTEND', countlyConfig, process.env);
+module.exports = require('../../api/configextender')('FRONTEND', userovoConfig, process.env);

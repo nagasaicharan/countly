@@ -1,7 +1,7 @@
 /**
  *  Change ownershup of everything form one dashboard user to another
- *  Server: countly
- *  Path: countly dir/bin/scripts/modify-data
+ *  Server: userovo
+ *  Path: userovo dir/bin/scripts/modify-data
  *  Command: node changeOwner.js
  */
 
@@ -13,7 +13,7 @@ var common = require('./../../../api/utils/common');
 var async = require('async');
 const Promise = require('bluebird');
 
-pluginManager.dbConnection("countly").then((db) => {
+pluginManager.dbConnection("userovo").then((db) => {
     common.db = db;
     const NEW_OID = common.db.ObjectID(NEW_ID);
     const OLD_OID = common.db.ObjectID(OLD_ID);

@@ -93,7 +93,7 @@ var error = log("ERROR");
 var warn = log("WARN");
 var success = log("SUCCESS");
 
-pluginManager.dbConnection("countly_drill").then((db) => {
+pluginManager.dbConnection("userovo_drill").then((db) => {
 
     var source = "drill_bookmarks",
         sink = "drill_bookmarks",

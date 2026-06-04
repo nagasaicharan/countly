@@ -7,12 +7,12 @@ nodejs "$DIR/upgrade/17.05/removeOld.js"
 
 if [ "$1" != "combined" ]; then
     #upgrade all plugins
-    bash "$DIR/scripts/countly.install.plugins.sh"
+    bash "$DIR/scripts/userovo.install.plugins.sh"
     
     #enable new plugins
-    countly plugin enable dashboards
-    countly plugin enable assistant
-    countly plugin enable flows
+    userovo plugin enable dashboards
+    userovo plugin enable assistant
+    userovo plugin enable flows
 fi
 
 #add indexes

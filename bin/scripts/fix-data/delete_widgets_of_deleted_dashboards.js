@@ -1,7 +1,7 @@
 /**
  *  Description : Remove orphan widget and long_tasks records left behind after a dashboard is deleted
- *  Server  : countly
- *  Path    : $(countly dir)/bin/scripts/fix-data
+ *  Server  : userovo
+ *  Path    : $(userovo dir)/bin/scripts/fix-data
  *  Command : node delete_widgets_of_deleted_dashboards.js [--dry-run]
  *  Usage   :
  *      # Preview only
@@ -120,7 +120,7 @@ function collectAllLinkedLongTasks(widget) {
 
 
 (async() => {
-    const db = await pluginManager.dbConnection('countly');
+    const db = await pluginManager.dbConnection('userovo');
 
     try {
         const dashboardWidgets = [];

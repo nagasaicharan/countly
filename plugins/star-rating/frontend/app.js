@@ -1,6 +1,6 @@
 var exported = {},
-    countlyFs = require('../../../api/utils/countlyFs.js'),
-    countlyConfig = require("../../../frontend/express/config"),
+    userovoFs = require('../../../api/utils/userovoFs.js'),
+    userovoConfig = require("../../../frontend/express/config"),
     common = require('../../../api/utils/common.js'),
     imageUtils = require('../api/image-utils.js');
 var path = require('path');
@@ -30,25 +30,25 @@ var STAR_RATING_EXT_TO_MIME = {
          * @param {*} res - Express response object
          */
         function renderPopup(req, res) {
-            let countlyPath = countlyConfig.path || '';
+            let userovoPath = userovoConfig.path || '';
 
-            if (countlyPath.length > 0 && !countlyPath.startsWith('/')) {
-                countlyPath = `/${countlyPath}`;
+            if (userovoPath.length > 0 && !userovoPath.startsWith('/')) {
+                userovoPath = `/${userovoPath}`;
             }
 
             res.removeHeader('X-Frame-Options');
-            res.render('../../../plugins/star-rating/frontend/public/templates/feedback-popup', { countlyPath });
+            res.render('../../../plugins/star-rating/frontend/public/templates/feedback-popup', { userovoPath });
         }
 
-        app.get(countlyConfig.path + '/feedback/rating', renderPopup);
+        app.get(userovoConfig.path + '/feedback/rating', renderPopup);
         // keep this for backward compatability
-        app.get(countlyConfig.path + '/feedback', renderPopup);
-        app.get(countlyConfig.path + '/feedback/preview/*', function(req, res/*, next*/) {
+        app.get(userovoConfig.path + '/feedback', renderPopup);
+        app.get(userovoConfig.path + '/feedback/preview/*', function(req, res/*, next*/) {
             if (!req.params || !req.params[0] || req.params[0] === '' || !PREVIEW_NAME_RE.test(req.params[0])) {
                 res.sendFile(__dirname + '/public/images/default_app_icon.png');
             }
             else {
-                countlyFs.gridfs.getDataById("feedback", req.params[0], function(err, data) {
+                userovoFs.gridfs.getDataById("feedback", req.params[0], function(err, data) {
                     if (err || !data) {
                         res.sendFile(__dirname + '/public/images/default_app_icon.png');
                         return;
@@ -84,7 +84,7 @@ var STAR_RATING_EXT_TO_MIME = {
                 });
             }
         });
-        app.get(countlyConfig.path + '/star-rating/images/*', function(req, res) {
+        app.get(userovoConfig.path + '/star-rating/images/*', function(req, res) {
             var imagePath = common.resolvePathInBase(path.resolve(__dirname, './../images'), req.params[0]);
             if (!imagePath) {
                 res.sendFile(path.resolve(__dirname + './../../../frontend/express/public/images/default_app_icon.png'));
@@ -100,12 +100,12 @@ var STAR_RATING_EXT_TO_MIME = {
                 res.sendFile(path.resolve(__dirname + './../../../frontend/express/public/images/default_app_icon.png'));
                 return;
             }
-            countlyFs.getStats("star-rating", imagePath, {id: "" + req.params[0]}, function(statsErr, stats) {
+            userovoFs.getStats("star-rating", imagePath, {id: "" + req.params[0]}, function(statsErr, stats) {
                 if (statsErr || !stats || !stats.size) {
                     res.sendFile(path.resolve(__dirname + './../../../frontend/express/public/images/default_app_icon.png'));
                 }
                 else {
-                    countlyFs.getStream("star-rating", imagePath, {id: "" + req.params[0]}, function(streamErr, stream) {
+                    userovoFs.getStream("star-rating", imagePath, {id: "" + req.params[0]}, function(streamErr, stream) {
                         if (streamErr || !stream) {
                             res.sendFile(path.resolve(__dirname + './../../../frontend/express/public/images/default_app_icon.png'));
                         }

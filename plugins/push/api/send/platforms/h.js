@@ -271,12 +271,12 @@ class HPK extends Splitter {
                 else if (resp.code === '80300008') {
                     // The message body size exceeds the default value
                     this.log.e('Huawei: the message body size exceeds the default value (80300008) %j', resp);
-                    sendFullError('MessageBodyTooBig', ERROR.DATA_COUNTLY);
+                    sendFullError('MessageBodyTooBig', ERROR.DATA_USEROVO);
                 }
                 else if (resp.code === '80300010') {
                     // The number of tokens in the message body exceeds the default value
                     this.log.e('Huawei: the number of tokens in the message body exceeds the default value (80300010) %j', resp);
-                    sendFullError('TooManyTokens', ERROR.DATA_COUNTLY);
+                    sendFullError('TooManyTokens', ERROR.DATA_USEROVO);
                 }
                 else if (resp.code === '80300011') {
                     // You are not authorized to send high-priority notification messages

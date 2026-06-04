@@ -1,13 +1,13 @@
 var pluginManager = require('../../plugins/pluginManager.js'),
     async = require('async');
 
-pluginManager.dbConnection().then((countlyDb) => {
+pluginManager.dbConnection().then((userovoDb) => {
     console.log("Adding core indexes");
-    countlyDb.collection('apps').find({}).toArray(function(err, apps) {
+    userovoDb.collection('apps').find({}).toArray(function(err, apps) {
 
         if (!apps || err) {
             console.log("No apps to index");
-            countlyDb.close();
+            userovoDb.close();
             return;
         }
         function upgrade(app, done) {
@@ -22,15 +22,15 @@ pluginManager.dbConnection().then((countlyDb) => {
             }
 
             var parallelJobs = [
-                () => countlyDb.collection('app_users' + app._id).ensureIndex({ls: -1}, { background: true }, cb),
-                () => countlyDb.collection('app_users' + app._id).ensureIndex({"uid": 1}, { background: true }, cb),
-                () => countlyDb.collection('app_users' + app._id).ensureIndex({"sc": 1}, { background: true }, cb),
-                () => countlyDb.collection('app_users' + app._id).ensureIndex({"lac": -1}, { background: true }, cb),
-                () => countlyDb.collection('app_users' + app._id).ensureIndex({"tsd": 1}, { background: true }, cb),
-                () => countlyDb.collection('app_users' + app._id).ensureIndex({"did": 1}, { background: true }, cb),
-                () => countlyDb.collection('app_users' + app._id).dropIndex("lac_1_ls_1", cb),
-                () => countlyDb.collection('metric_changes' + app._id).ensureIndex({ts: 1, "cc.o": 1}, { background: true }, cb),
-                () => countlyDb.collection('metric_changes' + app._id).ensureIndex({uid: 1}, { background: true }, cb)
+                () => userovoDb.collection('app_users' + app._id).ensureIndex({ls: -1}, { background: true }, cb),
+                () => userovoDb.collection('app_users' + app._id).ensureIndex({"uid": 1}, { background: true }, cb),
+                () => userovoDb.collection('app_users' + app._id).ensureIndex({"sc": 1}, { background: true }, cb),
+                () => userovoDb.collection('app_users' + app._id).ensureIndex({"lac": -1}, { background: true }, cb),
+                () => userovoDb.collection('app_users' + app._id).ensureIndex({"tsd": 1}, { background: true }, cb),
+                () => userovoDb.collection('app_users' + app._id).ensureIndex({"did": 1}, { background: true }, cb),
+                () => userovoDb.collection('app_users' + app._id).dropIndex("lac_1_ls_1", cb),
+                () => userovoDb.collection('metric_changes' + app._id).ensureIndex({ts: 1, "cc.o": 1}, { background: true }, cb),
+                () => userovoDb.collection('metric_changes' + app._id).ensureIndex({uid: 1}, { background: true }, cb)
             ];
 
             totalParallelJobs = parallelJobs.length;
@@ -40,9 +40,9 @@ pluginManager.dbConnection().then((countlyDb) => {
             }
         }
         async.forEach(apps, upgrade, function() {
-            countlyDb.collection('exports').ensureIndex({"_eid": 1}, {background: true}, function() {
+            userovoDb.collection('exports').ensureIndex({"_eid": 1}, {background: true}, function() {
                 console.log("Finished adding core indexes");
-                countlyDb.close();
+                userovoDb.close();
             });
         });
     });

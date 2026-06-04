@@ -1,8 +1,8 @@
 /**
  *  Check datapoints based on drill documents for specified period
  *  requires index on cd collections or else will be slower
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/data-reports
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/data-reports
  *  Command: node datapoints_based_on_drill.js
  */
 
@@ -14,13 +14,13 @@ var plugins = require("../../../plugins/pluginManager");
 var maps = require("./db_mapping.json");
 var map;
 for (let i = 0; i < maps.length; i++) {
-    if (maps[i].name === "countly_drill") {
+    if (maps[i].name === "userovo_drill") {
         map = maps[i];
         break;
     }
 }
 if (!map) {
-    console.log("No mapping found for countly_drill");
+    console.log("No mapping found for userovo_drill");
     process.exit();
 }
 var asyncjs = require("async");
@@ -30,7 +30,7 @@ for (var key in map.collections) {
 }
 
 var data = [];
-plugins.dbConnection("countly_drill").then(function(db) {
+plugins.dbConnection("userovo_drill").then(function(db) {
     db.collections(function(error, results) {
         var cnt = 1;
         asyncjs.eachSeries(results, function(col, done) {

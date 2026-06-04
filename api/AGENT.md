@@ -1,6 +1,6 @@
 # API Agent Guide
 
-This guide is for AI agents and developers working in the `api/` backend of Countly Server.
+This guide is for AI agents and developers working in the `api/` backend of Userovo Server.
 
 ## Essentials
 - **Tech:** Node.js 22+, MongoDB

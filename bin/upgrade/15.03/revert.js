@@ -1,5 +1,5 @@
 var dbAddress = "IP_ADDRESS:PORT";
-var dbName = "countly";
+var dbName = "userovo";
 
 /*
     **************************************************

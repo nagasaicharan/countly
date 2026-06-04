@@ -5,7 +5,7 @@
  * it is suggested to run this script as a cron after 1 to 2 hours interval
  * 
  * RUN in node.js
- * Path : COUNTLY ROOT dir [`countly dir`] 
+ * Path : USEROVO ROOT dir [`userovo dir`] 
  * out_dir : good ol console :D, you should probably save the output anyway, specially in case of errors
  */
 /* ****************************
@@ -26,11 +26,11 @@ var QUERY = {
     "hasInfo": { "$ne": true } // anonymous user
 };
 var pluginManager = require("./plugins/pluginManager.js");
-var request = require('countly-request')(pluginManager.getConfig("security"));
-var DB = 'countly';
+var request = require('userovo-request')(pluginManager.getConfig("security"));
+var DB = 'userovo';
 var COLLECTION_NAME = "app_users" + APP_ID; // do not change
 /**
- * Function to senmd simulated request to countly server
+ * Function to senmd simulated request to userovo server
  * 
  * @param {*} params params Object
  * @param {*} callback callback fn
@@ -77,12 +77,12 @@ function sendRequest(params, callback) {
     }
 }
 // start script
-pluginManager.dbConnection(DB).then(async(countlyDb) => {
+pluginManager.dbConnection(DB).then(async(userovoDb) => {
     try {
         console.log("Deleting unknown app users");
         var query = QUERY;
         var projections = { uid: 1 };
-        var users = await countlyDb.collection(COLLECTION_NAME).find(query).project(projections).limit(USER_DELETE_LIMIT).toArray();
+        var users = await userovoDb.collection(COLLECTION_NAME).find(query).project(projections).limit(USER_DELETE_LIMIT).toArray();
         var uids = users.map(u => u.uid);
         if (uids.length) {
             await new Promise(function(resolve) {
@@ -107,12 +107,12 @@ pluginManager.dbConnection(DB).then(async(countlyDb) => {
             console.log('NOTHING TO DELETE');
         }
         console.log("Script ran successfully!!!");
-        countlyDb.close();
+        userovoDb.close();
         process.exit(0);
     }
     catch (e) {
         console.log("Error while running script ", e);
-        countlyDb.close();
+        userovoDb.close();
         process.exit(1);
     }
 });

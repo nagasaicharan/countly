@@ -1,10 +1,10 @@
-# CLAUDE.md - Countly Server
+# CLAUDE.md - Userovo Server
 
 This file provides guidance for Claude (Anthropic) when working with this codebase.
 
 ## Project Overview
 
-Countly is a product analytics platform. Backend: Node.js 22+, MongoDB. Frontend: Vue 2, Element UI, Backbone (legacy). Architecture is plugin-based.
+Userovo is a product analytics platform. Backend: Node.js 22+, MongoDB. Frontend: Vue 2, Element UI, Backbone (legacy). Architecture is plugin-based.
 
 ## Quick Commands
 
@@ -17,8 +17,8 @@ npx grunt sass               # Compile SASS only
 # Testing
 npm run test:unit            # Unit tests
 npm run test:plugin -- name  # Single plugin tests
-countly plugin lint name     # Lint plugin
-countly shellcheck           # Validate shell scripts
+userovo plugin lint name     # Lint plugin
+userovo shellcheck           # Validate shell scripts
 ```
 
 ## Critical Security Rules
@@ -55,7 +55,7 @@ countly shellcheck           # Validate shell scripts
 | What | Where |
 |------|-------|
 | Plugin code | `plugins/<name>/api/api.js` |
-| Vue views | `plugins/<name>/frontend/public/javascripts/countly.views.js` |
+| Vue views | `plugins/<name>/frontend/public/javascripts/userovo.views.js` |
 | Templates | `plugins/<name>/frontend/public/templates/` |
 | Localization | `plugins/<name>/frontend/public/localization/<name>.properties` |
 | Tests | `plugins/<name>/tests.js` |
@@ -96,9 +96,9 @@ plugins.register("/o/myfeature", function(ob) {
 ## Creating Vue Components
 
 ```javascript
-var MyComponent = countlyVue.views.create({
-    template: countlyVue.T("/myplugin/templates/main.html"),
-    mixins: [countlyVue.mixins.auth(FEATURE_NAME)],
+var MyComponent = userovoVue.views.create({
+    template: userovoVue.T("/myplugin/templates/main.html"),
+    mixins: [userovoVue.mixins.auth(FEATURE_NAME)],
     data: function() {
         return { items: [] };
     },
@@ -113,7 +113,7 @@ var MyComponent = countlyVue.views.create({
 });
 
 app.route('/dashboard/myfeature', 'myfeature', function() {
-    new countlyVue.views.BackboneWrapper({ component: MyComponent }).render();
+    new userovoVue.views.BackboneWrapper({ component: MyComponent }).render();
 });
 ```
 

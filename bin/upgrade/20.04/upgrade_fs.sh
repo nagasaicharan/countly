@@ -4,7 +4,7 @@ echo "Running filesystem modifications"
 
 VER="20.04"
 
-CONTINUE="$(countly check before upgrade fs "$VER")"
+CONTINUE="$(userovo check before upgrade fs "$VER")"
 
 if [ "$CONTINUE" != "1" ] && [ "$1" != "combined" ]
 then
@@ -59,21 +59,21 @@ then
     if [[ "$GLIBC_VERSION" != "2.25" ]]; then
         (cd "$DIR/.." && sudo npm install argon2 --build-from-source)
     fi
-    countly plugin upgrade push
+    userovo plugin upgrade push
     (cd "$DIR/../plugins/push/api/parts/apn" && npm install --unsafe-perm)
-    countly plugin upgrade attribution
-    countly plugin upgrade web
-    countly plugin enable active_users
-    countly plugin enable performance-monitoring
+    userovo plugin upgrade attribution
+    userovo plugin upgrade web
+    userovo plugin enable active_users
+    userovo plugin enable performance-monitoring
     
     #get web sdk
-    countly update sdk-web
+    userovo update sdk-web
 
-    #install dependencies, process files and restart countly
-    countly task dist-all
+    #install dependencies, process files and restart userovo
+    userovo task dist-all
 
     #call after check
-    countly check after upgrade fs "$VER"
+    userovo check after upgrade fs "$VER"
 elif [ "$CONTINUE" == "0" ]
 then
     echo "Filesystem is already upgraded to $VER"

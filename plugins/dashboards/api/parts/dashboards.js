@@ -6,7 +6,7 @@ var countlyModel = require("../../../../api/lib/countly.model.js"),
     async = require('async'),
     crypto = require('crypto'),
     common = require('../../../../api/utils/common.js'),
-    countlyCommon = require('../../../../api/lib/countly.common'),
+    userovoCommon = require('../../../../api/lib/userovo.common'),
     fetch = require("../../../../api/parts/data/fetch.js"),
     log = common.log('dashboards:api'),
     plugins = require("../../../pluginManager.js");
@@ -1138,7 +1138,7 @@ function getSessionModel(params, apps, appId, collection, segment, widget) {
             fetch.getTotalUsersObj(segment, paramsObj, function(dbTotalUsersObj) {
                 var formattedUserObj = fetch.formatTotalUsersObj(dbTotalUsersObj);
 
-                var model = countlyModel.load(toModel(segment));
+                var model = userovoModel.load(toModel(segment));
 
                 model.setPeriod(paramsObj.qstring.period);
                 model.setDb(data);
@@ -1221,9 +1221,9 @@ function getEventsModel(params, apps, appId, collection, segment, event, widget)
                 });
             }
 
-            countlyCommon.setPeriod(paramsObj.qstring.period);
+            userovoCommon.setPeriod(paramsObj.qstring.period);
 
-            var model = countlyModel.load("event");
+            var model = userovoModel.load("event");
             model.setPeriod(paramsObj.qstring.period);
             model.setDb(data);
 
@@ -1266,9 +1266,9 @@ function getPushModel(params, apps, appId, collection, segment, widget) {
         };
 
         fetch.getTimeObjForEvents(collection, paramsObj, function(data) {
-            countlyCommon.setPeriod(paramsObj.qstring.period);
+            userovoCommon.setPeriod(paramsObj.qstring.period);
 
-            var model = countlyModel.load("event");
+            var model = userovoModel.load("event");
             model.setPeriod(paramsObj.qstring.period);
 
             model.setDb(data);
@@ -1299,9 +1299,9 @@ function getCrashModel(params, apps, appId, collection, widget) {
         };
 
         fetch.getTimeObj(collection, paramsObj, {unique: "cru"}, function(data) {
-            countlyCommon.setPeriod(paramsObj.qstring.period);
+            userovoCommon.setPeriod(paramsObj.qstring.period);
 
-            var model = model = countlyModel.load(toModel("data"));
+            var model = model = userovoModel.load(toModel("data"));
             model.setPeriod(paramsObj.qstring.period);
 
             model.setDb(data);

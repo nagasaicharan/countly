@@ -1,12 +1,12 @@
-# Countly Server - AI Coding Agent Instructions
+# Userovo Server - AI Coding Agent Instructions
 
 ## Project Overview
-Countly is a product analytics platform built with **Node.js 22+**, **MongoDB**, and **Vue 2** (with Element UI). The architecture is plugin-based: core functionality lives in `api/` and `frontend/`, while features are implemented as plugins in `plugins/`.
+Userovo is a product analytics platform built with **Node.js 22+**, **MongoDB**, and **Vue 2** (with Element UI). The architecture is plugin-based: core functionality lives in `api/` and `frontend/`, while features are implemented as plugins in `plugins/`.
 
 ## Architecture
 
 ### Multi-Process Architecture
-Countly runs as multiple services (start via `npm run start:all:dev`):
+Userovo runs as multiple services (start via `npm run start:all:dev`):
 - **API Server** (`api/api.js`) - SDK data ingestion on port 3001
 - **Frontend** (`frontend/express/app.js`) - Dashboard on port 6001
 - **Job Server** (`jobServer/index.js`) - Background job processing
@@ -14,7 +14,7 @@ Countly runs as multiple services (start via `npm run start:all:dev`):
 - **Ingestor** (`api/ingestor.js`) - High-volume data ingestion
 
 ### Plugin System
-Plugins extend Countly via event hooks. Each plugin has this structure:
+Plugins extend Userovo via event hooks. Each plugin has this structure:
 ```
 plugins/<name>/
 ├── api/api.js          # Backend API endpoints (required)
@@ -107,9 +107,9 @@ plugins.dispatch("/systemlogs", {params: params, action: "item_edited", data: {b
 ### Component Conventions
 ```javascript
 // Use PascalCase for component names
-var MyComponent = countlyVue.views.create({
-    template: countlyVue.T("/myplugin/templates/mytemplate.html"),
-    mixins: [countlyVue.mixins.auth(FEATURE_NAME)],
+var MyComponent = userovoVue.views.create({
+    template: userovoVue.T("/myplugin/templates/mytemplate.html"),
+    mixins: [userovoVue.mixins.auth(FEATURE_NAME)],
     data: function() { return { /* state */ }; },
     computed: { /* prefer computed over watchers */ },
     methods: { /* handlers */ }
@@ -117,7 +117,7 @@ var MyComponent = countlyVue.views.create({
 
 // Register route with kebab-case component names in templates
 app.route('/dashboard/myfeature', 'myfeature', function() {
-    new countlyVue.views.BackboneWrapper({ component: MyComponent }).render();
+    new userovoVue.views.BackboneWrapper({ component: MyComponent }).render();
 });
 ```
 
@@ -144,7 +144,7 @@ app.route('/dashboard/myfeature', 'myfeature', function() {
 ### XSS Prevention
 - API output is auto-escaped via `common.returnOutput()` and `common.returnMessage()`
 - Frontend: Treat API data as HTML, use `{{ msg }}` for unescaped user input
-- Use `countlyCommon.encodeHtml()` for manual sanitization
+- Use `userovoCommon.encodeHtml()` for manual sanitization
 
 ### MongoDB Injection Prevention
 ```javascript
@@ -181,11 +181,11 @@ npm run test:lite-plugins         # CE plugin tests
 npm run test:plugin -- <name>     # Single plugin tests
 
 # Linting
-countly plugin lint <pluginname>
-countly plugin lintfix <pluginname>
+userovo plugin lint <pluginname>
+userovo plugin lintfix <pluginname>
 
 # Shell script validation
-countly shellcheck
+userovo shellcheck
 ```
 
 ### Plugin Test Requirements
@@ -240,7 +240,7 @@ node bin/commands/scripts/plugin.js disable <name>
 | Plugin manager | `plugins/pluginManager.js` |
 | Common utilities | `api/utils/common.js` |
 | Authorization | `api/utils/rights.js` |
-| Vue core | `frontend/express/public/javascripts/countly/vue/core.js` |
+| Vue core | `frontend/express/public/javascripts/userovo/vue/core.js` |
 | Sample plugin | `plugins/empty/` |
 | TypeScript types | `types/` |
 | Coding guidelines | `CODING_GUIDELINES.md` |

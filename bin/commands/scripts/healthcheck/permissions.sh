@@ -1,9 +1,9 @@
 #!/bin/bash
 
 procowner="0"
-fileowner=$(stat -c '%U' "$(countly dir)")
+fileowner=$(stat -c '%U' "$(userovo dir)")
 # shellcheck disable=SC2009
-paths=$(ps -ux | grep countly)
+paths=$(ps -ux | grep userovo)
 while read -r line; do
     if [[ "$line" = *"dashboard node"* ]]; then
         procowner=$(echo "${line}" | tr -s ' ' | cut -d ' ' -f 1)

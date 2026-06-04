@@ -1,7 +1,7 @@
 /**
  *  Description: This script is used to recheck merges and update drill data with new uid
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/fix-data
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/fix-data
  *  Command: node recheck_merges.js
  */
 
@@ -15,9 +15,9 @@ const drillCommon = require("../../../plugins/drill/api/common.js");
 
 const APP_ID = ""; //leave empty to get all apps
 
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
     console.log("Connected to databases...");
-    common.db = countlyDb;
+    common.db = userovoDb;
     common.drillDb = drillDb;
     //get all apps
     try {
@@ -25,7 +25,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
         if (APP_ID) {
             query._id = common.db.ObjectID(APP_ID);
         }
-        const apps = await countlyDb.collection("apps").find(query, {_id: 1, name: 1}).toArray();
+        const apps = await userovoDb.collection("apps").find(query, {_id: 1, name: 1}).toArray();
         if (!apps || !apps.length) {
             return close();
         }
@@ -36,7 +36,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                 //get all drill collections for this app
                 var collections = await getDrillCollections(app._id);
                 //cursor
-                const usersCollection = countlyDb.collection('app_users' + app._id);
+                const usersCollection = userovoDb.collection('app_users' + app._id);
                 var usersCursor = usersCollection.find({merges: {$gt: 0}}, {_id: 1, uid: 1, merged_uid: 1});
                 //processed users count
                 var processedUsersCount = 0;
@@ -71,7 +71,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
     async function getDrillCollections(app_id) {
         var collections = ["drill_events"];
         try {
-            var events = await countlyDb.collection("events").findOne({_id: common.db.ObjectID(app_id)});
+            var events = await userovoDb.collection("events").findOne({_id: common.db.ObjectID(app_id)});
             var list = ["[CLY]_session", "[CLY]_crash", "[CLY]_view", "[CLY]_action", "[CLY]_push_action", "[CLY]_push_sent", "[CLY]_star_rating", "[CLY]_nps", "[CLY]_survey", "[CLY]_apm_network", "[CLY]_apm_device", "[CLY]_consent"];
 
             if (events && events.list) {
@@ -137,7 +137,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
     }
 
     function close(err) {
-        countlyDb.close();
+        userovoDb.close();
         drillDb.close();
         if (err) {
             console.log("Finished with errors: ", err);

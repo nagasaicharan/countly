@@ -7,17 +7,17 @@ var plugins = require('../../../pluginManager.js'),
     reports = require("../reports");
 /**
  * @class
- * @classdesc Class ReportsJob is report Job extend from Countly Job
+ * @classdesc Class ReportsJob is report Job extend from Userovo Job
  * @extends Job
  */
 class ReportsJob extends job.Job {
     /**
     * run task
-    * @param {object} countlyDb - db object
+    * @param {object} userovoDb - db object
     * @param {function} doneJob - callback function
     * @param {function} progressJob - function for reporting progress
     */
-    run(countlyDb, doneJob, progressJob) {
+    run(userovoDb, doneJob, progressJob) {
         log.d("starting send job");
         /**
          * check job status periodically
@@ -32,7 +32,7 @@ class ReportsJob extends job.Job {
         var timeout = setTimeout(ping, 10000);
 
         //load configs
-        plugins.loadConfigs(countlyDb, function() {
+        plugins.loadConfigs(userovoDb, function() {
             var cache = {};
             var date = new Date();
             var hour = date.getHours();
@@ -43,7 +43,7 @@ class ReportsJob extends job.Job {
             }
 
             log.d(hour, dow);
-            countlyDb.collection("reports").find({r_hour: hour}).toArray(function(err, res) {
+            userovoDb.collection("reports").find({r_hour: hour}).toArray(function(err, res) {
                 if (!res || !res.length) {
                     log.d("nothing to send");
                     clearTimeout(timeout);
@@ -60,11 +60,11 @@ class ReportsJob extends job.Job {
                         if (report.last_sent && report.last_sent.hour === hour && report.last_sent.dow === dow && report.last_sent.dom === dom) {
                             return done();
                         }
-                        reports.getReport(countlyDb, report, function(err2, ob) {
+                        reports.getReport(userovoDb, report, function(err2, ob) {
                             if (!err2) {
                                 reports.send(ob.report, ob.message, function() {
                                     log.d("sent to", ob.report.emails);
-                                    countlyDb.collection("reports").updateOne({_id: countlyDb.ObjectID(report._id)}, {$set: {last_sent: {hour: hour, dow: dow, dom: dom}}}, function() {
+                                    userovoDb.collection("reports").updateOne({_id: userovoDb.ObjectID(report._id)}, {$set: {last_sent: {hour: hour, dow: dow, dom: dom}}}, function() {
                                         done(null, null);
                                     });
                                 });

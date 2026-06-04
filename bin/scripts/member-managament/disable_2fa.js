@@ -15,16 +15,16 @@ if (dry_run) {
     console.log("Members will only be listed, 2FA will not be disabled");
 }
 
-pluginManager.dbConnection().then(async(countlyDb) => {
+pluginManager.dbConnection().then(async(userovoDb) => {
     try {
         // Find the users by email
         let users = [];
-        users = await getUsers(countlyDb, EMAILS);
+        users = await getUsers(userovoDb, EMAILS);
 
         console.log(`The following ${users.length} user(s) 2FA will be disabled: `);
         console.log(JSON.stringify(users));
         if (!dry_run) {
-            await countlyDb.collection('members').updateMany({_id: {$in: users.map(user=>user._id)}},
+            await userovoDb.collection('members').updateMany({_id: {$in: users.map(user=>user._id)}},
                 {
                     $set: {"two_factor_auth.enabled": false},
                     $unset: {"two_factor_auth.secret_token": ""}
@@ -37,7 +37,7 @@ pluginManager.dbConnection().then(async(countlyDb) => {
         console.log(error);
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
     }
 });
 

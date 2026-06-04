@@ -19,7 +19,7 @@ timestamp="$(date +"%s")"
 start_timestamp=$((timestamp-seconds))
 start_date="$(date -u +'%Y-%m-%dT%H:%M:%S+0000' -d @${start_timestamp})"
 prefix="app_users"
-db="countly"
+db="userovo"
 out_dir="./output"
 
 if [ ! $out_dir ]; then
@@ -39,7 +39,7 @@ rm $tmp_file
 
 
 prefix="drill_events"
-db="countly_drill"
+db="userovo_drill"
 out_dir="./output"
 
 if [ ! $out_dir ]; then

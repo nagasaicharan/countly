@@ -63,10 +63,10 @@ const ERROR = {
     CONNECTION_PROVIDER: 1 << 18 | ERROR_TYPE.CONNECTION,
 
     /**
-     * Invalid data supplied to Countly
+     * Invalid data supplied to Userovo
      * 524288 | 4096 = 528384
      */
-    DATA_COUNTLY: 1 << 19 | ERROR_TYPE.DATA,
+    DATA_USEROVO: 1 << 19 | ERROR_TYPE.DATA,
 
     /**
      * Invalid data error returned by push provider
@@ -268,7 +268,7 @@ class ValidationError extends PushError {
      * @param {string[]|string} errors array of error strings
      */
     constructor(errors) {
-        super('Validation error', ERROR.DATA_COUNTLY);
+        super('Validation error', ERROR.DATA_USEROVO);
         this.errors = typeof errors === 'string' ? [errors] : errors;
     }
 

@@ -10,16 +10,16 @@ export interface TTLCollection {
 
 /** Database configuration files mapping */
 export interface DbConfigFiles {
-    countly_drill: string;
-    countly_out: string;
-    countly_fs: string;
+    userovo_drill: string;
+    userovo_out: string;
+    userovo_fs: string;
 }
 
 /** Database configuration environment variables mapping */
 export interface DbConfigEnvs {
-    countly_drill: string;
-    countly_out: string;
-    countly_fs: string;
+    userovo_drill: string;
+    userovo_out: string;
+    userovo_fs: string;
 }
 
 /** Internal omit segments configuration */
@@ -139,7 +139,7 @@ export interface PromiseResult<T> {
 }
 
 /**
- * Plugin Manager - Central orchestrator for Countly's plugin system
+ * Plugin Manager - Central orchestrator for Userovo's plugin system
  */
 export interface PluginManager {
     /** Registered app types */
@@ -461,18 +461,18 @@ export interface PluginManager {
     /**
      * Load plugins frontend app.js and expose static paths
      * @param app - Express app
-     * @param countlyDb - Database connection
+     * @param userovoDb - Database connection
      * @param express - Express module
      */
-    loadAppStatic(app: any, countlyDb: Database, express: any): void;
+    loadAppStatic(app: any, userovoDb: Database, express: any): void;
 
     /**
      * Call init method of plugin's frontend app.js modules
      * @param app - Express app
-     * @param countlyDb - Database connection
+     * @param userovoDb - Database connection
      * @param express - Express module
      */
-    loadAppPlugins(app: any, countlyDb: Database, express: any): void;
+    loadAppPlugins(app: any, userovoDb: Database, express: any): void;
 
     /**
      * Call specific predefined methods of plugin's frontend app.js modules
@@ -498,7 +498,7 @@ export interface PluginManager {
     singleDefaultConnection(): Promise<Database>;
 
     /**
-     * Connect to all databases (countly, countly_out, countly_fs, countly_drill)
+     * Connect to all databases (userovo, userovo_out, userovo_fs, userovo_drill)
      * @returns Promise with array of database connections
      */
     connectToAllDatabases(): Promise<Database[]>;
@@ -527,14 +527,14 @@ export interface PluginManager {
 
     /**
      * Wrap db object with compatibility layer
-     * @param countlyDb - Countly database connection
+     * @param userovoDb - Userovo database connection
      * @param client - MongoDB client
      * @param dbName - Database name
      * @param dbConnectionString - Connection string
      * @param dbOptions - Database options
      * @returns Wrapped database object
      */
-    wrapDatabase(countlyDb: any, client: any, dbName: string, dbConnectionString: string, dbOptions: object): Database;
+    wrapDatabase(userovoDb: any, client: any, dbName: string, dbConnectionString: string, dbOptions: object): Database;
 
     // Data Masking Methods
     /**
@@ -592,9 +592,9 @@ export interface PluginManager {
     prepareProduction(callback: (error?: Error) => void): void;
 
     /**
-     * Procedure to restart countly process
+     * Procedure to restart userovo process
      */
-    restartCountly(): void;
+    restartUserovo(): void;
 
     /**
      * Singleton getInstance definition

@@ -4,7 +4,7 @@
 */
 
 /** @lends module:api/parts/data/events */
-var countlyEvents = {},
+var userovoEvents = {},
     common = require('./../../utils/common.js'),
     async = require('async'),
     crypto = require('crypto'),
@@ -16,7 +16,7 @@ var countlyEvents = {},
 * @param {params} params - params object
 * @returns {Promise} resolved when procesing finished
 **/
-countlyEvents.processEvents = function(params) {
+userovoEvents.processEvents = function(params) {
     return new Promise(function(resolve) {
         var forbiddenSegValues = [];
         for (let i = 1; i < 32; i++) {
@@ -672,4 +672,4 @@ function mergeEvents(firstObj, secondObj) {
     return invObj;
 }*/
 
-module.exports = countlyEvents;
+module.exports = userovoEvents;

@@ -402,12 +402,12 @@
         },
         {
             "files": [
-                "frontend/express/public/javascripts/countly/*.js",
-                "frontend/express/public/javascripts/countly/vue/*.js",
-                "frontend/express/public/javascripts/countly/vue/components/*.js",
-                "frontend/express/public/javascripts/countly/vue/data/*.js",
-                "frontend/express/public/core/*/javascripts/countly.*.js",
-                "plugins/*/frontend/public/javascripts/countly.*.js"
+                "frontend/express/public/javascripts/userovo/*.js",
+                "frontend/express/public/javascripts/userovo/vue/*.js",
+                "frontend/express/public/javascripts/userovo/vue/components/*.js",
+                "frontend/express/public/javascripts/userovo/vue/data/*.js",
+                "frontend/express/public/core/*/javascripts/userovo.*.js",
+                "plugins/*/frontend/public/javascripts/userovo.*.js"
             ],
             "parserOptions": {
                 "ecmaVersion": 2020

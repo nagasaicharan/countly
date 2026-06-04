@@ -1,7 +1,7 @@
 /**
  *  Description: This script is used to anonymize app_users collection
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/export-data
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/export-data
  *  Command: node app_users_anonymized_data.js
  */
 
@@ -16,11 +16,11 @@ const APPS = []; //leave array empty to get all apps;
 const PATH = './'; //path to save anonymized data
 const FIELDS_TO_ANONYMIZE = ['did', 'name', 'username', 'email', 'organization', 'phone', 'picture', 'custom'];
 
-pluginManager.dbConnection("countly").then(async function(countlyDb) {
+pluginManager.dbConnection("userovo").then(async function(userovoDb) {
     console.log("Connected to database...");
 
     //SET COMMON DB
-    common.db = countlyDb;
+    common.db = userovoDb;
 
     var query = {};
     if (APPS.length > 0) {
@@ -56,7 +56,7 @@ pluginManager.dbConnection("countly").then(async function(countlyDb) {
         console.log(err);
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
         console.log("Done.");
     }
 

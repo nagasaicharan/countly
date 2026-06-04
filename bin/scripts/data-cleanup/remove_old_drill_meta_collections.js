@@ -6,16 +6,16 @@ console.log("Deleting old meta documents");
 
 Promise.all(
     [
-        pluginManager.dbConnection("countly"),
-        pluginManager.dbConnection("countly_drill")
+        pluginManager.dbConnection("userovo"),
+        pluginManager.dbConnection("userovo_drill")
     ])
-    .spread(async function(countlyDB, countlyDrillDB) {
+    .spread(async function(userovoDB, userovoDrillDB) {
 
-        countlyDrillDB.collections(function(err, colls) {
+        userovoDrillDB.collections(function(err, colls) {
             if (err) {
                 console.log('Script failed. Exiting');
-                countlyDB.close();
-                countlyDrillDB.close();
+                userovoDB.close();
+                userovoDrillDB.close();
             }
             else {
                 //filter out list with only drill_meta collections. but not outr merged collection
@@ -28,7 +28,7 @@ Promise.all(
 
                 Promise.each(drillMetaCollections, function(coll) {
                     return new Promise(function(resolve) {
-                        countlyDrillDB.collection(coll).drop(function(err3) {
+                        userovoDrillDB.collection(coll).drop(function(err3) {
                             if (err3) {
                                 console.log(err3);
                             }
@@ -38,13 +38,13 @@ Promise.all(
                 }
                 ).then(function() {
                     console.log("All old drill meta collections deleted");
-                    countlyDB.close();
-                    countlyDrillDB.close();
+                    userovoDB.close();
+                    userovoDrillDB.close();
                 }).catch(function(err5) {
                     console.log(err5);
                     console.log('Script failed. Exiting');
-                    countlyDB.close();
-                    countlyDrillDB.close();
+                    userovoDB.close();
+                    userovoDrillDB.close();
                 });
 
             }

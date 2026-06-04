@@ -1,5 +1,5 @@
 {
-  "name": "countly-crashes",
+  "name": "userovo-crashes",
   "title": "Crash analytics (Vue)",
   "version": "0.5.0",
   "description": "See which users are affected by crashes and exceptions, and take necessary precautions",
@@ -7,13 +7,13 @@
   "homepage": "https://count.ly/plugins/crashes-errors/",
   "repository": {
     "type": "git",
-    "url": "http://github.com/Countly/countly-server.git"
+    "url": "http://github.com/Userovo/userovo-server.git"
   },
   "bugs": {
-    "url": "http://github.com/Countly/countly-server/issues"
+    "url": "http://github.com/Userovo/userovo-server/issues"
   },
   "keywords": [
-    "countly",
+    "userovo",
     "analytics",
     "mobile",
     "reports",

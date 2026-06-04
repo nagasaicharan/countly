@@ -3,8 +3,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 usage (){
     echo "";
-    echo "countly encrypt usage:";
-    echo "    countly encrypt # encrypts text with configuration provided in api/config.js encryption object";
+    echo "userovo encrypt usage:";
+    echo "    userovo encrypt # encrypts text with configuration provided in api/config.js encryption object";
 }
 
 if [ -z "$1" ]

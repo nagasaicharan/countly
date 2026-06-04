@@ -1,5 +1,5 @@
 // run as 
-// node generate.js > ../../../frontend/express/public/javascripts/countly/countly.device.list.js
+// node generate.js > ../../../frontend/express/public/javascripts/userovo/userovo.device.list.js
 
 //https://www.theiphonewiki.com/wiki/Models 
 //https://gist.github.com/adamawolf/3048717
@@ -48,6 +48,6 @@ csv()
     // })
     .on('done', ()=>{
         process.stderr.write("CSV parsing 'done' trigger\n");
-        process.stdout.write("/**\n * Object with device models as keys and pretty/marketing device names as values\n * @name countlyDeviceList\n * @global\n * @namespace countlyDeviceList\n */\nvar countlyDeviceList = " + JSON.stringify(devices, null, 4) + ";\n/*global module*/\nif (typeof module !== 'undefined' && module.exports) {\n    module.exports = countlyDeviceList;\n}");
+        process.stdout.write("/**\n * Object with device models as keys and pretty/marketing device names as values\n * @name userovoDeviceList\n * @global\n * @namespace userovoDeviceList\n */\nvar userovoDeviceList = " + JSON.stringify(devices, null, 4) + ";\n/*global module*/\nif (typeof module !== 'undefined' && module.exports) {\n    module.exports = userovoDeviceList;\n}");
     });
 process.stderr.write("Ending CSV parsing\n");

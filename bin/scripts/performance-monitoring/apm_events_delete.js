@@ -15,7 +15,7 @@ if (dry_run) {
     console.log('Nothing will be deleted');
 }
 
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
     try {
         if (!APP_ID) {
             console.log("Please set APP_ID");
@@ -23,7 +23,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
         else {
             console.log('Deleting APM events for app_id: ' + APP_ID);
             await Promise.all([
-                countlyDb.collection("apm").remove({app_id: APP_ID}),
+                userovoDb.collection("apm").remove({app_id: APP_ID}),
                 drillDb.collection("drill_events" + crypto.createHash('sha1').update("[CLY]_apm_network" + APP_ID).digest('hex')).drop(),
                 drillDb.collection("drill_events" + crypto.createHash('sha1').update("[CLY]_apm_device" + APP_ID).digest('hex')).drop(),
                 drillDb.collection("drill_events").remove({"a": APP_ID, "e": {$in: ["[CLY]_apm_device", "[CLY]_apm_network"]}})
@@ -34,11 +34,11 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
     catch (error) {
         console.log("ERROR: ");
         console.log(error);
-        countlyDb.close();
+        userovoDb.close();
         drillDb.close();
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
         drillDb.close();
     }
 });

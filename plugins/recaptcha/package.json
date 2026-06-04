@@ -1,5 +1,5 @@
 {
-  "name": "countly-recaptcha",
+  "name": "userovo-recaptcha",
   "title": "Recaptcha",
   "version": "1.0.0",
   "description": "Display recaptcha on incorrect login",
@@ -7,13 +7,13 @@
   "homepage": "https://count.ly/plugins/recaptcha",
   "repository": {
     "type": "git",
-    "url": "http://github.com/Countly/countly-server.git"
+    "url": "http://github.com/Userovo/userovo-server.git"
   },
   "bugs": {
-    "url": "http://github.com/Countly/countly-server/issues"
+    "url": "http://github.com/Userovo/userovo-server/issues"
   },
   "keywords": [
-    "countly",
+    "userovo",
     "analytics",
     "captcha",
     "plugins",

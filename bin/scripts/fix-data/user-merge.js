@@ -1,8 +1,8 @@
 /**
  *  Description: This script merges users if they match on any fields configured in the script.
  *  configure - processAllFields function to add or remove fields for merging.
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/fix-data
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/fix-data
  *  Command: node user-merge.js --no-dry-run [--record-overload-sleep 1000]
  *  --record-overload-sleep: Cooldown period when record count exceeds RECORD_COUNT_LIMIT
  */
@@ -48,9 +48,9 @@ const sleep = m => new Promise((r) => {
     setTimeout(r, m);
 });
 
-pluginManager.dbConnection("countly").then(async(countlyDb) => {
+pluginManager.dbConnection("userovo").then(async(userovoDb) => {
     try {
-        common.db = countlyDb;
+        common.db = userovoDb;
         await processAllFields();
         console.log("Total potential merges found - ", UPDATE_COUNTER);
         if (DRY_RUN) {

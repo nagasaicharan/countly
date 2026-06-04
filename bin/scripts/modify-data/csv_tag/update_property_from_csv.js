@@ -1,7 +1,7 @@
 /**
  *  Update custom user properties named CUSTOM_PROPERTY with value FIELD_VALUE with device id defined in CSV FILE_NAME under FIELD_NAME for APP_ID
- *  Server: countly
- *  Path: countly dir/bin/scripts/modify-data/csv_tag
+ *  Server: userovo
+ *  Path: userovo dir/bin/scripts/modify-data/csv_tag
  *  Command: node update_property_from_csv.js
  */
 
@@ -56,7 +56,7 @@ csv()
         }
     })
     .on('done', ()=>{
-        Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).spread(function(db, dbDrill) {
+        Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).spread(function(db, dbDrill) {
             if (batch.length > 0) {
                 batches.push(batch);
             }

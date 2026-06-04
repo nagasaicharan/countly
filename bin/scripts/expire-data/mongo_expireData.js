@@ -5,8 +5,8 @@
  *  Command: mongosh < mongo_expireData.js
  */
 
-var COUNTLY_DRILL = 'countly_drill',
-    COUNTLY = 'countly',
+var USEROVO_DRILL = 'userovo_drill',
+    USEROVO = 'userovo',
     EXPIRE_AFTER = 60 * 60 * 24 * 365, //1 year in seconds
     INDEX_NAME = "cd_1";
 
@@ -32,8 +32,8 @@ authDB.auth('<username>', '<password>');
 
  **/
 
-var cly = conn.getDB(COUNTLY),
-    drill = conn.getDB(COUNTLY_DRILL);
+var cly = conn.getDB(USEROVO),
+    drill = conn.getDB(USEROVO_DRILL);
 
 var clyCollections = cly.getCollectionNames(), collections = clyCollections.concat(drill.getCollectionNames()), check = [], update = [];
 

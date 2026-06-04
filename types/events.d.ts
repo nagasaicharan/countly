@@ -36,5 +36,5 @@ export interface EventsModule {
     processEvents(params: Params): Promise<void>;
 }
 
-declare const countlyEvents: EventsModule;
-export default countlyEvents;
+declare const userovoEvents: EventsModule;
+export default userovoEvents;

@@ -174,11 +174,11 @@ describe('Testing Simple database operations', function() {
 
     describe('Setting up db connection', function() {
         before('Create db connection', async function() {
-            testUtils.db = await plugins.dbConnection("countly");
+            testUtils.db = await plugins.dbConnection("userovo");
             testUtils.client = testUtils.db.client;
         });
         it('Setting db', function(done) {
-            db = testUtils.client.db("countly");
+            db = testUtils.client.db("userovo");
             done();
         });
     });

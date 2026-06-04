@@ -25,7 +25,7 @@
 
     }
     &__title{
-        color: #333C48;
+        color: #172554;
         font-family:  t.$font-family;
         line-height: 24px;
         font-weight: 500;
@@ -41,7 +41,7 @@
     line-height: 20px;
 	  }
       &__field{
-        color: #333C48;
+        color: #172554;
         font-family:  t.$font-family;
         line-height: 20px;
         font-weight: 500;
@@ -54,7 +54,7 @@
         margin-bottom:16px;
 	  }
       &__confirm{
-	      	background-color: #12AF51;
+	      	background-color: #06B6D4;
 		      color: white;
 	  }
       &__cancel {
@@ -99,7 +99,7 @@
     }
 
     &__title {
-        color: #333C48;
+        color: #172554;
         font-family: t.$font-family;
         line-height: 24px;
         font-weight: 500;
@@ -125,7 +125,7 @@
     }
 
     &__field {
-        color: #333C48;
+        color: #172554;
         font-family: t.$font-family;
         line-height: 20px;
         font-weight: 500;
@@ -174,7 +174,7 @@
 
 .cly-vue-more-options {
     .el-button {
-        border: 1px solid #CFD6E4;
+        border: 1px solid #CBD5E1;
         .is-reverse {
             -webkit-transform: rotateZ(0);
             transform: rotateZ(0);

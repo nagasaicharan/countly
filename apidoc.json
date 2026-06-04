@@ -1,8 +1,8 @@
 {
-    "name": "countly-apidoc",
+    "name": "userovo-apidoc",
     "version": "23.11.0",
-    "description": "Countly Api Docs",
-    "title": "Countly Api Docs",
+    "description": "Userovo Api Docs",
+    "title": "Userovo Api Docs",
     "url": "https://api.count.ly/",
     "template": {
         "withCompare": true,

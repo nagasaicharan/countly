@@ -2,7 +2,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 usage (){
     echo "";
-    echo "countly add_user <username>";
+    echo "userovo add_user <username>";
 }
 
 if [ -z "$1" ]

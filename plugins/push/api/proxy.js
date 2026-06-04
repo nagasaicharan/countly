@@ -239,11 +239,11 @@ module.exports = {
 // }
 
 // // Promise.all([
-// //     // test('https://count.ly/images/home/countly-overview.png', {host: 'doclet.io', port: 8080, auth: false}),
-// //     // test('http://count.ly/images/home/countly-overview.png', {host: 'doclet.io', port: 8080, http: true, auth: false}),
+// //     // test('https://count.ly/images/home/userovo-overview.png', {host: 'doclet.io', port: 8080, auth: false}),
+// //     // test('http://count.ly/images/home/userovo-overview.png', {host: 'doclet.io', port: 8080, http: true, auth: false}),
 
-// //     // test('https://count.ly/images/home/countly-overview.png', {host: 'doclet.io', port: 9090}),
-// //     // test('http://count.ly/images/home/countly-overview.png', {host: 'doclet.io', port: 9090}),
+// //     // test('https://count.ly/images/home/userovo-overview.png', {host: 'doclet.io', port: 9090}),
+// //     // test('http://count.ly/images/home/userovo-overview.png', {host: 'doclet.io', port: 9090}),
 
 // //     test('https://api.push.apple.com/4/1123', {host: 'doclet.io', port: 9090, http2: true}),
 // // ]).then(function() {
@@ -254,11 +254,11 @@ module.exports = {
 
 
 // Promise.all([
-//     test('https://count.ly/images/home/countly-overview.png', {proxyhost: 'doclet.io', proxyport: 8080, proxyunauthorized: true}),
-//     // test('http://count.ly/images/home/countly-overview.png', {proxyhost: 'doclet.io', proxyport: 8080, http: true, proxyunauthorized: true}),
+//     test('https://count.ly/images/home/userovo-overview.png', {proxyhost: 'doclet.io', proxyport: 8080, proxyunauthorized: true}),
+//     // test('http://count.ly/images/home/userovo-overview.png', {proxyhost: 'doclet.io', proxyport: 8080, http: true, proxyunauthorized: true}),
 
-//     // test('https://count.ly/images/home/countly-overview.png', {proxyhost: 'doclet.io', proxyport: 9090}),
-//     // test('http://count.ly/images/home/countly-overview.png', {proxyhost: 'doclet.io', proxyport: 9090}),
+//     // test('https://count.ly/images/home/userovo-overview.png', {proxyhost: 'doclet.io', proxyport: 9090}),
+//     // test('http://count.ly/images/home/userovo-overview.png', {proxyhost: 'doclet.io', proxyport: 9090}),
 
 //     // test('https://api.push.apple.com/4/1123', {host: 'doclet.io', port: 9090, http2: true}),
 // ]).then(function() {

@@ -3,10 +3,10 @@
 * @module api/utils/utils
 */
 var crypto = require('crypto'),
-    countlyConfig = require('./../config', 'dont-enclose');
+    userovoConfig = require('./../config', 'dont-enclose');
 
-if (!countlyConfig.encryption) {
-    countlyConfig.encryption = {};
+if (!userovoConfig.encryption) {
+    userovoConfig.encryption = {};
 }
 
 /**
@@ -22,7 +22,7 @@ if (!countlyConfig.encryption) {
 exports.encrypt = function(text, key, iv, algorithm, input_encoding, output_encoding) {
     var cipher, crypted;
     if (typeof key === "undefined") {
-        key = countlyConfig.encryption.key || "dpYheF85";
+        key = userovoConfig.encryption.key || "dpYheF85";
     }
 
     //pad or shrink to 32 bytes
@@ -34,13 +34,13 @@ exports.encrypt = function(text, key, iv, algorithm, input_encoding, output_enco
     if (typeof algorithm === "undefined") {
         //The algorithm is dependent on OpenSSL, examples are 'aes192', etc. 
         //On recent OpenSSL releases, openssl list-cipher-algorithms will display the available cipher algorithms.
-        algorithm = countlyConfig.encryption.algorithm || "aes-256-cbc";
+        algorithm = userovoConfig.encryption.algorithm || "aes-256-cbc";
     }
     if (typeof input_encoding === "undefined") {
-        input_encoding = countlyConfig.encryption.input_encoding || "utf-8";
+        input_encoding = userovoConfig.encryption.input_encoding || "utf-8";
     }
     if (typeof output_encoding === "undefined") {
-        output_encoding = countlyConfig.encryption.output_encoding || "hex";
+        output_encoding = userovoConfig.encryption.output_encoding || "hex";
     }
     cipher = crypto.createCipheriv(algorithm, key, iv);
     crypted = cipher.update(text, input_encoding, output_encoding);
@@ -80,25 +80,25 @@ exports.decrypt = function(crypted, key, iv, algorithm, input_encoding, output_e
 
     var decipher, decrypted;
     if (typeof key === "undefined") {
-        key = countlyConfig.encryption.key || "dpYheF85";
+        key = userovoConfig.encryption.key || "dpYheF85";
     }
 
     //pad or shrink to 32 bytes
     key = Buffer.concat([Buffer.from(key), Buffer.alloc(32)], 32);
 
     if (typeof iv === "undefined") {
-        iv = countlyConfig.encryption.iv || ivPart;
+        iv = userovoConfig.encryption.iv || ivPart;
     }
     if (typeof algorithm === "undefined") {
         //The algorithm is dependent on OpenSSL, examples are 'aes192', etc. 
         //On recent OpenSSL releases, openssl list-cipher-algorithms will display the available cipher algorithms.
-        algorithm = countlyConfig.encryption.algorithm || "aes-256-cbc";
+        algorithm = userovoConfig.encryption.algorithm || "aes-256-cbc";
     }
     if (typeof input_encoding === "undefined") {
-        input_encoding = countlyConfig.encryption.output_encoding || "hex";
+        input_encoding = userovoConfig.encryption.output_encoding || "hex";
     }
     if (typeof output_encoding === "undefined") {
-        output_encoding = countlyConfig.encryption.input_encoding || "utf-8";
+        output_encoding = userovoConfig.encryption.input_encoding || "utf-8";
     }
 
     decipher = crypto.createDecipheriv(algorithm, key, iv);
@@ -130,21 +130,21 @@ exports.decrypt_old = function(crypted, key, iv, algorithm, input_encoding, outp
     }
     var decipher, decrypted;
     if (typeof key === "undefined") {
-        key = countlyConfig.encryption.key || "dpYheF85";
+        key = userovoConfig.encryption.key || "dpYheF85";
     }
     if (typeof iv === "undefined") {
-        iv = countlyConfig.encryption.iv;
+        iv = userovoConfig.encryption.iv;
     }
     if (typeof algorithm === "undefined") {
         //The algorithm is dependent on OpenSSL, examples are 'aes192', etc. 
         //On recent OpenSSL releases, openssl list-cipher-algorithms will display the available cipher algorithms.
-        algorithm = countlyConfig.encryption.algorithm || "aes-256-cbc";
+        algorithm = userovoConfig.encryption.algorithm || "aes-256-cbc";
     }
     if (typeof input_encoding === "undefined") {
-        input_encoding = countlyConfig.encryption.output_encoding || "hex";
+        input_encoding = userovoConfig.encryption.output_encoding || "hex";
     }
     if (typeof output_encoding === "undefined") {
-        output_encoding = countlyConfig.encryption.input_encoding || "utf-8";
+        output_encoding = userovoConfig.encryption.input_encoding || "utf-8";
     }
     if (iv) {
         decipher = crypto.createDecipheriv(algorithm, key, iv);

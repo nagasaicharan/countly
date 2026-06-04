@@ -1,7 +1,7 @@
 /**
  *  Description: Script is used to get all indexes
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/export-data
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/export-data
  *  Command: node get_all_indexes.js
  */
 
@@ -13,29 +13,29 @@ const Promise = require("bluebird");
 const _ = require('underscore');
 const async = require('async');
 
-var run_countly = true;
+var run_userovo = true;
 var run_drill = true;
 
 
-Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
+Promise.all([plugins.dbConnection("userovo"), plugins.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
 
 
     //SET COMMON DBs
-    common.db = countlyDb;
+    common.db = userovoDb;
     common.drillDb = drillDb;
     var output = {};
 
-    dbLoadEventsData(countlyDb, function(err, appList, eventList, viewList) {
+    dbLoadEventsData(userovoDb, function(err, appList, eventList, viewList) {
         var dbs = [];
-        if (run_countly) {
-            dbs.push("countly");
+        if (run_userovo) {
+            dbs.push("userovo");
         }
         if (run_drill) {
             dbs.push("drill");
         }
         Promise.each(dbs, function(dbname) {
             return new Promise((resolve) => {
-                if (run_countly) {
+                if (run_userovo) {
                     var currentDB = common.db;
                     if (dbname === "drill") {
                         currentDB = drillDb;
@@ -79,12 +79,12 @@ Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_dril
                 console.log(err);
             }
             console.log(JSON.stringify(output));
-            countlyDb.close();
+            userovoDb.close();
             drillDb.close();
 
         }).catch(function(err) {
             console.log("Error: " + err);
-            countlyDb.close();
+            userovoDb.close();
             drillDb.close();
         });
 

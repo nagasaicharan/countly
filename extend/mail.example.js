@@ -1,5 +1,5 @@
-//file should be placed in countly/extend
-//edit this script and put it in countly/extend/mail.js to overwrite existing email templates and settings
+//file should be placed in userovo/extend
+//edit this script and put it in userovo/extend/mail.js to overwrite existing email templates and settings
 var nodemailer = require('nodemailer');
 const pluginManager = require('../plugins/pluginManager.js');
 

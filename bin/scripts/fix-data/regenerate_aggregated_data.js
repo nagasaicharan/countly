@@ -2,10 +2,10 @@
 * Scrript triggers data regeneration for events and sessions.
 * It stores progress in county.data_regeneration_progress collection. 
 * Collection can be dropped once regeneration is complete. Data in there ensures that if script dies unexpectedly, then upon staring again it will not regenerate collections again.
-*   mongosh countly
+*   mongosh userovo
 *   db.data_regeneration_progress.drop();
 *
-*   script path: {countly}/bin/scripts/fix-data/
+*   script path: {userovo}/bin/scripts/fix-data/
 *
 * To run script:
 *   node regenerate_aggregated_data.js
@@ -29,9 +29,9 @@ const pluginManager = require('../../../plugins/pluginManager.js');
 const asyncjs = require('async');
 const drill = require('../../../plugins/drill/api/parts/data/drill.js');
 
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
     console.log("Connected to databases...");
-    common.db = countlyDb;
+    common.db = userovoDb;
     common.drillDb = drillDb;
     //get all apps
     try {
@@ -39,10 +39,10 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
         if (appList && appList.length) {
             query._id = {$in: appList.map(app_id=>common.db.ObjectID(app_id))};
         }
-        const apps = await countlyDb.collection("apps").find(query, {_id: 1, name: 1, timezone: 1}).toArray();
+        const apps = await userovoDb.collection("apps").find(query, {_id: 1, name: 1, timezone: 1}).toArray();
 
         await new Promise((resolve)=>{
-            common.plugins.loadConfigs(countlyDb, function() {
+            common.plugins.loadConfigs(userovoDb, function() {
                 resolve();
             });
         });
@@ -56,7 +56,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                 //get all drill collections for this app
                 var skipped_ec = 0;
                 if (regenerate_events) {
-                    var events = await countlyDb.collection("events").findOne({_id: app._id}, {'list': 1});
+                    var events = await userovoDb.collection("events").findOne({_id: app._id}, {'list': 1});
                     if (events && events.list && events.list.length) {
                         events.list = events.list.filter(function(ee) {
                             if (ee.indexOf("[CLY]_") === 0) {
@@ -72,7 +72,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                         for (var z = 0; z < events.list.length; z++) {
                             var qq = {_id: app._id + ""};
                             qq[events.list[z]] = {$exists: true};
-                            var doc = await countlyDb.collection("data_regeneration_progress").findOne(qq);
+                            var doc = await userovoDb.collection("data_regeneration_progress").findOne(qq);
                             if (!doc) {
                                 var event = events.list[z];
                                 console.log("      Processing event: ", event);
@@ -93,7 +93,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                                     });
                                     var update = {};
                                     update[event] = Date.now();
-                                    await countlyDb.collection("data_regeneration_progress").updateOne({_id: app._id + ""}, {"$set": update}, {"upsert": true});
+                                    await userovoDb.collection("data_regeneration_progress").updateOne({_id: app._id + ""}, {"$set": update}, {"upsert": true});
 
                                 }
                                 catch (err) {
@@ -113,7 +113,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                     }
                 }
                 if (regenerate_sessions) {
-                    var doc2 = await countlyDb.collection("data_regeneration_progress").findOne({_id: app._id + "", "[CLY]_session": {$exists: true}});
+                    var doc2 = await userovoDb.collection("data_regeneration_progress").findOne({_id: app._id + "", "[CLY]_session": {$exists: true}});
                     if (!doc2) {
                         console.log("      Processing sessions");
                         var params2 = {
@@ -130,7 +130,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                                     resolve();
                                 });
                             });
-                            await countlyDb.collection("data_regeneration_progress").updateOne({_id: app._id + ""}, {"$set": { "[CLY]_session": Date.now()}}, {"upsert": true});
+                            await userovoDb.collection("data_regeneration_progress").updateOne({_id: app._id + ""}, {"$set": { "[CLY]_session": Date.now()}}, {"upsert": true});
                         }
                         catch (err) {
                             console.log(err);
@@ -159,7 +159,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
             console.log('EXITED WITH ERROR');
         }
         console.log("Closing connections...");
-        countlyDb.close();
+        userovoDb.close();
         drillDb.close();
         console.log("DONE");
     }

@@ -1,6 +1,6 @@
-# Countly Coding Guidelines
+# Userovo Coding Guidelines
 
-This document provides comprehensive coding standards and best practices for developing Countly Server. All contributors should follow these guidelines to maintain code quality and consistency.
+This document provides comprehensive coding standards and best practices for developing Userovo Server. All contributors should follow these guidelines to maintain code quality and consistency.
 
 ## Table of Contents
 - [Code Quality](#code-quality)
@@ -25,8 +25,8 @@ All code must pass ESLint validation. ESLint runs automatically on PRs via GitHu
 
 ```bash
 # Lint a specific plugin
-countly plugin lint <pluginname>
-countly plugin lintfix <pluginname>
+userovo plugin lint <pluginname>
+userovo plugin lintfix <pluginname>
 
 # Lint entire codebase
 npx grunt eslint
@@ -48,8 +48,8 @@ cp "shellcheck-${scversion}/shellcheck" /usr/bin/
 # Validate a script
 shellcheck myscript.sh
 
-# Validate all shell scripts in Countly
-countly shellcheck
+# Validate all shell scripts in Userovo
+userovo shellcheck
 ```
 
 ### Code Comments
@@ -132,7 +132,7 @@ if (typeof params.qstring.data === "string") {
 Always handle errors and notify the frontend:
 
 ```javascript
-countlyApi.mgmt.appUsers.create(params.qstring.app_id, params.qstring.data, params, function(err, res) {
+userovoApi.mgmt.appUsers.create(params.qstring.app_id, params.qstring.data, params, function(err, res) {
     if (err) {
         common.returnMessage(params, 400, err);
     } else {
@@ -171,8 +171,8 @@ log.e('Error message');  // Errors
 
 ```javascript
 // ✅ Use PascalCase for component definitions
-var MyComponent = countlyVue.views.create({
-    template: countlyVue.T("/myplugin/templates/myview.html"),
+var MyComponent = userovoVue.views.create({
+    template: userovoVue.T("/myplugin/templates/myview.html"),
     // ...
 });
 
@@ -348,7 +348,7 @@ db.collection("items").deleteOne({
 **Frontend:**
 ```javascript
 // Sanitize user input
-var safe = countlyCommon.encodeHtml(userInput);
+var safe = userovoCommon.encodeHtml(userInput);
 ```
 
 ### MongoDB Injection Prevention
@@ -410,7 +410,7 @@ Document all public functions using JSDoc format for automatic documentation gen
  * @returns {object} in the following format {"percent": "20%", "trend": "u"}
  * @example
  *   //outputs {"percent":"100%","trend":"u"}
- *   countlyCommon.getPercentChange(100, 200);
+ *   userovoCommon.getPercentChange(100, 200);
  */
 function getPercentChange(previous, current) { ... }
 ```
@@ -420,17 +420,17 @@ function getPercentChange(previous, current) { ... }
 ```javascript
 /**
  * Object with common functions to be used for multiple purposes
- * @name countlyCommon
+ * @name userovoCommon
  * @global
- * @namespace countlyCommon
+ * @namespace userovoCommon
  */
-var countlyCommon = {};
+var userovoCommon = {};
 
 /**
  * App Key of currently selected app or 0 when not initialized
  * @type {string|number}
  */
-countlyCommon.ACTIVE_APP_KEY = 0;
+userovoCommon.ACTIVE_APP_KEY = 0;
 ```
 
 ### Documenting Objects with Properties
@@ -444,16 +444,16 @@ countlyCommon.ACTIVE_APP_KEY = 0;
  * @property {boolean} isSpecialPeriod - true if current period is special
  * @property {number} daysInPeriod - amount of full days in selected period
  */
-countlyCommon.periodObj = calculatePeriodObj();
+userovoCommon.periodObj = calculatePeriodObj();
 ```
 
 ### Generating Documentation
 
 ```bash
-countly docs generate
+userovo docs generate
 ```
 
-Documentation is generated in `countly/frontend/express/public/docs` with browser-side docs in `browser/` and API docs in `api/`. View locally via `index.html` or at `http://yourdomain.com/docs`.
+Documentation is generated in `userovo/frontend/express/public/docs` with browser-side docs in `browser/` and API docs in `api/`. View locally via `index.html` or at `http://yourdomain.com/docs`.
 
 ---
 
@@ -605,18 +605,18 @@ systemlogs.action.myitem_deleted = My Item Deleted
 
 ```javascript
 var pluginManager = require('../pluginManager.js');
-var countlyDb = pluginManager.dbConnection();
+var userovoDb = pluginManager.dbConnection();
 
-countlyDb.collection('apps').find({}).toArray(function(err, apps) {
+userovoDb.collection('apps').find({}).toArray(function(err, apps) {
     if (!err && apps) {
         apps.forEach(function(app) {
-            countlyDb.collection('app_mydata' + app._id).ensureIndex(
+            userovoDb.collection('app_mydata' + app._id).ensureIndex(
                 {"field": 1}, 
                 {background: true}
             );
         });
     }
-    countlyDb.close();
+    userovoDb.close();
 });
 ```
 
@@ -636,7 +636,7 @@ Every script must include a header comment:
 #!/bin/bash
 
 #  Description of what this script does
-#  Server: mongodb / countly / any
+#  Server: mongodb / userovo / any
 #  Path: where the script should be located
 #  Command: bash myscript.sh
 ```
@@ -650,7 +650,7 @@ All configurable variables must be listed with comments:
 connection_string="mongodb://localhost"
 
 #database to operate on
-db="countly"
+db="userovo"
 
 #output directory for results
 out_dir="./output"
@@ -668,7 +668,7 @@ out_dir="./output"
 
 ```bash
 # Validate with shellcheck
-countly shellcheck
+userovo shellcheck
 
 # Or directly
 shellcheck myscript.sh
@@ -728,8 +728,8 @@ Localization strings are stored in `.properties` files:
 ### Adding New Strings
 
 1. Add to your plugin's properties file
-2. Submit to Transifex: https://www.transifex.com/osoner/countly/
-3. Commit to countly-localization repo for auto-sync
+2. Submit to Transifex: https://www.transifex.com/osoner/userovo/
+3. Commit to userovo-localization repo for auto-sync
 
 ### Adding Resources to Transifex
 
@@ -743,7 +743,7 @@ Localization strings are stored in `.properties` files:
 
 ### Auto-Updating Transifex
 
-Commit your properties file to https://github.com/Countly/countly-localization to automatically sync with Transifex on each PR merge.
+Commit your properties file to https://github.com/Userovo/userovo-localization to automatically sync with Transifex on each PR merge.
 
 ### Building Locales
 
@@ -755,8 +755,8 @@ npx grunt locales
 
 ## Additional Resources
 
-- [API Documentation](http://countly.github.io/countly-server/)
-- [Plugin Development Guide](https://support.countly.com/hc/en-us/articles/360036862392)
+- [API Documentation](http://userovo.github.io/userovo-server/)
+- [Plugin Development Guide](https://support.userovo.com/hc/en-us/articles/360036862392)
 - [Security Guidelines](docs/SECURITY.md)
 - [Vue.js Guidelines](docs/VUEJS_GUIDELINES.md)
 - [CSS Style Guide](docs/CSS_STYLE_GUIDE.md)

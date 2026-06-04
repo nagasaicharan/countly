@@ -87,7 +87,7 @@ const debounce = function(func, minWait, maxWait) {
  *
  * There are 3 useful Job subclasses already implemented:
  * ResourcefulJob is used when job requires some persistent resource to run on. Read - network connection, memory cache, etc.
- * IPCJob which extends ResourcefulJob is used when resource needs to live in a separate from Countly master process. Example - push which runs a 
+ * IPCJob which extends ResourcefulJob is used when resource needs to live in a separate from Userovo master process. Example - push which runs a 
  * TransientJob which extends IPCJob is used when job shouldn't be saved in jobs collection with all status updates being run through IPC.
  */
 class Job extends EventEmitter {
@@ -933,7 +933,7 @@ class ResourcefulJob extends Job {
 
 /**
  * Job which runs in 2 processes:
- * - Initiator process (Countly master) creates subprocess (fork of executor.js) and processes IPC messages from subprocess
+ * - Initiator process (Userovo master) creates subprocess (fork of executor.js) and processes IPC messages from subprocess
  * - Subprocess actually runs the job, but sends state updates through IPC, keeping all listeners aware of its lifecycle
  *
  * This complex structure gives following advantage:

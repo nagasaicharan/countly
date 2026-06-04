@@ -1909,7 +1909,7 @@ CanvasRenderingContext2D.prototype.dashedLineTo = function(fromX, fromY, toX, to
                 if (!isNaN(v)) {
                     if (isYAxisTick) {
                         //onur: Set yAxis ticks as short numbers such as 1B, 1M, 1K
-                        axis.ticks.push({v: v, label: countlyCommon.getShortNumber(label)});
+                        axis.ticks.push({v: v, label: userovoCommon.getShortNumber(label)});
                     } else {
                         axis.ticks.push({v: v, label: label});
                     }

@@ -3,8 +3,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 usage (){
     echo "";
-    echo "countly docs usage:";
-    echo "    countly docs generate # regenerate documentation";
+    echo "userovo docs usage:";
+    echo "    userovo docs generate # regenerate documentation";
 } 
 if [ -z "$1" ]
 then
@@ -12,7 +12,7 @@ then
 elif [ "$1" = "generate" ]; then
     npm install jsdoc@latest --save-dev ;
     #browser code
-    npx jsdoc "$DIR/../../../frontend/express/public/javascripts/countly" "$DIR/../../../frontend/express/public/javascripts/pre-login.js" -R "$DIR/../../../README.md" -c  "$DIR/../../../jsdoc_conf.json" -d "$DIR/../../../frontend/express/public/docs/browser" ;
+    npx jsdoc "$DIR/../../../frontend/express/public/javascripts/userovo" "$DIR/../../../frontend/express/public/javascripts/pre-login.js" -R "$DIR/../../../README.md" -c  "$DIR/../../../jsdoc_conf.json" -d "$DIR/../../../frontend/express/public/docs/browser" ;
     
     #api code
     npx jsdoc "$DIR/../../../api" -R "$DIR/../../../README.md" -c  "$DIR/../../../jsdoc_conf.json" -d  "$DIR/../../../frontend/express/public/docs/api" ;

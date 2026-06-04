@@ -1,5 +1,5 @@
 {
-  "name": "countly-consolidate",
+  "name": "userovo-consolidate",
   "title": "Consolidate apps",
   "version": "0.0.0",
   "description": "Consolidate information from all apps into one by duplicating information",
@@ -7,13 +7,13 @@
   "homepage": "https://count.ly/plugins/consolidate/",
   "repository": {
     "type": "git",
-    "url": "http://github.com/Countly/countly-server.git"
+    "url": "http://github.com/Userovo/userovo-server.git"
   },
   "bugs": {
-    "url": "http://github.com/Countly/countly-server/issues"
+    "url": "http://github.com/Userovo/userovo-server/issues"
   },
   "keywords": [
-    "countly",
+    "userovo",
     "analytics",
     "apps",
     "consolidate",

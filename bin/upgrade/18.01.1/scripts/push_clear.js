@@ -23,8 +23,8 @@ function split(data, batch) {
     }
     return chunks;
 }
-pluginManager.dbConnection().then((countlyDb) => {
-    countlyDb.listCollections().toArray((err, names) => {
+pluginManager.dbConnection().then((userovoDb) => {
+    userovoDb.listCollections().toArray((err, names) => {
         if (names) {
             names = names.map(n => n.name).filter(n => n.indexOf('push_') === 0 && n.indexOf('_') === n.lastIndexOf('_'));
             if (names.length) {
@@ -34,20 +34,20 @@ pluginManager.dbConnection().then((countlyDb) => {
                     sequence(split(names, 10), names => {
                         return new Promise((res, rej) => {
                             console.log(`${i++} batch out of ${total}`);
-                            Promise.all(names.map(n => countlyDb.collection(n).drop())).then(res, res);
+                            Promise.all(names.map(n => userovoDb.collection(n).drop())).then(res, res);
                         });
                     }).then(() => {
                         console.log('...done');
-                        countlyDb.close();
+                        userovoDb.close();
                     }, err => {
                         console.error('error: %j', err);
-                        countlyDb.close();
+                        userovoDb.close();
                     });
                 }, 5000);
                 return;
             }
         }
 
-        countlyDb.close();
+        userovoDb.close();
     });
 });

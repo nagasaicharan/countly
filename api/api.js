@@ -4,7 +4,7 @@ const fs = require('fs');
 const cluster = require('cluster');
 const formidable = require('formidable');
 const os = require('os');
-const countlyConfig = require('./config', 'dont-enclose');
+const userovoConfig = require('./config', 'dont-enclose');
 const plugins = require('../plugins/pluginManager.js');
 const jobs = require('./parts/jobs');
 const log = require('./utils/log.js')('core:api');
@@ -19,12 +19,12 @@ const moment = require("moment");
 const tracker = require('./parts/mgmt/tracker.js');
 const { RateLimiterMemory } = require("rate-limiter-flexible");
 
-var t = ["countly:", "api"];
+var t = ["userovo:", "api"];
 common.processRequest = processRequest;
 
 if (cluster.isMaster) {
-    console.log("Starting Countly", "version", versionInfo.version, "package", pack.version);
-    if (!common.checkDatabaseConfigMatch(countlyConfig.mongodb, frontendConfig.mongodb)) {
+    console.log("Starting Userovo", "version", versionInfo.version, "package", pack.version);
+    if (!common.checkDatabaseConfigMatch(userovoConfig.mongodb, frontendConfig.mongodb)) {
         log.w('API AND FRONTEND DATABASE CONFIGS ARE DIFFERENT');
     }
     t.push("master");
@@ -55,7 +55,7 @@ plugins.connectToAllDatabases().then(function() {
     /**
     * Set Max Sockets
     */
-    http.globalAgent.maxSockets = countlyConfig.api.max_sockets || 1024;
+    http.globalAgent.maxSockets = userovoConfig.api.max_sockets || 1024;
 
     /**
     * Set Plugins APIs Config
@@ -133,11 +133,11 @@ plugins.connectToAllDatabases().then(function() {
     * Set Plugins Logs Config
     */
     plugins.setConfigs('logs', {
-        debug: (countlyConfig.logging && countlyConfig.logging.debug) ? countlyConfig.logging.debug.join(', ') : '',
-        info: (countlyConfig.logging && countlyConfig.logging.info) ? countlyConfig.logging.info.join(', ') : '',
-        warn: (countlyConfig.logging && countlyConfig.logging.warn) ? countlyConfig.logging.warn.join(', ') : '',
-        error: (countlyConfig.logging && countlyConfig.logging.error) ? countlyConfig.logging.error.join(', ') : '',
-        default: (countlyConfig.logging && countlyConfig.logging.default) ? countlyConfig.logging.default : 'warn',
+        debug: (userovoConfig.logging && userovoConfig.logging.debug) ? userovoConfig.logging.debug.join(', ') : '',
+        info: (userovoConfig.logging && userovoConfig.logging.info) ? userovoConfig.logging.info.join(', ') : '',
+        warn: (userovoConfig.logging && userovoConfig.logging.warn) ? userovoConfig.logging.warn.join(', ') : '',
+        error: (userovoConfig.logging && userovoConfig.logging.error) ? userovoConfig.logging.error.join(', ') : '',
+        default: (userovoConfig.logging && userovoConfig.logging.default) ? userovoConfig.logging.default : 'warn',
     }, undefined, () => {
         const cfg = plugins.getConfig('logs'), msg = {
             cmd: 'log',
@@ -319,15 +319,15 @@ plugins.connectToAllDatabases().then(function() {
             process.exit(1);
         });
 
-        const workerCount = (countlyConfig.api.workers)
-            ? countlyConfig.api.workers
+        const workerCount = (userovoConfig.api.workers)
+            ? userovoConfig.api.workers
             : os.cpus().length;
 
         for (let i = 0; i < workerCount; i++) {
             // there's no way to define inspector port of a worker in the code. So if we don't
             // pick a unique port for each worker, they conflict with each other.
             let nodeOptions = {};
-            if (countlyConfig?.symlinked !== true) { // countlyConfig.symlinked is passed when running in a symlinked setup
+            if (userovoConfig?.symlinked !== true) { // userovoConfig.symlinked is passed when running in a symlinked setup
                 const inspectorPort = i + 1 + (common?.config?.masterInspectorPort || 9229);
                 nodeOptions = { NODE_OPTIONS: "--inspect-port=" + inspectorPort };
             }
@@ -468,8 +468,8 @@ function handleRequest(req, res) {
 
     if (req.method.toLowerCase() === 'post') {
         const formidableOptions = {};
-        if (countlyConfig.api.maxUploadFileSize) {
-            formidableOptions.maxFileSize = countlyConfig.api.maxUploadFileSize;
+        if (userovoConfig.api.maxUploadFileSize) {
+            formidableOptions.maxFileSize = userovoConfig.api.maxUploadFileSize;
         }
 
         const form = new formidable.IncomingForm(formidableOptions);
@@ -528,7 +528,7 @@ function handleRequest(req, res) {
         const headers = {};
         headers["Access-Control-Allow-Origin"] = "*";
         headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS";
-        headers["Access-Control-Allow-Headers"] = "countly-token, Content-Type";
+        headers["Access-Control-Allow-Headers"] = "userovo-token, Content-Type";
         res.writeHead(200, headers);
         res.end();
     }

@@ -1,5 +1,5 @@
 {
-  "name": "countly-vue-example",
+  "name": "userovo-vue-example",
   "title": "Plugin template for Vue.js",
   "version": "0.0.0",
   "description": "Empty Vue.js plugin template for creating new plugins",
@@ -7,13 +7,13 @@
   "homepage": "https://count.ly/plugins/",
   "repository": {
     "type": "git",
-    "url": "http://github.com/Countly/countly-server.git"
+    "url": "http://github.com/Userovo/userovo-server.git"
   },
   "bugs": {
-    "url": "http://github.com/Countly/countly-server/issues"
+    "url": "http://github.com/Userovo/userovo-server/issues"
   },
   "keywords": [
-    "countly",
+    "userovo",
     "analytics",
     "mobile",
     "plugins",

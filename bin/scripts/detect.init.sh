@@ -5,7 +5,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 # use available init system
 INITSYS="systemd"
 
-if [ -z "$COUNTLY_CONTAINER" ]; then
+if [ -z "$USEROVO_CONTAINER" ]; then
 	if [[ $(/sbin/init --version) =~ upstart ]]; then
 	    INITSYS="upstart"
 	fi 2> /dev/null
@@ -14,9 +14,9 @@ else
 fi
 
 bash "$DIR/commands/$INITSYS/install.sh"
-ln -sf "$DIR/commands/$INITSYS/countly.sh" "$DIR/commands/enabled/countly.sh"
+ln -sf "$DIR/commands/$INITSYS/userovo.sh" "$DIR/commands/enabled/userovo.sh"
 
-chmod +x "$DIR/commands/countly.sh"
-ln -sf "$DIR/commands/countly.sh" /usr/bin/countly
+chmod +x "$DIR/commands/userovo.sh"
+ln -sf "$DIR/commands/userovo.sh" /usr/bin/userovo
 
-cp -f "$DIR/commands/scripts/autocomplete/countly" /etc/bash_completion.d
+cp -f "$DIR/commands/scripts/autocomplete/userovo" /etc/bash_completion.d

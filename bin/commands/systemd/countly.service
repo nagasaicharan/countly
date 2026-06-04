@@ -1,5 +1,5 @@
 [Unit]
-Description=countly-supervisor
+Description=userovo-supervisor
 Documentation=http://count.ly
 
 [Install]

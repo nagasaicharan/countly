@@ -3,9 +3,9 @@
  * @module frontend/express/libs/members
  * @example
  * var plugins = require('../../plugins/pluginManager.js'); //need for db
- * var countlyDb = plugins.dbConnection(countlyConfig); //get db connection
+ * var userovoDb = plugins.dbConnection(userovoConfig); //get db connection
  * var membersUtility = require("./libs/members.js");
- * membersUtility.db = countlyDB; //setting db before using any function
+ * membersUtility.db = userovoDB; //setting db before using any function
  *
  */
 
@@ -13,7 +13,7 @@ var authorize = require('./../../../api/utils/authorizer.js'); //for token valid
 var common = require('./../../../api/utils/common.js');
 var plugins = require('./../../../plugins/pluginManager.js');
 var configs = require('./../config', 'dont-enclose');
-var countlyMail = require('./../../../api/parts/mgmt/mail.js');
+var userovoMail = require('./../../../api/parts/mgmt/mail.js');
 var url = require('url');
 var crypto = require('crypto');
 var argon2 = require('argon2');
@@ -26,11 +26,11 @@ var membersUtility = { };
  */
 membersUtility.db = null;
 /**
- * @property {object} countlyConfig - countly configuration object
+ * @property {object} userovoConfig - userovo configuration object
  */
-membersUtility.countlyConfig = configs;
-if (membersUtility.countlyConfig.web && membersUtility.countlyConfig.web.track === "all") {
-    membersUtility.countlyConfig.web.track = null;
+membersUtility.userovoConfig = configs;
+if (membersUtility.userovoConfig.web && membersUtility.userovoConfig.web.track === "all") {
+    membersUtility.userovoConfig.web.track = null;
 }
 
 /**
@@ -81,10 +81,10 @@ function argon2Hash(str) {
 * Update user password to new sha512 hash
 * @param {string} id - id of the user document
 * @param {string} password - password to hash
-* @param {object} countlyDb  - data base object
+* @param {object} userovoDb  - data base object
 **/
-function updateUserPasswordToArgon2(id, password, countlyDb) {
-    countlyDb.collection('members').update({ _id: id}, { $set: { password: password}});
+function updateUserPasswordToArgon2(id, password, userovoDb) {
+    userovoDb.collection('members').update({ _id: id}, { $set: { password: password}});
 }
 
 /**
@@ -113,10 +113,10 @@ function sha512Hash(str, addSalt) {
  * Verify member for Argon2 Hash
  * @param {string} username | User name
  * @param {password} password | Password string
- * @param {object} countlyDb  - data base object
+ * @param {object} userovoDb  - data base object
  * @param {Function} callback | Callback function
  */
-function verifyMemberArgon2Hash(username, password, countlyDb, callback) {
+function verifyMemberArgon2Hash(username, password, userovoDb, callback) {
     var emailVal = null;
     if (username && typeof username === 'string') {
         emailVal = username.toString().toLocaleLowerCase();
@@ -124,7 +124,7 @@ function verifyMemberArgon2Hash(username, password, countlyDb, callback) {
     else {
         emailVal = username;
     }
-    countlyDb.collection('members').findOne({$and: [{ $or: [ {"username": username}, {"email": emailVal}]}]}, (err, member) => {
+    userovoDb.collection('members').findOne({$and: [{ $or: [ {"username": username}, {"email": emailVal}]}]}, (err, member) => {
         if (member) {
             if (isArgon2Hash(member.password)) {
                 verifyArgon2Hash(member.password, password).then(match => {
@@ -144,7 +144,7 @@ function verifyMemberArgon2Hash(username, password, countlyDb, callback) {
 
                 if (member.password === password_SHA1 || member.password === password_SHA5) {
                     argon2Hash(password).then(password_ARGON2 => {
-                        updateUserPasswordToArgon2(member._id, password_ARGON2, countlyDb);
+                        updateUserPasswordToArgon2(member._id, password_ARGON2, userovoDb);
                         callback(undefined, member);
                     }).catch(function() {
                         callback("Password is wrong!");
@@ -199,10 +199,10 @@ var getSessionTimeoutInMs = function(req) {
 * Sets variables for logged in session
 * @param {object} req - request object
 * @param {object} member - member object
-* @param {object} countlyDb  -data base reference
+* @param {object} userovoDb  -data base reference
 * @param {function} callback - callback function, called after token and variables are set. Returns nothing.
 **/
-function setLoggedInVariables(req, member, countlyDb, callback) {
+function setLoggedInVariables(req, member, userovoDb, callback) {
     req.session.uid = member._id;
     req.session.gadm = (member.global_admin === true);
     req.session.email = member.email;
@@ -219,7 +219,7 @@ function setLoggedInVariables(req, member, countlyDb, callback) {
     }
 
     authorize.save({
-        db: countlyDb,
+        db: userovoDb,
         multi: true,
         owner: req.session.uid,
         tryReuse: reuse,
@@ -273,7 +273,7 @@ membersUtility.verifyCredentials = function(username, password, callback) {
     if (username && password) {
         username = (username + "").trim();
 
-        var secret = membersUtility.countlyConfig.passwordSecret || "";
+        var secret = membersUtility.userovoConfig.passwordSecret || "";
         password = password + secret;
 
         verifyMemberArgon2Hash(username, password, membersUtility.db, (err, member) => {
@@ -432,10 +432,10 @@ membersUtility.loginWithExternalAuthentication = function(req, res, callback) {
 * @param {string} userId - id of the user for which to remove sessions
 * @param {string} my_token - current auth token
 * @param {string} my_session - current session id
-* @param {object} countlyDb  -data base reference
+* @param {object} userovoDb  -data base reference
 **/
-function killOtherSessionsForUser(userId, my_token, my_session, countlyDb) {
-    countlyDb.collection('sessions_').find({"session": { $regex: userId }}).toArray(function(err, sessions) {
+function killOtherSessionsForUser(userId, my_token, my_session, userovoDb) {
+    userovoDb.collection('sessions_').find({"session": { $regex: userId }}).toArray(function(err, sessions) {
         var delete_us = [];
         if (sessions) {
             for (var i = 0; i < sessions.length; i++) {
@@ -452,16 +452,16 @@ function killOtherSessionsForUser(userId, my_token, my_session, countlyDb) {
                 }
             }
             if (delete_us.length > 0) {
-                countlyDb.collection('sessions_').remove({'_id': {$in: delete_us}});
+                userovoDb.collection('sessions_').remove({'_id': {$in: delete_us}});
             }
         }
     });
     //delete other auth tokens with purpose:"LoggedInAuth"
     if (my_token) {
-        countlyDb.collection('auth_tokens').remove({'owner': countlyDb.ObjectID(userId), 'purpose': "LoggedInAuth", '_id': {$ne: my_token}});
+        userovoDb.collection('auth_tokens').remove({'owner': userovoDb.ObjectID(userId), 'purpose': "LoggedInAuth", '_id': {$ne: my_token}});
     }
     else {
-        countlyDb.collection('auth_tokens').remove({'owner': countlyDb.ObjectID(userId), 'purpose': "LoggedInAuth"});
+        userovoDb.collection('auth_tokens').remove({'owner': userovoDb.ObjectID(userId), 'purpose': "LoggedInAuth"});
     }
 }
 
@@ -472,7 +472,7 @@ function killOtherSessionsForUser(userId, my_token, my_session, countlyDb) {
 **/
 membersUtility.loginWithToken = function(req, callback) {
     var token = req.params.token;
-    var pathUrl = req.url.replace(membersUtility.countlyConfig.path, "");
+    var pathUrl = req.url.replace(membersUtility.userovoConfig.path, "");
     var urlParts = url.parse(pathUrl, true);
     var fullPath = urlParts.pathname;
 
@@ -592,7 +592,7 @@ membersUtility.extendSession = function(req) {
 };
 
 /**
- * Sets up first user in Countly(if there is none). Req object is used to get mandatory variables from req.body and also there are variables set to have logged in session for new user.
+ * Sets up first user in Userovo(if there is none). Req object is used to get mandatory variables from req.body and also there are variables set to have logged in session for new user.
  * @param {object} req - request object
  * @param {string} req.body.full_name - Full name. Mandatory.
  * @param {string} req.body.username - Username. Mandatory.
@@ -600,7 +600,7 @@ membersUtility.extendSession = function(req) {
  * @param {string} req.body.email  - E-mail. Mandatory.
  * @param {function} callback  - Function with one return value - error (if there is one)
  * @example
- *   membersUtility.setup(req, res, countlyConfig, function(error) {
+ *   membersUtility.setup(req, res, userovoConfig, function(error) {
  *      if(error) {
  *          //there is error while setting up user
  *          // error === "Wrong request parameters" - not all mandatory parameters passed or there was error during creating user
@@ -648,7 +648,7 @@ membersUtility.setup = function(req, callback) {
                 });
                 return;
             }
-            var secret = membersUtility.countlyConfig.passwordSecret || "";
+            var secret = membersUtility.userovoConfig.passwordSecret || "";
             argon2Hash(req.body.password + secret).then(password => {
                 req.body.email = (req.body.email + "").trim();
                 req.body.username = (req.body.username + "").trim();
@@ -766,7 +766,7 @@ membersUtility.forgot = function(req, callback) {
                     prid = crypto.randomBytes(32).toString('hex');
                 member.lang = member.lang || req.body.lang || "en";
                 membersUtility.db.collection('password_reset').insert({"prid": prid, "user_id": member._id, "timestamp": timestamp}, {safe: true}, function() {
-                    countlyMail.sendPasswordResetInfo(member, prid);
+                    userovoMail.sendPasswordResetInfo(member, prid);
                     plugins.callMethod("passwordRequest", {req: req, data: req.body}); //used in systemlogs
                     callback(member);
                 });
@@ -790,7 +790,7 @@ membersUtility.reset = function(req, callback) {
     if (result === false) {
         if (req.body.password && req.body.again && req.body.prid) {
             req.body.prid += "";
-            var secret = membersUtility.countlyConfig.passwordSecret || "";
+            var secret = membersUtility.userovoConfig.passwordSecret || "";
             argon2Hash(req.body.password + secret).then(password => {
                 membersUtility.db.collection('password_reset').findOne({ prid: req.body.prid }, function(err, passwordReset) {
                     if (err || !passwordReset || !passwordReset.user_id) {
@@ -873,7 +873,7 @@ membersUtility.settings = function(req, callback) {
                     callback(false, "username-exists");
                 }
                 else {
-                    var secret = membersUtility.countlyConfig.passwordSecret || "";
+                    var secret = membersUtility.userovoConfig.passwordSecret || "";
                     req.body.new_pwd = req.body.new_pwd + secret;
                     if (req.body.old_pwd && req.body.old_pwd.length) {
                         if (isArgon2Hash(member.password)) {

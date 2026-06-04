@@ -2,15 +2,15 @@ const pluginManager = require('../../../../plugins/pluginManager.js');
 
 console.log("Updating user populator templates");
 
-pluginManager.dbConnection().then(async(countlyDb) => {
-    const cursor = countlyDb.collection('populator_templates').find({uniqueUserCount: {$exists: false}});
+pluginManager.dbConnection().then(async(userovoDb) => {
+    const cursor = userovoDb.collection('populator_templates').find({uniqueUserCount: {$exists: false}});
     try {
         while (await cursor.hasNext()) {
             const existingTemplate = await cursor.next();
             try {
                 const convertedTemplate = convertTemplate(existingTemplate);
                 try {
-                    const result = await countlyDb.collection('populator_templates').replaceOne({_id: existingTemplate._id}, convertedTemplate);
+                    const result = await userovoDb.collection('populator_templates').replaceOne({_id: existingTemplate._id}, convertedTemplate);
                     console.log("Template updated successfully:", existingTemplate.name);
                 }
                 catch (replaceOneError) {
@@ -33,7 +33,7 @@ pluginManager.dbConnection().then(async(countlyDb) => {
                 console.error("Error closing cursor:", err);
             }
             else {
-                countlyDb.close();
+                userovoDb.close();
                 console.log("All templates processed.");
             }
         });
@@ -127,7 +127,7 @@ function convertTemplate(template) {
             ],
             "sequenceConditions": []
         },
-        "lastEditedBy": "Countly-Script"
+        "lastEditedBy": "Userovo-Script"
     };
 
     return convertedTemplate;

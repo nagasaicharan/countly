@@ -74,8 +74,8 @@ function parse(uri) {
 
 load("../../../frontend/express/config.js");
 
-if (typeof countlyConfig.mongodb === "string") {
-    var uriObject = parse(countlyConfig.mongodb);
+if (typeof userovoConfig.mongodb === "string") {
+    var uriObject = parse(userovoConfig.mongodb);
     dbObject.name = uriObject.database;
 
     for (var i = 0; i < uriObject.hosts.length; i++) {
@@ -96,19 +96,19 @@ if (typeof countlyConfig.mongodb === "string") {
     dbObject.password = uriObject.password;
 }
 else {
-    dbObject.name = countlyConfig.mongodb.db || 'countly';
-    if (typeof countlyConfig.mongodb.replSetServers === 'object') {
+    dbObject.name = userovoConfig.mongodb.db || 'userovo';
+    if (typeof userovoConfig.mongodb.replSetServers === 'object') {
         //mongodb://db1.example.net,db2.example.net:2500/?replicaSet=test
-        dbObject.host = countlyConfig.mongodb.replSetServers.join(",");
-        if (countlyConfig.mongodb.replicaName) {
-            dbObject.host = countlyConfig.mongodb.replicaName + "/" + dbObject.host;
+        dbObject.host = userovoConfig.mongodb.replSetServers.join(",");
+        if (userovoConfig.mongodb.replicaName) {
+            dbObject.host = userovoConfig.mongodb.replicaName + "/" + dbObject.host;
         }
     }
     else {
-        dbObject.host = countlyConfig.mongodb.host + ':' + countlyConfig.mongodb.port;
+        dbObject.host = userovoConfig.mongodb.host + ':' + userovoConfig.mongodb.port;
     }
-    if (countlyConfig.mongodb.username && countlyConfig.mongodb.password) {
-        dbObject.username = countlyConfig.mongodb.username;
-        dbObject.password = countlyConfig.mongodb.password;
+    if (userovoConfig.mongodb.username && userovoConfig.mongodb.password) {
+        dbObject.username = userovoConfig.mongodb.username;
+        dbObject.password = userovoConfig.mongodb.password;
     }
 }

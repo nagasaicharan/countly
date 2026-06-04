@@ -3,7 +3,7 @@
 set -e
 
 if [[ $EUID -ne 0 ]]; then
-   echo "Please execute Countly installation script with a superuser..." 1>&2
+   echo "Please execute Userovo installation script with a superuser..." 1>&2
    exit 1
 fi
 
@@ -79,7 +79,7 @@ cp "$DIR/config/nginx.server.conf" /etc/nginx/sites-enabled/default
 cp "$DIR/config/nginx.conf" /etc/nginx/nginx.conf
 /etc/init.d/nginx restart
 
-cp "$DIR/../frontend/express/public/javascripts/countly/countly.config.sample.js" "$DIR/../frontend/express/public/javascripts/countly/countly.config.js"
+cp "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.sample.js" "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.js"
 
 bash "$DIR/scripts/detect.init.sh"
 
@@ -112,16 +112,16 @@ echo "$plugins" > plugins.json
 )
 
 #install plugins
-bash "$DIR/scripts/countly.install.plugins.sh"
+bash "$DIR/scripts/userovo.install.plugins.sh"
 
 #load city data into database
 nodejs "$DIR/scripts/loadCitiesInDb.js"
 
 #compile scripts for production
-countly task dist-all
+userovo task dist-all
 
 # after install call
-countly check after install
+userovo check after install
 
-#finally start countly api and dashboard
-countly start
+#finally start userovo api and dashboard
+userovo start

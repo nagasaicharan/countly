@@ -1,6 +1,6 @@
 # Test Suite Documentation
 
-This document covers how to run and write tests for Countly Server.
+This document covers how to run and write tests for Userovo Server.
 
 ## Table of Contents
 - [Test Framework](#test-framework)
@@ -23,10 +23,10 @@ Tests are run using **Grunt** task runner with:
 
 ### Full Test Suite
 
-Run the complete test suite (requires clean Countly instance without admin user or apps):
+Run the complete test suite (requires clean Userovo instance without admin user or apps):
 
 ```bash
-countly test
+userovo test
 ```
 
 This runs ESLint validation followed by test suites in order:
@@ -60,19 +60,19 @@ npm run test:plugin -- <pluginname>
 
 ```bash
 # Run tests for a specific plugin
-countly plugin test pluginname
+userovo plugin test pluginname
 
 # Run tests for multiple plugins
-countly plugin test plugin1 plugin2 plugin3
+userovo plugin test plugin1 plugin2 plugin3
 
 # Run only the test file (skip app/user creation)
-countly plugin test pluginname --only
+userovo plugin test pluginname --only
 
 # Debug mode (pause between test cases)
-countly plugin test pluginname --debug
+userovo plugin test pluginname --debug
 
 # Combine options
-countly plugin test plugin1 plugin2 --only --debug
+userovo plugin test plugin1 plugin2 --only --debug
 ```
 
 **Debug mode** pauses after each test case, allowing you to:
@@ -258,11 +258,11 @@ All code must pass ESLint before tests run:
 
 ```bash
 # Lint specific plugin
-countly plugin lint <pluginname>
-countly plugin lintfix <pluginname>
+userovo plugin lint <pluginname>
+userovo plugin lintfix <pluginname>
 
 # Lint shell scripts
-countly shellcheck
+userovo shellcheck
 ```
 
 ---

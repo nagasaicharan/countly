@@ -2,31 +2,31 @@
 
 boot_configurations () {
     LIMIT_NO_FILE=$(($(($(lscpu |grep 'CPU(s):'|head -1|awk -F' ' '{print $2}')*1000)) + 10000))
-    sed -i '/LimitNOFILE/d' /etc/systemd/system/countly.service
-    sed -i "s#\[Service\]#\[Service\]\nLimitNOFILE=${LIMIT_NO_FILE}#g" /etc/systemd/system/countly.service
+    sed -i '/LimitNOFILE/d' /etc/systemd/system/userovo.service
+    sed -i "s#\[Service\]#\[Service\]\nLimitNOFILE=${LIMIT_NO_FILE}#g" /etc/systemd/system/userovo.service
     systemctl daemon-reload
 
-    SERVICE_USER=$(grep 'user' "$(countly dir)/bin/config/supervisord.conf"|awk -F'=' '{print $2}')
-    chown -R "$SERVICE_USER:$SERVICE_USER" "$(countly dir)"
+    SERVICE_USER=$(grep 'user' "$(userovo dir)/bin/config/supervisord.conf"|awk -F'=' '{print $2}')
+    chown -R "$SERVICE_USER:$SERVICE_USER" "$(userovo dir)"
 }
 
-countly_start () {
-    countly_root ;
+userovo_start () {
+    userovo_root ;
     boot_configurations ;
-    systemctl start countly;
+    systemctl start userovo;
 }
 
-countly_stop () {
-    countly_root ;
-    systemctl stop countly;
+userovo_stop () {
+    userovo_root ;
+    systemctl stop userovo;
 }
 
-countly_restart () {
-    countly_root ;
+userovo_restart () {
+    userovo_root ;
     boot_configurations ;
-    systemctl restart countly;
+    systemctl restart userovo;
 }
 
-countly_status () {
-    systemctl status countly;
+userovo_status () {
+    systemctl status userovo;
 }

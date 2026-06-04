@@ -1,7 +1,7 @@
 /**
  *  Delete user properties from users and all historic drill documents
- *  Server: countly
- *  Path: countly dir/bin/scripts/modify-data/delete
+ *  Server: userovo
+ *  Path: userovo dir/bin/scripts/modify-data/delete
  *  Command: node delete_user_properties.js
  */
 
@@ -22,7 +22,7 @@ var unset = {};
 unset[PROPERTY] = "";
 
 var Promise = require("bluebird");
-Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_drill")]).spread(function(db, dbDrill) {
+Promise.all([plugins.dbConnection("userovo"), plugins.dbConnection("userovo_drill")]).spread(function(db, dbDrill) {
     console.log("Deleting property from app users");
     db.collection('app_users' + APP_ID).updateMany({}, {$unset: unset}, function(err,) {
         if (err) {

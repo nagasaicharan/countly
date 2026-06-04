@@ -1,7 +1,7 @@
 var plugin = {},
     crypto = require('crypto'),
     common = require('../../../api/utils/common.js'),
-    countlyCommon = require('../../../api/lib/countly.common.js'),
+    userovoCommon = require('../../../api/lib/userovo.common.js'),
     appUsers = require('../../../api/parts/mgmt/app_users.js'),
     fetch = require('../../../api/parts/data/fetch.js'),
     plugins = require('../../pluginManager.js'),
@@ -213,8 +213,8 @@ const FEATURE_NAME = 'compliance_hub';
                         params.qstring.sort = checkOb || params.qstring.sort || {};
 
                         if (params.qstring.period) {
-                            countlyCommon.getPeriodObj(params);
-                            params.qstring.query.ts = countlyCommon.getTimestampRangeQuery(params, false);
+                            userovoCommon.getPeriodObj(params);
+                            params.qstring.query.ts = userovoCommon.getTimestampRangeQuery(params, false);
                         }
 
                         params.qstring.project = params.qstring.project || {};

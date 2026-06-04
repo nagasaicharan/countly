@@ -1,6 +1,6 @@
-# Countly Server Observability Guidelines
+# Userovo Server Observability Guidelines
 
-This document describes best practices for logging, debugging, and error reporting in Countly Server. All contributors must follow these guidelines to ensure robust observability and traceability.
+This document describes best practices for logging, debugging, and error reporting in Userovo Server. All contributors must follow these guidelines to ensure robust observability and traceability.
 
 ---
 

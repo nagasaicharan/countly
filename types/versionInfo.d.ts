@@ -1,4 +1,4 @@
-// Type definitions for Countly Version Info
+// Type definitions for Userovo Version Info
 // Generated from /frontend/express/version.info.js
 
 export interface VersionInfo {

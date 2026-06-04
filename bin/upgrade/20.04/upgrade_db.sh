@@ -2,7 +2,7 @@
 
 VER="20.04"
 
-CONTINUE="$(countly check before upgrade db "$VER")"
+CONTINUE="$(userovo check before upgrade db "$VER")"
 
 if [ "$CONTINUE" != "1" ] && [ "$1" != "combined" ]
 then
@@ -22,8 +22,8 @@ then
 
     if [ "$1" != "combined" ]; then
         #upgrade plugins
-        countly plugin enable active_users
-        countly plugin enable performance-monitoring
+        userovo plugin enable active_users
+        userovo plugin enable performance-monitoring
     fi
 
     #run upgrade scripts
@@ -39,7 +39,7 @@ then
     nodejs "$DIR/scripts/add_indexes.js"
 
     #call after check
-    countly check after upgrade db "$VER"
+    userovo check after upgrade db "$VER"
 elif [ "$CONTINUE" == "0" ]
 then
     echo "Database is already upgraded to $VER"

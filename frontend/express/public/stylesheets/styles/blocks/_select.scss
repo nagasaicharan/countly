@@ -10,7 +10,7 @@
         }
         .el-tabs {
             &__active-bar{
-                background-color: #0166d6;
+                background-color: #2563eb;
             }
             &__nav-wrap::after {
                 background-color: transparent;
@@ -28,7 +28,7 @@
                     position: absolute;
                     width: 100%;
                     height: 12px;
-                    background: linear-gradient(180deg, #333c48 0%, rgba(51, 60, 72, 0.0001) 100%);
+                    background: linear-gradient(180deg, #172554 0%, rgba(23, 37, 84, 0.0001) 100%);
                     top: 40px;
                     opacity: 0.12;
                 }
@@ -77,7 +77,7 @@
         font-weight: 500;
         font-size: 16px;
         line-height: 24px;
-        color: #333c48;
+        color: #172554;
         padding-bottom: 16px;
     }
     &__header-slot {
@@ -148,7 +148,7 @@
         padding: 8px;
         line-height: 20px;
         font-weight: t.$font-weight-primary;
-        color: #333c48;
+        color: #172554;
         font-size: 14px;
     }
 
@@ -159,7 +159,7 @@
     .el-checkbox__label {
         line-height: 20px;
         font-weight: t.$font-weight-text;
-        color: #333c48;
+        color: #172554;
         max-width: 330px !important;
         white-space: nowrap;
         overflow: hidden;
@@ -168,7 +168,7 @@
     }
 
     .el-checkbox__input.is-checked + .el-checkbox__label {
-        color: #333C48;
+        color: #172554;
     }
 
     .drag-handler {
@@ -193,7 +193,7 @@
             position: absolute;
             width: 100%;
             height: 12px;
-            background: linear-gradient(180deg, #333c48 0%, rgba(51, 60, 72, 0.0001) 100%);
+            background: linear-gradient(180deg, #172554 0%, rgba(23, 37, 84, 0.0001) 100%);
             top: 57px;
             left: 0;
             opacity: 0.12;

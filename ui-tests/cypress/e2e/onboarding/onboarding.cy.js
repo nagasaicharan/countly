@@ -55,9 +55,9 @@ const pluginsPageHelpers = require('../../lib/dashboard/manage/plugins/plugins')
 const reportsPageHelpers = require('../../lib/dashboard/manage/reports/reports');
 const alertsPageHelpers = require('../../lib/dashboard/manage/alerts/alerts');
 const hooksPageHelpers = require('../../lib/dashboard/manage/hooks/hooks');
-const dbCountlyPageHelpers = require('../../lib/dashboard/manage/db/countly/dbCountly');
-const dbCountlyOutPageHelpers = require('../../lib/dashboard/manage/db/countlyOut/countlyOut');
-const dbCountlyFsPageHelpers = require('../../lib/dashboard/manage/db/countlyFs/countlyFs');
+const dbUserovoPageHelpers = require('../../lib/dashboard/manage/db/userovo/dbUserovo');
+const dbUserovoOutPageHelpers = require('../../lib/dashboard/manage/db/userovoOut/userovoOut');
+const dbUserovoFsPageHelpers = require('../../lib/dashboard/manage/db/userovoFs/userovoFs');
 const loginHelpers = require('../../lib/login/login');
 const { APP_TYPE, DATA_TYPE } = require('../../support/constants');
 
@@ -263,11 +263,11 @@ describe('Complete Onboarding', () => {
         navigationHelpers.goToHooksPage();
         hooksPageHelpers.verifyEmptyPageElements();
         navigationHelpers.goToDbViewerPage();
-        dbCountlyPageHelpers.verifyEmptyPageElements();
-        dbCountlyPageHelpers.clickCountlyOutDatabaseTab();
-        dbCountlyOutPageHelpers.verifyEmptyPageElements();
-        dbCountlyOutPageHelpers.clickCountlyFileSystemDatabaseTab();
-        dbCountlyFsPageHelpers.verifyEmptyPageElements();
+        dbUserovoPageHelpers.verifyEmptyPageElements();
+        dbUserovoPageHelpers.clickUserovoOutDatabaseTab();
+        dbUserovoOutPageHelpers.verifyEmptyPageElements();
+        dbUserovoOutPageHelpers.clickUserovoFileSystemDatabaseTab();
+        dbUserovoFsPageHelpers.verifyEmptyPageElements();
     });
 
     it('should be complete onboarding flow with creating own desktop type application with default app key and enable tracking and subscribe to newsletter', function() {
@@ -438,12 +438,12 @@ describe('Complete Onboarding', () => {
         //hooksPageHelpers.verifyFullDataPageElements();   //TODO: Data is not being generated with the populator. Need to generate the data
         hooksPageHelpers.verifyEmptyPageElements();
         navigationHelpers.goToDbViewerPage();
-        dbCountlyPageHelpers.verifyFullDataPageElements();
-        dbCountlyPageHelpers.clickCountlyOutDatabaseTab();
-        //dbCountlyOutPageHelpers.verifyFullDataPageElements(); //TODO: Data is not being generated with the populator. Need to generate the data
-        dbCountlyOutPageHelpers.verifyEmptyPageElements();
-        dbCountlyOutPageHelpers.clickCountlyFileSystemDatabaseTab();
-        //dbCountlyFsPageHelpers.verifyFullDataPageElements(); //TODO: Data is not being generated with the populator. Need to generate the data
-        dbCountlyFsPageHelpers.verifyEmptyPageElements();
+        dbUserovoPageHelpers.verifyFullDataPageElements();
+        dbUserovoPageHelpers.clickUserovoOutDatabaseTab();
+        //dbUserovoOutPageHelpers.verifyFullDataPageElements(); //TODO: Data is not being generated with the populator. Need to generate the data
+        dbUserovoOutPageHelpers.verifyEmptyPageElements();
+        dbUserovoOutPageHelpers.clickUserovoFileSystemDatabaseTab();
+        //dbUserovoFsPageHelpers.verifyFullDataPageElements(); //TODO: Data is not being generated with the populator. Need to generate the data
+        dbUserovoFsPageHelpers.verifyEmptyPageElements();
     });
 });

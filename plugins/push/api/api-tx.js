@@ -45,18 +45,18 @@ async function check(params, push) {
 
     let message = await plugins.getPluginsApis().push.cache.read(data._id.toString());
     if (!message) {
-        throw new PushError('No such message or it doesn\'t have API trigger', ERROR.DATA_COUNTLY);
+        throw new PushError('No such message or it doesn\'t have API trigger', ERROR.DATA_USEROVO);
     }
 
     let trigger = message.triggerFind(TriggerKind.API);
     if (!trigger) {
-        throw new PushError('Message is not api', ERROR.DATA_COUNTLY);
+        throw new PushError('Message is not api', ERROR.DATA_USEROVO);
     }
     else if (trigger.start.getTime() > data.start.getTime()) {
-        throw new PushError('Message start date is later than push date', ERROR.DATA_COUNTLY);
+        throw new PushError('Message start date is later than push date', ERROR.DATA_USEROVO);
     }
     else if (trigger.end && trigger.end.getTime() < data.start.getTime()) {
-        throw new PushError('Message end date is earlier than push date', ERROR.DATA_COUNTLY);
+        throw new PushError('Message end date is earlier than push date', ERROR.DATA_USEROVO);
     }
 
     return new Audience(log, message, params.app)[push ? 'push' : 'pop'](trigger)

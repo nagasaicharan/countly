@@ -1,8 +1,8 @@
 /**
  *  Check for which dates data was recorded 
  *  requires index on cd collections or else will be slower
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/data-reports
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/data-reports
  *  Command: node drill_data_cd.js
  */
 
@@ -60,20 +60,20 @@ function output_data(dates, results) {
     console.log(line2);
 
 }
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
     //get apps
     var queryApps = {};
     if (apps && apps.length) {
         for (var z = 0; z < apps.length; z++) {
-            apps[z] = countlyDb.ObjectID(apps[z]);
+            apps[z] = userovoDb.ObjectID(apps[z]);
         }
         queryApps = {_id: {$in: apps}};
     }
 
-    countlyDb.collection("apps").find(queryApps).toArray(function(err, apps) {
+    userovoDb.collection("apps").find(queryApps).toArray(function(err, apps) {
         if (err) {
             console.log(err);
-            countlyDb.close();
+            userovoDb.close();
             drillDb.close();
         }
         else {
@@ -83,7 +83,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                     var dates = {};
                     var results = {};
                     //fetch events list
-                    countlyDb.collection("events").findOne({"_id": app._id}, {"list": 1}, function(err, events) {
+                    userovoDb.collection("events").findOne({"_id": app._id}, {"list": 1}, function(err, events) {
                         events = events || [];
                         var list = events.list || [];
                         if (verbose) {
@@ -137,11 +137,11 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                     });
                 });
             }).then(function() {
-                countlyDb.close();
+                userovoDb.close();
                 drillDb.close();
             }).catch(function(err) {
                 console.log(err);
-                countlyDb.close();
+                userovoDb.close();
                 drillDb.close();
             });
         }

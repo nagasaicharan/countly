@@ -3,8 +3,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 usage (){
     echo "";
-    echo "countly apidocs usage:";
-    echo "    countly apidocs generate # regenerate documentation";
+    echo "userovo apidocs usage:";
+    echo "    userovo apidocs generate # regenerate documentation";
 } 
 if [ -z "$1" ]
 then

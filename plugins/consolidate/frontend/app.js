@@ -1,6 +1,6 @@
 var plugin = {};
 
-plugin.init = function(/*app, countlyDb*/) {
+plugin.init = function(/*app, userovoDb*/) {
     //add middleware here
 };
 

@@ -1,7 +1,7 @@
 /**
  *  Description: Clear the "checked" flag from app_viewsmeta collections after deleting old views
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/data-cleanup
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/data-cleanup
  *  Command: node delete_old_views_cleanup.js
  */
 
@@ -9,16 +9,16 @@ const { ObjectId } = require('mongodb');
 const pluginManager = require('../../../plugins/pluginManager.js');
 var APP_LIST = [];
 
-pluginManager.dbConnection("countly").then(async function(countlyDb) {
+pluginManager.dbConnection("userovo").then(async function(userovoDb) {
     console.log("Connected to database...");
     try {
         // GET APP LIST
-        const apps = await getAppList({db: countlyDb});
+        const apps = await getAppList({db: userovoDb});
         if (!apps || !apps.length) {
             return close("No apps to process");
         }
         for (let i = 0; i < apps.length; i++) {
-            await countlyDb.collection("app_viewsmeta" + apps[i]._id).update({}, {$unset: {checked: 1}}, {multi: true});
+            await userovoDb.collection("app_viewsmeta" + apps[i]._id).update({}, {$unset: {checked: 1}}, {multi: true});
         }
         close();
     }
@@ -54,6 +54,6 @@ pluginManager.dbConnection("countly").then(async function(countlyDb) {
         else {
             console.log("Finished successfully.");
         }
-        countlyDb.close();
+        userovoDb.close();
     }
 });

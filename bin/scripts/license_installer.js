@@ -2,7 +2,7 @@
  * @version 3.1 only delete license history when the exact jwt is matched (will not delete all installations of same license id)
  * @version 3.0 added ability to run again, will only update if the license jwt is mismatched
  */
-var DB = 'countly';
+var DB = 'userovo';
 let auth_token = 'token_here';
 
 const jwt = require('jsonwebtoken');
@@ -54,9 +54,9 @@ if (process.argv[2]) {
 }
 
 
-pluginManager.dbConnection(DB).then(async(countlyDb) => {
+pluginManager.dbConnection(DB).then(async(userovoDb) => {
     try {
-        let apiDomain = (await countlyDb.collection('plugins').findOne({ _id: 'plugins' }, { _id: 0, 'api.domain': 1 })).api.domain.split('//')[1];
+        let apiDomain = (await userovoDb.collection('plugins').findOne({ _id: 'plugins' }, { _id: 0, 'api.domain': 1 })).api.domain.split('//')[1];
         apiDomain = apiDomain.replace(/(^\w+:|^)\/\//, '').replace(/\/$/, '');
         if (apiDomain.indexOf("www.") === 0) {
             apiDomain = apiDomain.substring(4);
@@ -84,8 +84,8 @@ pluginManager.dbConnection(DB).then(async(countlyDb) => {
                 obj.content = {license};
                 obj.activated_at = parseInt(Date.now() / 1000, 10);
                 obj.license_id = decoded._id;
-                const currentLicense = await countlyDb.collection('plugins').findOne({_id: 'license'});
-                const existingLicense = await countlyDb.collection('licenses').findOne({ _id: decoded._id });
+                const currentLicense = await userovoDb.collection('plugins').findOne({_id: 'license'});
+                const existingLicense = await userovoDb.collection('licenses').findOne({ _id: decoded._id });
 
                 if (currentLicense?.content?.license === license) {
                     console.log('entirely same license, doing nothing, exiting');
@@ -93,8 +93,8 @@ pluginManager.dbConnection(DB).then(async(countlyDb) => {
                 else {
                     if (existingLicense) {
                         console.log("License already exists, re-installing");
-                        await countlyDb.collection('plugins').remove({_id: 'license'});
-                        // await countlyDb.collection('licenses').remove({'content.license': license});
+                        await userovoDb.collection('plugins').remove({_id: 'license'});
+                        // await userovoDb.collection('licenses').remove({'content.license': license});
                     }
 
                     console.log('start existing license check');
@@ -106,24 +106,24 @@ pluginManager.dbConnection(DB).then(async(countlyDb) => {
                     }
 
                     obj._id = 'license';
-                    await countlyDb.collection('plugins').save(obj);
+                    await userovoDb.collection('plugins').save(obj);
                     obj._id = decoded._id;
-                    await countlyDb.collection('licenses').save(obj);
-                    await countlyDb.collection('plugins').updateOne({_id: 'plugins'}, {$unset: {licenseEmails: 1}});
-                    await countlyDb.collection('plugins').update({_id: 'license'}, {$unset: {metrics_check: 1}});
-                    const pluginsDoc = await countlyDb.collection('plugins').findOne({_id: 'plugins'});
+                    await userovoDb.collection('licenses').save(obj);
+                    await userovoDb.collection('plugins').updateOne({_id: 'plugins'}, {$unset: {licenseEmails: 1}});
+                    await userovoDb.collection('plugins').update({_id: 'license'}, {$unset: {metrics_check: 1}});
+                    const pluginsDoc = await userovoDb.collection('plugins').findOne({_id: 'plugins'});
                     if (!pluginsDoc.remoteConfig) {
-                        await countlyDb.collection('plugins').updateOne({_id: 'plugins'}, {$set: {remoteConfig: {}}});
+                        await userovoDb.collection('plugins').updateOne({_id: 'plugins'}, {$set: {remoteConfig: {}}});
                     }
                 }
 
                 console.log('license updation complete');
-                countlyDb.close();
+                userovoDb.close();
                 process.exit(0);
             }
             catch (error) {
                 console.error('download failed:', error);
-                countlyDb.close();
+                userovoDb.close();
                 process.exit(0);
             }
         }

@@ -2,7 +2,7 @@
 
 VER="23.03"
 
-CONTINUE="$(countly check before upgrade db "$VER")"
+CONTINUE="$(userovo check before upgrade db "$VER")"
 
 if [ "$CONTINUE" != "1" ] && [ "$1" != "combined" ]
 then
@@ -22,7 +22,7 @@ then
 
     if [ "$1" != "combined" ]; then
         #upgrade plugins
-        countly plugin enable license;
+        userovo plugin enable license;
         nodejs "$DIR/scripts/install_plugins.js"
     fi
     
@@ -30,7 +30,7 @@ then
     nodejs "$DIR/scripts/add_indexes.js"
 
     #run upgrade scripts
-    countly config "api.session_duration_limit" 86400
+    userovo config "api.session_duration_limit" 86400
     nodejs "$SCRIPTS/scripts/add_cohort_creation_info.js"
     nodejs "$SCRIPTS/scripts/add_funnel_creator.js"
     nodejs "$SCRIPTS/scripts/push_hash.js"
@@ -41,11 +41,11 @@ then
     nodejs "$SCRIPTS/scripts/update_user_text_index.js"
 
     if [ "$1" != "combined" ]; then
-        countly upgrade;
+        userovo upgrade;
     fi
 
     #call after check
-    countly check after upgrade db "$VER"
+    userovo check after upgrade db "$VER"
 elif [ "$CONTINUE" == "0" ]
 then
     echo "Database is already upgraded to $VER"

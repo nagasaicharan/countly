@@ -2,19 +2,19 @@ const pluginManager = require('../../../../plugins/pluginManager.js');
 
 console.log("Assign creator to funnels from systemlogs");
 
-pluginManager.dbConnection().then(async(countlyDb) => {
+pluginManager.dbConnection().then(async(userovoDb) => {
 
     var requests = [];
 
     async function update(funnel) {
         try {
-            var log = await countlyDb.collection('systemlogs').findOne({ 'i._id': funnel._id, 'a': "funnel_added" });
+            var log = await userovoDb.collection('systemlogs').findOne({ 'i._id': funnel._id, 'a': "funnel_added" });
             if (log) {
                 requests.push({
                     'updateOne': {
                         'filter': { '_id': funnel._id },
                         'update': {
-                            '$set': {'creator': countlyDb.ObjectID(log.user_id), 'created': log.ts}
+                            '$set': {'creator': userovoDb.ObjectID(log.user_id), 'created': log.ts}
                         }
                     }
                 });
@@ -22,7 +22,7 @@ pluginManager.dbConnection().then(async(countlyDb) => {
                     //Execute per 500 operations and re-init
                     console.log("Flushing changes:" + requests.length);
                     try {
-                        await countlyDb.collection('funnels').bulkWrite(requests);
+                        await userovoDb.collection('funnels').bulkWrite(requests);
                     }
                     catch (err) {
                         console.error(err);
@@ -37,7 +37,7 @@ pluginManager.dbConnection().then(async(countlyDb) => {
     }
 
     try {
-        var funnels = await countlyDb.collection('funnels').find({ $or: [{ 'creator': null }, { 'created': null }] }).toArray();
+        var funnels = await userovoDb.collection('funnels').find({ $or: [{ 'creator': null }, { 'created': null }] }).toArray();
         if (funnels.length == 0) {
             console.log("No changes");
         }
@@ -48,7 +48,7 @@ pluginManager.dbConnection().then(async(countlyDb) => {
             if (requests.length > 0) {
                 console.log("Flushing changes:" + requests.length);
                 try {
-                    await countlyDb.collection('funnels').bulkWrite(requests);
+                    await userovoDb.collection('funnels').bulkWrite(requests);
                 }
                 catch (err) {
                     console.error(err);
@@ -61,6 +61,6 @@ pluginManager.dbConnection().then(async(countlyDb) => {
         console.log(err);
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
     }
 });

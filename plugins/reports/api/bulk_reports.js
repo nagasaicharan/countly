@@ -3,9 +3,9 @@
 var plugins = require('../../pluginManager.js'),
     async = require("async"),
     reports = require("./reports");
-plugins.dbConnection().then((countlyDb) => {
+plugins.dbConnection().then((userovoDb) => {
 //load configs
-plugins.loadConfigs(countlyDb, function(){
+plugins.loadConfigs(userovoDb, function(){
     var cache = {};
     var date = new Date();
     var hour = date.getHours();
@@ -14,10 +14,10 @@ plugins.loadConfigs(countlyDb, function(){
         dow = 7;
     
     console.log(hour, dow);
-    countlyDb.collection("reports").find({r_hour:hour}).toArray(function(err, res){
+    userovoDb.collection("reports").find({r_hour:hour}).toArray(function(err, res){
         async.eachSeries(res, function(report, done){
             if(report.frequency == "daily" || (report.frequency == "weekly" && report.r_day == dow)){
-                reports.getReport(countlyDb, report, function(err, ob){
+                reports.getReport(userovoDb, report, function(err, ob){
                     if(!err){
                         reports.send(ob.report, ob.message, function(){
                             console.log("sent to", ob.report.emails[0]);
@@ -35,7 +35,7 @@ plugins.loadConfigs(countlyDb, function(){
             }
         }, function(err, results) {
             console.log("all reports sent");
-            countlyDb.close();
+            userovoDb.close();
             process.exit();
         });
     })

@@ -1,19 +1,19 @@
 {
-  "name": "countly-populator",
+  "name": "userovo-populator",
   "title": "Data Populator",
   "version": "0.1.0",
-  "description": "Populate Countly with random data",
+  "description": "Populate Userovo with random data",
   "author": "Count.ly",
   "homepage": "https://count.ly/plugins/data-populator",
   "repository": {
     "type": "git",
-    "url": "http://github.com/Countly/countly-server.git"
+    "url": "http://github.com/Userovo/userovo-server.git"
   },
   "bugs": {
-    "url": "http://github.com/Countly/countly-server/issues"
+    "url": "http://github.com/Userovo/userovo-server/issues"
   },
   "keywords": [
-    "countly",
+    "userovo",
     "analytics",
     "mobile",
     "data",

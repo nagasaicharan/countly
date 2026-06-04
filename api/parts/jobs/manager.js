@@ -26,7 +26,7 @@ class Manager {
 
         this.classes = {}; // {'job name': Constructor}
         this.types = []; // ['job name1', 'job name2']
-        this.files = {}; // {'ping': '/usr/local/countly/api/jobs/ping.js'}
+        this.files = {}; // {'ping': '/usr/local/userovo/api/jobs/ping.js'}
         this.processes = {}; // {job1Id: [fork1, fork2], job2Id: [fork3, fork4], job3Id: []}     job3 is small and being run on this process, job1/2 are IPC ones
         this.running = {}; // {'push:apn:connection': [resource1, resource2], 'xxx': [resource3]}
         this.resources = []; // {'push:apn:connection': [job1, job2]}

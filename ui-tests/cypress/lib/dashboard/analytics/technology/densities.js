@@ -249,7 +249,7 @@ const verifyDensitiesMetricCard = ({
         element: densitiesMetricCardElements(index).BOUNCE_RATE_PROGRESS_CIRCLE,
     });
 
-    // TODO: Ooen that part after https://countly.atlassian.net/browse/SER-1791 Fixed 
+    // TODO: Ooen that part after https://userovo.atlassian.net/browse/SER-1791 Fixed 
     // for (var i = 0; i < 3; i++) {
     //     cy.verifyElement({
     //         shouldNot: !isEmpty,

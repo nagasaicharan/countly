@@ -8,7 +8,7 @@ try {
     puppeteer = require('puppeteer');
 }
 catch (err) {
-    if (process.env.COUNTLY_CONTAINER !== 'frontend') {
+    if (process.env.USEROVO_CONTAINER !== 'frontend') {
         console.warn(
             `Puppeteer not installed. Please install puppeteer if
               you would like to use api/utils/render.js. \nGracefully skipping

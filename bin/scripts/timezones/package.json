@@ -7,18 +7,18 @@
     "generate": "node timezones.js"
   },
   "keywords": [
-    "countly",
+    "userovo",
     "device",
     "list"
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/countly/countly-server.git"
+    "url": "git://github.com/userovo/userovo-server.git"
   },
-  "author": "Countly <hello@count.ly> (https://count.ly/)",
+  "author": "Userovo <hello@count.ly> (https://count.ly/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Countly/countly-server/issues"
+    "url": "https://github.com/Userovo/userovo-server/issues"
   },
   "homepage": "https://count.ly/",
   "dependencies": {

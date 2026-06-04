@@ -23,8 +23,8 @@ if (dry_run) {
     console.log("This is dry run");
     console.log("Members will be only listed, not locked");
 }
-Promise.all([pluginManager.dbConnection("countly")]).spread(function(countlyDb) {
-    countlyDb.collection("members").aggregate([{"$match": query}, {"$project": {"_id": true, "email": true, "username": true, "full_name": true}}], {allowDiskUse: true}, function(err, res) {
+Promise.all([pluginManager.dbConnection("userovo")]).spread(function(userovoDb) {
+    userovoDb.collection("members").aggregate([{"$match": query}, {"$project": {"_id": true, "email": true, "username": true, "full_name": true}}], {allowDiskUse: true}, function(err, res) {
         if (err) {
             console.log(err);
         }
@@ -36,7 +36,7 @@ Promise.all([pluginManager.dbConnection("countly")]).spread(function(countlyDb) 
                     resolve();
                 }
                 else {
-                    countlyDb.collection("members").updateOne({_id: data._id}, {$set: {locked: true}}, function(err) {
+                    userovoDb.collection("members").updateOne({_id: data._id}, {$set: {locked: true}}, function(err) {
                         if (err) {
                             console.log(err);
                             errored++;
@@ -50,11 +50,11 @@ Promise.all([pluginManager.dbConnection("countly")]).spread(function(countlyDb) 
                 console.log(errored + " requests failed");
             }
             console.log("ALL done");
-            countlyDb.close();
+            userovoDb.close();
         }).catch(function(rejection) {
             console.log("Error");
             console.log("Error:", rejection);
-            countlyDb.close();
+            userovoDb.close();
         });
     });
 

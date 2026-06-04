@@ -121,7 +121,7 @@ Enterprise fixes:
 - [oidc] Using sub as fallback as user identifier when there's no email
 
 Dependencies:
-- Bump countly-sdk-web from 26.1.0 to 26.1.1
+- Bump userovo-sdk-web from 26.1.0 to 26.1.1
 - Bump ejs from 4.0.1 to 5.0.1
 - Bump express-rate-limit from 8.3.0 to 8.3.1
 - Bump fast-xml-parser from 5.4.1 to 5.5.7 in /plugins/push
@@ -133,7 +133,7 @@ Dependencies:
 
 ## Version 25.03.39
 Fixes:
-- [core] Fixed replaceDatabaseString incorrectly replacing "countly" in the MongoDB username when it appears in the connection URL
+- [core] Fixed replaceDatabaseString incorrectly replacing "userovo" in the MongoDB username when it appears in the connection URL
 - [dashboards] Unescape event segment values in meta
 - [push] Using Android specific content for Huawei messages as well
 
@@ -163,7 +163,7 @@ Dependencies:
 - Bump cypress from 15.10.0 to 15.11.0 in /ui-tests
 - Bump fast-xml-parser and @google-cloud/storage in /plugins/push
 - Bump geoip-lite from 1.4.10 to 2.0.0
-- Bump minimatch from 9.0.5 to 9.0.9 in /api/utils/countly-request
+- Bump minimatch from 9.0.5 to 9.0.9 in /api/utils/userovo-request
 - Bump minimatch from 9.0.5 to 9.0.9 in /plugins/hooks
 - Bump nodemailer from 7.0.13 to 8.0.1
 - Bump qs from 6.14.1 to 6.14.2
@@ -199,7 +199,7 @@ Enterprise Fixes:
 - [content] Uniform journey and content block actions
 - [content] Fix overflow and missing translations in content blocks
 - [content] Fix button management when creating fullscreen content blocks
-- [crash_symbolication] Use countlyfs for JavaScript symbolication
+- [crash_symbolication] Use userovofs for JavaScript symbolication
 - [funnels] Fix funnel name tooltip content
 - [surveys] Allow surveys to resize and reposition when user rotates devices or adjust browser window
 - [nps] Allow nps to resize and reposition when user rotates devices or adjust browser window
@@ -223,7 +223,7 @@ Enterprise Fixes:
 - [journey-engine] Update asset file naming to include version from package.json
 
 Enterprise Features:
-- [crash_symbolication] Use countlyfs for js symbolication
+- [crash_symbolication] Use userovofs for js symbolication
 
 Dependencies:
 - Bump qs from 6.14.0 to 6.14.1
@@ -264,7 +264,7 @@ Dependencies:
 - Bump @vitejs/plugin-vue from 6.0.1 to 6.0.2
 - Bump @vue-flow/core from 1.47.0 to 1.48.0
 - Bump body-parser from 2.2.0 to 2.2.1
-- Bump countly-sdk-web from 25.4.1 to 25.4.2
+- Bump userovo-sdk-web from 25.4.1 to 25.4.2
 - Bump glob from 10.3.12 to 10.5.0
 - Bump js-yaml from 3.14.1 to 3.14.2
 - Bump js-yaml from 3.14.1 to 3.14.2
@@ -375,7 +375,7 @@ Enterprise Fixes:
 
 Dependencies
 - Bump @faker-js/faker from 10.0.0 to 10.1.0 in /ui-tests
-- Bump countly-sdk-nodejs from 24.10.2 to 24.10.3
+- Bump userovo-sdk-nodejs from 24.10.2 to 24.10.3
 - Bump lint-staged from 16.2.3 to 16.2.4
 - Bump puppeteer from 24.23.0 to 24.24.1
 
@@ -611,7 +611,7 @@ Enterprise Fixes:
 Dependencies:
 - Bump sass from 1.89.1 to 1.89.2
 - Bump puppeteer from 24.10.0 to 24.10.1
-- Bump countly-sdk-nodejs from 24.10.1 to 24.10.2
+- Bump userovo-sdk-nodejs from 24.10.1 to 24.10.2
 - Bump sass-embedded in /plugins/content from 1.89.1 to 1.89.2
 - Bump @vue-flow/node-resizer  in /plugins/content from 1.4.0 to 1.5.0
 - Bump @vue-flow/core in /plugins/content from 1.44.0 to 1.45.0
@@ -658,7 +658,7 @@ Dependencies:
 
 ## Version 25.03.5
 Fixes:
-- [core] Changes for event omit script to validate data in new model and use countly-request.
+- [core] Changes for event omit script to validate data in new model and use userovo-request.
 - [core] Changes to top events job. Fetching data from aggregated event totals.
 - [crashes] Fix unescaped SDK logs
 - [feedback] Uniformize drawer internal name input texts
@@ -675,7 +675,7 @@ Enterprise Fixes:
 - [retention] Fixed report loading
 
 Dependencies:
-- Bump countly-sdk-web from 25.1.0 to 25.4.0
+- Bump userovo-sdk-web from 25.1.0 to 25.4.0
 - Bump mongodb from 6.14.2 to 6.16.0
 - Bump nodemailer from 6.10.0 to 6.10.1
 - Bump puppeteer from 23.10.4 to 24.7.0
@@ -737,8 +737,8 @@ Enterprise Fixes:
 
 Dependencies:
 - Bump axios from 1.7.4 to 1.8.2 in /plugins/hooks
-- Bump countly-sdk-nodejs from 24.10.0 to 24.10.1
-- Bump countly-sdk-web from 24.11.4 to 25.1.0
+- Bump userovo-sdk-nodejs from 24.10.0 to 24.10.1
+- Bump userovo-sdk-web from 24.11.4 to 25.1.0
 - Bump form-data from 4.0.1 to 4.0.2
 - Bump moment-timezone from 0.5.46 to 0.5.47
 - Bump mongodb from 6.11.0 to 6.14.2
@@ -753,7 +753,7 @@ Features:
 - [core] Fixed a bug causing events to not being loaded when there's an escaped character in the event name
 - [core] Redirecting user to a newly created app
 - [core] Removing HTML from localization files
-- [core] Showing a flex banner on sidebar if the version is Countly Lite
+- [core] Showing a flex banner on sidebar if the version is Userovo Lite
 - [crashes] Adding confirmation for deleting crash groups
 - [dashoards] Fixed the "Add/manage notes" button that did not work for the technology widget
 - [dbviewer] Preventing aggregation of using any stages which might open user to harmful actions (like $merge, $out, $lookup, $uninonWith) for all users except global admin
@@ -764,7 +764,7 @@ Features:
 - [push] Fixed bug where it crashes in connection pool growth because of a type mismatch in an if condition
 - [reports] Fixes report generation failure due to SSL error
 - [star-rating] Removed unnecessary limitation with using cohorts for targeting
-- [system-utility] Fixed: Mongo error (code: 26) in some Countly instances when the profiler gets run for the first time
+- [system-utility] Fixed: Mongo error (code: 26) in some Userovo instances when the profiler gets run for the first time
 - [user-management] Global admins can now disable 2FA for individual users
 
 Enterprise Features:
@@ -779,8 +779,8 @@ Enterprise Features:
 - [surveys] Removed unnecessary limitation with using cohorts for targeting
 
 Dependencies:
-- Bump countly-sdk-nodejs from 24.10.0 to 24.10.1
-- Bump countly-sdk-web from 24.11.2 to 24.11.3
+- Bump userovo-sdk-nodejs from 24.10.0 to 24.10.1
+- Bump userovo-sdk-web from 24.11.2 to 24.11.3
 - Bump express from 4.21.1 to 4.21.2
 - Bump express-rate-limit from 7.4.1 to 7.5.0
 - Bump form-data from 4.0.0 to 4.0.1
@@ -795,7 +795,7 @@ Dependencies:
 ## Version 24.10.8
 Fixes:
 - [app-management] Unescaping HTML for created/updated application names
-- [countly-edge] Add import from Countly Edge Server
+- [userovo-edge] Add import from Userovo Edge Server
 - [languages] Calculated  total users percentage correctly
 
 Features:
@@ -933,11 +933,11 @@ Fixes:
 - [gridfs] fixes for moving to Promises
 - [reports] Fixes report generation failure due to SSL error
 - [surveys] "Select one" text in the widget can be edited now
-- [system-utility] Fixed: Mongo error (code: 26) in some Countly instances when the profiler gets run for the first time
+- [system-utility] Fixed: Mongo error (code: 26) in some Userovo instances when the profiler gets run for the first time
 
 Dependencies:
-- Bump countly-sdk-nodejs from 24.10.0 to 24.10.1
-- Bump countly-sdk-web from 24.11.2 to 24.11.4
+- Bump userovo-sdk-nodejs from 24.10.0 to 24.10.1
+- Bump userovo-sdk-web from 24.11.2 to 24.11.4
 - Bump express-rate-limit from 7.4.1 to 7.5.0
 - Bump puppeteer from 23.10.4 to 23.11.1
 - Bump sass from 1.81.0 to 1.83.4
@@ -951,8 +951,8 @@ Security:
 - [cohorts] Prevent query injection on cohort creation
 
 Dependencies:
-- Bump countly-sdk-nodejs from 22.6.0 to 24.10.0
-- Bump countly-sdk-web from 24.4.1 to 24.11.0
+- Bump userovo-sdk-nodejs from 22.6.0 to 24.10.0
+- Bump userovo-sdk-web from 24.4.1 to 24.11.0
 - Bump express from 4.21.1 to 4.21.2
 - Bump form-data from 4.0.0 to 4.0.1
 - Bump jimp from 0.22.12 to 1.6.0
@@ -1027,7 +1027,7 @@ Enterprise fixes:
 
 ## Version 24.05.14
 Fixes:
-- [code] Added better handling for countly servers while deployed using subdirectory
+- [code] Added better handling for userovo servers while deployed using subdirectory
 - [data-manager] Added missing "Create" button for event groups
 - [data-manager] Fixes for auto toggling data masking setting on redaction change
 - [populator] Fixed issues in case of wrongly structured data
@@ -1070,7 +1070,7 @@ Fixes:
 ## Version 24.05.10
 Fixes:
 - [alerts] Alerts improvements
-- [core] Various fixes for frontend to support running countly from subdirectory
+- [core] Various fixes for frontend to support running userovo from subdirectory
 - [logs]  Show collected problems on logger
 
 Enterprise fixes:
@@ -1103,7 +1103,7 @@ Enterprise fixes:
 
 ## Version 24.05.7
 Fixes:
-- [countly-request]Fix countly-request get and post methods
+- [userovo-request]Fix userovo-request get and post methods
 - [core] Improvements to prevent XSS
 - [push] objects are not allowed for the properties inside "data" key of the payload in new FCM API
 - [populator] Fixes for handling bulk requests
@@ -1300,7 +1300,7 @@ Fixes:
 
 Enterprise Fixes:
 - [block] Transform for crash object for crashes to work in block
-- [crash_symbolication] Init countly request correctly
+- [crash_symbolication] Init userovo request correctly
 - [acitve_directory] bugfix for AD user App key null issue
 
 ## Version 23.11.17
@@ -1309,7 +1309,7 @@ Fixes:
 - [core] Configuration for shard database connection
 - [core] Fixes for Graph notes user messages
 - [core] Fixes for null_id fixing script
-- [core] Signature consistency for countly-request
+- [core] Signature consistency for userovo-request
 - [core] Store last time merge happened
 - [data-masking]Try-catch on data masking setting check.
 - [reports] Bugfix for Email reports timing out
@@ -1391,7 +1391,7 @@ Enterprise Fixes:
 ## Version 23.11.12
 Fixes:
   - [core] Added option to run merges in paralel in merging job.
-  - [core] Report countly track type
+  - [core] Report userovo track type
   - [core] Script to reset specific dates from the event timeline to allow regeneration for those dates.
   - [hooks] Proxy settings for hooks
   - [hooks] hpagent added to package.json
@@ -1561,10 +1561,10 @@ Enterprise Fixes:
 Features:
 - [apps] App initial as default app image
 - [compliance-hub] Use millisecond timestamp when recording consent
-- [consent] Ask for countly tracking and newsletter subscription
+- [consent] Ask for userovo tracking and newsletter subscription
 - [core] Add config for setting maximum upload file size
 - [data_migration] Fixed problem with export
-- [guides] New plugin explaining Countly sections with videos and other content
+- [guides] New plugin explaining Userovo sections with videos and other content
 - [hooks] Add validation error messages when creating hooks
 - [jobs] Add the ability to pause jobs
 - [license] Check license at render instead of login
@@ -1615,7 +1615,7 @@ Fixes:
 - [core][views] Omitting views segments
 - [dependencies] Bump @babel/traverse from 7.22.5 to 7.23.2
 - [dependencies] Bump nodemailer from 6.9.6 to 6.9.7
-- [dependencies]Bump countly-sdk-web from 23.6.0 to 23.6.2
+- [dependencies]Bump userovo-sdk-web from 23.6.0 to 23.6.2
 - [permissions] Add feature check in rights
 - [push] Removing past dates from recurring messages details, fixing tests, sorting trigger dates
 - [ratings] fix for toggle issue in ratings
@@ -2092,7 +2092,7 @@ Security:
 - [dependencies] updated dependencies versions which had vulnerabilities
 - [nodejs] switched to NodeJS 18 as main version, NodeJS 14 is EOL soon
 - [os] added Centos/RHEL 9 and Ubuntu 22 support, deprecated Ubuntu 18, Centos/RHEL 6, 7
-- [process] countly running under countly user and installing npm dependencies as countly user
+- [process] userovo running under userovo user and installing npm dependencies as userovo user
 
 ## Version 22.09.19
 Fixes:
@@ -2260,7 +2260,7 @@ Fixes:
 - [push] Proper error message and scheduling for no audience case
 - [push] Sending approval emails again on message edits, leaving submitted props on edits
 - [report manager] Improved filtering of reports to allow filter by App and owner.
-- [views] Correct path usage in dashboard to prevent errors in case countly  root is in subfolder.
+- [views] Correct path usage in dashboard to prevent errors in case userovo  root is in subfolder.
 
 Enterprise fixes:
 - [ab-testing] AB testing bayesian models compilation fixed
@@ -2654,7 +2654,7 @@ Fixes:
 - [populator] add more demo pages with links
 - [push] reschedule on edits
 - [scripts] fixed one liner installer script
-- [star-rating] changes for ratings images in countlyFS
+- [star-rating] changes for ratings images in userovoFS
 - [ui] in dropdowns the scroll bar is not shown by default
 - [views] add support for handling SDK provided ids for views
 - [views] fixed heatmap top bar check mark
@@ -3065,7 +3065,7 @@ Fixes:
 
 Enterprise fixes:
 - [ab-testing] fixes for detail page to show variants
-- [revenue] session data included in the countly revenue
+- [revenue] session data included in the userovo revenue
 - [surveys] changes to show device id if userName not present
 - [surveys] changes to show logo on edit
 - [surveys] fixed logo deletion
@@ -3190,7 +3190,7 @@ Improvements:
 Enterprise Improvements:
 - [cohorts] broken cohort reference causes cohort drawer to fail
 - [drill] store cache as stringified version
-- [ldap] include group alias for matching with countly groups
+- [ldap] include group alias for matching with userovo groups
 
 
 ## Version 20.11.2.8
@@ -3256,7 +3256,7 @@ Enterprise Improvements:
 * [push] missing notification header in some cases
 * [push] missing personalization tooltips on preview
 * [push] wording fix for expiration description
-* [reports] fixing link when countly works from subdirectory
+* [reports] fixing link when userovo works from subdirectory
 * [server-stats] changed format of dp reports
 * [sources] fixed direct calculation logic
 * [star-rating] feedback sticker style bug fixed
@@ -3624,8 +3624,8 @@ Enterprise Improvements:
 * [api] fixed escaping filenames in headers
 * [api] reset period object before getting query time ranges
 * [api] respect city settings when it comes to user
-* [core] fixes running countly in sub directory
-* [core] improve countly user password change experience
+* [core] fixes running userovo in sub directory
+* [core] improve userovo user password change experience
 * [crashes] double dots on y axis for crash/session ratio
 * [crashes] fix closing first thread on refresh
 * [crashes] make sure minidump_stackwalk binary has proper permissions
@@ -3782,8 +3782,8 @@ Enterprise Improvements:
 * [users] recording and displaying nested objects
 
 **Development related**
-* [UI] create global solution in CountlyHelper for creating and managing drawers
-* [api] added local module to resolve relative path from Countly root path
+* [UI] create global solution in UserovoHelper for creating and managing drawers
+* [api] added local module to resolve relative path from Userovo root path
 * [api] more events for db operations and indexes
 * [api] use promise all settled for plugin events
 * [cmd] allow calling nodejs scripts directly as commands (without shell wrapper)
@@ -3930,7 +3930,7 @@ Enterprise Improvements:
 * [funnels] top percentage update bug fixed
 * [groups] add uppercase to allowed characters for name and group id
 * [revenue] fix updating overview widget on period changes
-* [whitelabeling] replacement of word Countly with company name in all localized strings
+* [whitelabeling] replacement of word Userovo with company name in all localized strings
 
 **New Features**
 * [api] allow updating multiple app users
@@ -3980,7 +3980,7 @@ Enterprise Improvements:
 * [api] provide cancel request on app not exists
 * [api] refactored getPeriodObj
 * [cmd] added new upgrade subcommands for automatic multiple version upgrades
-* [cmd] script to upgrade countly to ee
+* [cmd] script to upgrade userovo to ee
 * [cmd] use password prompt to mask sensitive data
 * [common] add email for validation
 * [configs] improved config parsing and usage
@@ -3995,7 +3995,7 @@ Enterprise Improvements:
 * [frontend] set cookie only when theme is customizable on user level
 * [frontend] trust estimation correction more than new users data
 * [members] moved all member functions to single separate members utility
-* [scripts] allow countly user to enable plugins
+* [scripts] allow userovo user to enable plugins
 * [scripts] correctly backup nginx config on ubuntu
 * [scripts] update_translation.js perfs and reliability boost
 * [security] HTML escaping in all localized strings
@@ -4118,7 +4118,7 @@ Enterprise Improvements:
 * [dashboard] use POST in most cases instead of GET
 * [dashboard] use argon2 for password hashing
 * [data-points] show data for larger periods
-* [dbviewer] add countly_fs and countly_out to list of databases too
+* [dbviewer] add userovo_fs and userovo_out to list of databases too
 * [dbviewer] aggregation support
 * [dbviewer] reload data instead of whole view
 * [feedback] added systemlogs for widget create, edit and remove processes
@@ -4175,7 +4175,7 @@ Enterprise Improvements:
 * [api] multiple metric refactoring and fixes
 * [api] respong only after app check
 * [cmd] healthcheck additions and fixes
-* [common] fixed countlyCommon.formatSecond() method
+* [common] fixed userovoCommon.formatSecond() method
 * [db] adding country metric index for faster overview load
 * [db] ignore handled errors like duplicate index inserts
 * [db] implement basic collection cache
@@ -4188,7 +4188,7 @@ Enterprise Improvements:
 * [eslint] single config file and fixes
 * [frontend] add common.db reference for consistency with api process
 * [frontend] add constraints to unique fields like email
-* [frontend] add countlyCommon.getPeriodRange function
+* [frontend] add userovoCommon.getPeriodRange function
 * [frontend] fixed regex for page/refresh scripts
 * [groups] added group id for groups.
 * [nginx] increase worker file and connection limits
@@ -4261,7 +4261,7 @@ Enterprise Improvements:
 * [assistant] fixed browser side error with a empty server
 * [config] switch buttons resized
 * [core] fixed bug when admin can't edit apps in some cases
-* [docker] added countly-core docker image without mongodb
+* [docker] added userovo-core docker image without mongodb
 * [docker] improved environment variable based configuration
 * [enterprise] make sure drill library loads before cohorts and funnels
 * [events] fixed padding on selectize items(omit segment)
@@ -4409,9 +4409,9 @@ Enterprise Improvements:
 * [common] autoscale y axis graph ticks
 * [common] handle seperate periods in browser
 * [components] added vue.js for common subview components
-* [core] Countly version checks and markings for future upgrades
+* [core] Userovo version checks and markings for future upgrades
 * [core] make indexing in background
-* [frontend] added safeDivision to countlyCommon
+* [frontend] added safeDivision to userovoCommon
 * [frontend] extend ago function to 30 days and handle future timestamps
 * [frontend] provide method to change path hash without affecting history
 * [mongodb] support for MongoDB 3.6 with new nodejs driver 3.0+
@@ -4441,7 +4441,7 @@ Enterprise Improvements:
 * [compliance-hub] fixes for searching device_id in consent history
 * [frontend] fixed event resetting when switching between events
 * [frontend] fixed some missing images
-* [frontend] ipad, chrome table export countly drop bug fixed
+* [frontend] ipad, chrome table export userovo drop bug fixed
 * [logger] do not log retried requests
 * [plugin-upload] fixed plugin validation failing in some cases
 * [push] fixed binary building for Ubuntu 17.10
@@ -4523,13 +4523,13 @@ Enterprise Improvements:
 **Development related**
 
 * [api] added separate app_users.js module to handle app users
-* [cmd] countly fs correctly deal with sub directory identifiers
+* [cmd] userovo fs correctly deal with sub directory identifiers
 * [cmd] update npm packaged on plugin upgrade command
 * [cmd] use new hash for passwords when creating/removing users
-* [countlyCommon] allow to get dashboard stats for segments too in countlyCommon.getDashboardData method
-* [countlyCommon] more customizable way to record custom metrics
+* [userovoCommon] allow to get dashboard stats for segments too in userovoCommon.getDashboardData method
+* [userovoCommon] more customizable way to record custom metrics
 * [db] fixes when using mongodb connection string
-* [process] change title of Countly processes
+* [process] change title of Userovo processes
 
 ## Version 18.01.1
 
@@ -4588,12 +4588,12 @@ Enterprise Improvements:
 **Fixes**
 
 * Add export period to file name on export, if possible
-* Added separate post install script to allow running countly under countly user
+* Added separate post install script to allow running userovo under userovo user
 * Better duplicate request handling with logging (can be disabled in configs)
 * Bulk request fixes on waiting to process previous request, preventing them from pile up
 * Centos/RHEL installation fixes for nginx and supervisord
 * Changed formatting of date to be more locale independent
-* Countly backup and restore commands now work even if mongodb is on another server
+* Userovo backup and restore commands now work even if mongodb is on another server
 * DBViewer: optimize displaying collections for big amount of events
 * Error Logs: renamed to Server logs
 * Event Logs: show warning about limited data
@@ -4625,7 +4625,7 @@ Enterprise Improvements:
 * Configurations: new UI, now searchable
 * Crashes: add resolving state to indicate the process started for resolving crash
 * Dashboard URLs are now app namespaced, so copying links would automatically select proper app (configurable)
-* Data migration: new plugin to easily move data from one countly server to other
+* Data migration: new plugin to easily move data from one userovo server to other
 * Email reports: new design and ability to name and toggle reports
 * Event Logs: now shows if request was canceled and why
 * Format event duration as seconds
@@ -4887,14 +4887,14 @@ This is a bugfix release.
 
 **Improvements**
 
-- New user interface: 16.12 release includes the biggest visual overhaul to the entire Countly user interface, greatly improving not only the UI but also the user experience. Dashboard is now faster than ever with simplified graphs, icons, less CSS and markup.
-- New languages: Countly is translated into Hungarian and Vietnamese, and now [supports more than 10 languages](https://www.transifex.com/projects/p/countly/).
+- New user interface: 16.12 release includes the biggest visual overhaul to the entire Userovo user interface, greatly improving not only the UI but also the user experience. Dashboard is now faster than ever with simplified graphs, icons, less CSS and markup.
+- New languages: Userovo is translated into Hungarian and Vietnamese, and now [supports more than 10 languages](https://www.transifex.com/projects/p/userovo/).
 - 5 new plugins
     - [Compare:](http://count.ly/plugins/compare) All custom event and application data can easily be compared on a time series chart.
     - [Star rating:](http://count.ly/plugins/star-rating) A simple plugin in order to understand end user’s ratings about your application. This plugin shows a popup when called on the SDK side (inside the mobile app) prompted the user to submit send rating information.
     - [Slipping Away Users:](https://count.ly/plugins/slipping-away-users) This plugin displays a list (and count) of users who haven’t used the application for a particular period, e.g for 7, 14, 30, 60 and 90 days.
-    - [Server stats:](https://count.ly/plugins/data-points/) This plugin displays how many data points (sum of sessions, custom events, pageviews, crashes and push data) a Countly server has collected for the last 3 months.
-    - Desktop analytics: Countly now has support for Windows and Mac OS X desktop application types. User interface changes accordingly to provide relevant information for desktop application types.
+    - [Server stats:](https://count.ly/plugins/data-points/) This plugin displays how many data points (sum of sessions, custom events, pageviews, crashes and push data) a Userovo server has collected for the last 3 months.
+    - Desktop analytics: Userovo now has support for Windows and Mac OS X desktop application types. User interface changes accordingly to provide relevant information for desktop application types.
 - Security
     - A new extensive login security plugin makes sure brute force login attempts are identified and eliminated by limiting number of wrong login attempts.
     - System administrators can specify how strong passwords need to be. Minimum password requirements such as length, uppercase or special characters can be set.
@@ -4903,7 +4903,7 @@ This is a bugfix release.
     - Proper HTML escaping has been added to prevent HTML injections, editable from Configurations.
     - Javascript errors are hidden from the browser console.
     - MongoDB password in configuration file can be set in an encrypted way.
-    - Countly can be configured to use a salt (from Management → Applications and inside the SDK) to add checksum to SDK requests in order to prevent parameter tampering.
+    - Userovo can be configured to use a salt (from Management → Applications and inside the SDK) to add checksum to SDK requests in order to prevent parameter tampering.
     - System administrator can lock users in order to prevent them accessing the dashboard or API.
 - Push notifications
     - Push overview is redesigned, to show only meaningful and important metrics. Instead of unreliable numbers that change from platform to platform (eg. delivery rate), we simplified metric page to show most important numbers and past performance, based on weekly and monthly deliveries.
@@ -4930,7 +4930,7 @@ This is a bugfix release.
     - Added a configuration option to prevent crash list from growing too long.
     - Better logging for uncaught/database errors & crashes.
     - Error logs (Management → Error logs) now output shorter logs, eliminating potential page slow-downs when viewing this page.
-    - Single install script (countly.install.sh) which auto-detects which install procedure to execute based on OS and OS version (e.g Ubuntu, Red Hat or CentOS).
+    - Single install script (userovo.install.sh) which auto-detects which install procedure to execute based on OS and OS version (e.g Ubuntu, Red Hat or CentOS).
     - OS based MongoDB version is installed and configured automatically.
     - Accept all timestamps in second, millisecond or float format from the SDKs.
     - There is no need to call begin_session to create a user on server. This way, a user is created for any request with a new device_id.
@@ -4945,7 +4945,7 @@ This is a bugfix release.
     - Carriers are filtered out and converted to names using MCC and MNC codes.
     - For image resizing, jimp library is used instead of sharp for less OS specific library dependencies.
     - Application administrator can change App key and all users can change their API key.
-    - Countly command line has autocomplete capabilities. Also new commands are added, namely countly reindex (reapply all Countly database indexes), countly encrypt (to encrypt a value), countly decrypt (to decrypt a value), countly task (to run grunt tasks in a more convenient way) and countly config (to allow unsetting configuration values).
+    - Userovo command line has autocomplete capabilities. Also new commands are added, namely userovo reindex (reapply all Userovo database indexes), userovo encrypt (to encrypt a value), userovo decrypt (to decrypt a value), userovo task (to run grunt tasks in a more convenient way) and userovo config (to allow unsetting configuration values).
     - Sources plugin uses preprocessed data for faster loading and can extract keywords from referral data and display it under Analytics → Search Terms.
     - DBViewer plugin
         - Allow users with read permission to access data for specific application(s) she/he has access to.
@@ -4956,7 +4956,7 @@ This is a bugfix release.
 
 **Performance**
 
-- Countly now uses a data splitting algorithm on all metrics, events and users collections. This results in better performance for high traffic deployments and takes better advantage of MongoDB sharding mechanism.
+- Userovo now uses a data splitting algorithm on all metrics, events and users collections. This results in better performance for high traffic deployments and takes better advantage of MongoDB sharding mechanism.
 - Added better handling of capped collections, indexing and reindexing options.
 - Now there is a single point for updating users collection, resulting in less read and writes from SDK requests.
 - Using objects instead of MongoDB arrays for meta data.
@@ -4990,18 +4990,18 @@ This is a bugfix release.
 
 ## Version 16.06
 
-This version provides several features and bugfixes to both server and SDKs. There are a lot of improvements in Countly core, and you are advised to upgrade. Below you can find notable changes for both Community Edition and Enterprise Edition.
+This version provides several features and bugfixes to both server and SDKs. There are a lot of improvements in Userovo core, and you are advised to upgrade. Below you can find notable changes for both Community Edition and Enterprise Edition.
 
 ### Changelog for both Community Edition and Enterprise Edition
 
-* Feature: We developed Countly Code Generator (http://code.count.ly) to help developers integrate their SDKs easily.
-* Feature: We provided several one liner explanations in Countly configuration options (under dashboard > Management > Configuration)
+* Feature: We developed Userovo Code Generator (http://code.count.ly) to help developers integrate their SDKs easily.
+* Feature: We provided several one liner explanations in Userovo configuration options (under dashboard > Management > Configuration)
 * Feature: Charts now full day for today's chart, instead of capping to current time.
 * Switched from MongoDB 3.0 to 3.2.
 * Feature: Command line now checks whether user is root and displays meaningful message for root needed commands
 * Feature: App key of application and API key of user can be changed from dashboard. This is nice in circumstances where keys should be modified in SDK but this is not a viable method.
 * Feature: Previously it wasn't possible to rename events with key names containing dots. As you may have guessed, this is not the case any more.
-* Feature: Countly now uses bulk report sending through jobs, rather than cronjob for each separate report.
+* Feature: Userovo now uses bulk report sending through jobs, rather than cronjob for each separate report.
 * Feature: Reports now also display overall events data and also benefit from datatables library when managing reports.
 * Feature: We dropped using Imagemagick, and started using Sharp node module instead.
 * Feature: Add IPv6 listen directive to Nginx config to make sure we are ready to use IPv6 in the future.
@@ -5016,7 +5016,7 @@ This version provides several features and bugfixes to both server and SDKs. The
 * User experience: Data populator has been revamped so it generates less random and more meaningful data with less overhead for browser.
 * User experience: We removed unused fields for web analytics.
 * User experience: When Google services are disabled (mainly for servers in China), switching between cities and countries and displaying simple table of countries on dashboard is now possible.
-* User experience: Improved plugin state syncing between two Countly servers, with option to disable it.
+* User experience: Improved plugin state syncing between two Userovo servers, with option to disable it.
 * User interface: There is now a new and improved side bar UI which looks and behaves a lot better than the old, one-level navigation bar.
 * User interface: There is a new, shiny pre-login page design that you'll probably love.
 * User interface: Main dashboard has been redesigned and better graph tooltips have been added to graphs.
@@ -5063,7 +5063,7 @@ This version provides several features and bugfixes to both server and SDKs. The
   * Use NodeJS 5.5 for compatibility with push functionality
   * Fixed inconsistencies with MongoDB 3 findAndModify
   * Fixed help localization for app version
-  * Added remote installer script to install Countly
+  * Added remote installer script to install Userovo
 
         wget -qO- http://c.ly/install | bash
 
@@ -5077,7 +5077,7 @@ This version provides several features and bugfixes to both server and SDKs. The
 
 ### Changelog for both Community Edition and Enterprise Edition
 
-  * Web Analytics feature, one of the major app types Countly now supports
+  * Web Analytics feature, one of the major app types Userovo now supports
   * Support for different app types, where each app type can have different views and dashboards
   * HTTP/2 transport for Apple Push Notifications service, single certificate for both: development & production environments
   * Sources plugin, showing sources of your Web visitors or Android app installations (replacing stores plugin)
@@ -5108,27 +5108,27 @@ This version provides several features and bugfixes to both server and SDKs. The
 
 ### Changelog for both Community Edition and Enterprise Edition
 
-  * Introduction of crash analytics ([Issue #152](https://github.com/Countly/countly-server/issues/152))
-  * Countly can now be run via [command line](http://blog.count.ly/post/127181109353/countly-behind-the-curtains-heres-how-we-make)
-  * Email reports plugin sending daily or weekly summary of your app statistics ([Issue #3](https://github.com/Countly/countly-server/issues/3))
+  * Introduction of crash analytics ([Issue #152](https://github.com/Userovo/userovo-server/issues/152))
+  * Userovo can now be run via [command line](http://blog.count.ly/post/127181109353/userovo-behind-the-curtains-heres-how-we-make)
+  * Email reports plugin sending daily or weekly summary of your app statistics ([Issue #3](https://github.com/Userovo/userovo-server/issues/3))
   * App sorting is now user specific
   * Browser plugin displaying browser metric for Web SDK and other web platforms
   * Stores plugin to track from which store was the app installed (Android)
-  * Enhancements to plugin mechanism (shared configs) ([Issue #175](https://github.com/Countly/countly-server/issues/175))
-  * Display time with logs ([Issue #155](https://github.com/Countly/countly-server/issues/155))
-  * Merging multiple same value metrics ([Issue #148](https://github.com/Countly/countly-server/issues/148))
-  * App Apps View fixes ([Issue #144](https://github.com/Countly/countly-server/issues/144))
-  * Metric switching on map ([Issue #141](https://github.com/Countly/countly-server/issues/141))
-  * Push plugin should stop sending notifications and return error for Mistmatch Sender ID GCM error ([Issue #163](https://github.com/Countly/countly-server/issues/163))
-  * Ability to run under Ubuntu 15.04 with systemd ([Issue #143](https://github.com/Countly/countly-server/issues/143))
-  * Languages should show long language names instead of language codes ([Issue #140](https://github.com/Countly/countly-server/issues/140))
+  * Enhancements to plugin mechanism (shared configs) ([Issue #175](https://github.com/Userovo/userovo-server/issues/175))
+  * Display time with logs ([Issue #155](https://github.com/Userovo/userovo-server/issues/155))
+  * Merging multiple same value metrics ([Issue #148](https://github.com/Userovo/userovo-server/issues/148))
+  * App Apps View fixes ([Issue #144](https://github.com/Userovo/userovo-server/issues/144))
+  * Metric switching on map ([Issue #141](https://github.com/Userovo/userovo-server/issues/141))
+  * Push plugin should stop sending notifications and return error for Mistmatch Sender ID GCM error ([Issue #163](https://github.com/Userovo/userovo-server/issues/163))
+  * Ability to run under Ubuntu 15.04 with systemd ([Issue #143](https://github.com/Userovo/userovo-server/issues/143))
+  * Languages should show long language names instead of language codes ([Issue #140](https://github.com/Userovo/userovo-server/issues/140))
 
 ### Changelog specific to Enterprise Edition (available for Enterprise Edition customers)
 
   * Enhanced Drill (Query Builder) with new metrics, user properties, custom properties, attribution campaigns and crashes
-  * Funnel segment applied to all steps ([Issue #173](https://github.com/Countly/countly-server/issues/173))
-  * Added Organic data to Referal Analytics ([Issue #153](https://github.com/Countly/countly-server/issues/153))
-  * New metrics added to User Profiles, e.g crashes, attribution and other ([Issue #170] (https://github.com/Countly/countly-server/issues/170))
+  * Funnel segment applied to all steps ([Issue #173](https://github.com/Userovo/userovo-server/issues/173))
+  * Added Organic data to Referal Analytics ([Issue #153](https://github.com/Userovo/userovo-server/issues/153))
+  * New metrics added to User Profiles, e.g crashes, attribution and other ([Issue #170] (https://github.com/Userovo/userovo-server/issues/170))
 
 
 ## Version 15.06
@@ -5167,7 +5167,7 @@ This version provides several features and bugfixes to both server and SDKs. The
 * Improved Push performance
 * Added upgrade script to 15.03 version from older versions
 * Added github core update script, to update installations cloned from github
-* Moved all dependencies to Countly root folder
+* Moved all dependencies to Userovo root folder
 * New minification through uglify, no need for heavy java dependencies
 * New API v3 requests for Loyalty, Session frequency and Session durations
 * Allowing to change device_id
@@ -5178,7 +5178,7 @@ This version provides several features and bugfixes to both server and SDKs. The
 
 ### Changelog specific to Community Edition
 
-  * Introducing Plugins system, allowing other developers to write plugins which would extend Countly functionality without changing/breaking the core. For more information on how to write a plugin, see [Countly resources](http://resources.count.ly)
+  * Introducing Plugins system, allowing other developers to write plugins which would extend Userovo functionality without changing/breaking the core. For more information on how to write a plugin, see [Userovo resources](http://resources.count.ly)
 
   * Lots of plugins come with new functionality in this release, including:
    * Data Populator
@@ -5187,28 +5187,28 @@ This version provides several features and bugfixes to both server and SDKs. The
    * System Logger
 
   * New core and scalable data structure, dividing data into years and months to prevent reaching MongoDB document size limit.
-  * Upgraded to using latest Mongoskin version and newer MongoDB driver which supports new connection string format (https://github.com/Countly/countly-server/issues/124)
-  * Countly now ensures that it uses latest MongoDB version
-  * Now Countly can be installed and run from subdirectory, more info (https://github.com/Countly/countly-server/issues/19)
-  * Countly can be run with countly user. For more information, see README under /bin directory before running corresponding script to install Countly.
-  * All dependencies are now defined in package.json and can be downloaded using install script (https://github.com/Countly/countly-server/issues/4)
-  * All apps view implemented displaying list of all apps and their dashboard statistics (https://github.com/Countly/countly-server/issues/122)
+  * Upgraded to using latest Mongoskin version and newer MongoDB driver which supports new connection string format (https://github.com/Userovo/userovo-server/issues/124)
+  * Userovo now ensures that it uses latest MongoDB version
+  * Now Userovo can be installed and run from subdirectory, more info (https://github.com/Userovo/userovo-server/issues/19)
+  * Userovo can be run with userovo user. For more information, see README under /bin directory before running corresponding script to install Userovo.
+  * All dependencies are now defined in package.json and can be downloaded using install script (https://github.com/Userovo/userovo-server/issues/4)
+  * All apps view implemented displaying list of all apps and their dashboard statistics (https://github.com/Userovo/userovo-server/issues/122)
   * Accepting bulk requests as post
   * Displaying default app icon instead of nothing
   * You can now login using username or email address
-  * All tables in Countly now use Datatables for more interaction, as sorting, filtering, etc.
+  * All tables in Userovo now use Datatables for more interaction, as sorting, filtering, etc.
   * New API enhancements, as providing country and city, or returning precalculated stats for implementing dashboards
   * Allowing any origin on API to allow CORS for ajax queries on different domains
   * Added new iOS device identifiers (iPhone 6 and iPhone 6S)
   * Fixed bug displaying user roles
-  * Fixed falling back to English if browser language is not defined (https://github.com/Countly/countly-server/issues/101)
-  * Fixed locked scrolling after using slimscroll in some cases (https://github.com/Countly/countly-server/issues/128)
+  * Fixed falling back to English if browser language is not defined (https://github.com/Userovo/userovo-server/issues/101)
+  * Fixed locked scrolling after using slimscroll in some cases (https://github.com/Userovo/userovo-server/issues/128)
   * Navigation bar has scroll. It eases moving between navigation items
 
 ### Changelog specific to Enterprise Edition (available for Enterprise Edition customers)
 
 
-  * Fixed displaying long funnel names (https://github.com/Countly/countly-server/issues/107)
+  * Fixed displaying long funnel names (https://github.com/Userovo/userovo-server/issues/107)
   * Numerous other minor fixes and improvements
 
 
@@ -5217,30 +5217,30 @@ This version provides several features and bugfixes to both server and SDKs. The
 * Added density reporting for Android
 * New license, check LICENSE.md for details
 * Visual improvements, cross-browser compatibility fixes
-* Fix issue #81 (https://github.com/Countly/countly-server/issues/81)
-* Fix issue #87 (https://github.com/Countly/countly-server/issues/87)
-* Fix issue #91 (https://github.com/Countly/countly-server/issues/91)
-* Fix issue #92 (https://github.com/Countly/countly-server/issues/92)
-* Fix issue #96 (https://github.com/Countly/countly-server/issues/96)
+* Fix issue #81 (https://github.com/Userovo/userovo-server/issues/81)
+* Fix issue #87 (https://github.com/Userovo/userovo-server/issues/87)
+* Fix issue #91 (https://github.com/Userovo/userovo-server/issues/91)
+* Fix issue #92 (https://github.com/Userovo/userovo-server/issues/92)
+* Fix issue #96 (https://github.com/Userovo/userovo-server/issues/96)
 
 
 ## Version 13.11
 
-* Fix issue #88 (https://github.com/Countly/countly-server/issues/88)
-* Fix issue #98 (https://github.com/Countly/countly-server/issues/98)
+* Fix issue #88 (https://github.com/Userovo/userovo-server/issues/88)
+* Fix issue #98 (https://github.com/Userovo/userovo-server/issues/98)
 * Fixed minor error in English translation
 * Renamed LICENCE.md to LICENSE.md
 
 ## Version 13.10
 
 * Add new iPhone device names (iPhone 5S and iPhone 5C)
-* Add replica set configuration for MongoDB (https://github.com/Countly/countly-server/pull/74)
-* Fix issue #77 (https://github.com/Countly/countly-server/issues/77)
+* Add replica set configuration for MongoDB (https://github.com/Userovo/userovo-server/pull/74)
+* Fix issue #77 (https://github.com/Userovo/userovo-server/issues/77)
 
 
 ## Version 13.09
 
-  * Optimizations and fixes to the API for viewing the data on Countly for iPhone
+  * Optimizations and fixes to the API for viewing the data on Userovo for iPhone
   * Optimization for begin_session and end_session handling especially to prevent
     a new session creation on Android when the user changes the screen orientation.
     end_session is ignored if begin_session is received less than ~10 secs ago.
@@ -5263,7 +5263,7 @@ This version provides several features and bugfixes to both server and SDKs. The
     configured from api/config.js by changing "worker" count.
   * Added two new API paths, /o/analytics/dashboard and /o/analytics/countries
     that returns ready-to-use metrics for today, 7 days and 30 days. This API
-    is used by Countly Mobile Apps.
+    is used by Userovo Mobile Apps.
   * Added individual event key deletion to event configuration modal.
   * Improved and optimized update mechanism during dashboard navigation.
     Navigation is now much more smoother.
@@ -5298,7 +5298,7 @@ This version provides several features and bugfixes to both server and SDKs. The
 
   * Added localization support. All the pages have translations in the
     following languages: Chinese, Dutch, French, German, Italian, Japanese,
-    Spanish and Turkish (https://www.transifex.com/projects/p/countly/).
+    Spanish and Turkish (https://www.transifex.com/projects/p/userovo/).
   * Added city level location information to countries view. City level
     location information is available only for the country selected in
     timezone configuration of an application.

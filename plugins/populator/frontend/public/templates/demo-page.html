@@ -17,7 +17,7 @@
         height: 20%;
         margin-top: 2%;
         MARGIN-left: 5%;
-        background-image: url("../populator/images/countly-logo-dark-bg.svg");
+        background-image: url("../populator/images/userovo-logo-dark-bg.svg");
         background-repeat: no-repeat;
         background-size: contain;
         background-position: left center;
@@ -260,28 +260,28 @@
 
     </div>  
 
-    <div style="text-align:center;padding:10px;margin-bottom:7px;">All Rights Reserved. (c) Countly, 2018</div>
+    <div style="text-align:center;padding:10px;margin-bottom:7px;">All Rights Reserved. (c) Userovo, 2018</div>
     <script type='text/javascript'>
     // Some default pre init
-    var Countly = Countly || {};
-    Countly.q = Countly.q || [];
+    var Userovo = Userovo || {};
+    Userovo.q = Userovo.q || [];
 
-    // Provide your app key that you retrieved from Countly dashboard
+    // Provide your app key that you retrieved from Userovo dashboard
     var parts = document.location.href.split("/");
-    Countly.app_key = parts[parts.length - 2];
+    Userovo.app_key = parts[parts.length - 2];
 
     // Provide your server IP or name. Use try.count.ly for EE trial server.
     // If you use your own server, make sure you have https enabled if you use
     // https below.
-    Countly.url = window.location.origin;
+    Userovo.url = window.location.origin;
     
-    // Load countly script asynchronously
+    // Load userovo script asynchronously
     (function() {
       var cly = document.createElement('script'); cly.type = 'text/javascript'; 
       cly.async = true;
       // Enter url of script here (see below for other option)
-      cly.src = '/sdk/web/countly.js';
-      cly.onload = function(){Countly.init()};
+      cly.src = '/sdk/web/userovo.js';
+      cly.onload = function(){Userovo.init()};
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(cly, s);
     })();
     </script>

@@ -2,8 +2,8 @@
  *  Checks aggregated data for all events of all apps and outputs the ones that should need omitting segments. 
  *  For deletion to work SERVER_URL and API_KEY should be set.
  *  If DRY_RUN is false, will also omit those segmentes
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/modify-data
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/modify-data
  *  Command: nodejs omit_events.js
  */
 
@@ -19,10 +19,10 @@ var failedReqs = 0;
 
 var plugins = require("../../../plugins/pluginManager");
 var crypto = require('crypto');
-var request = require('countly-request')(plugins.getConfig("security"));
+var request = require('userovo-request')(plugins.getConfig("security"));
 
 if (!SERVER_URL) {
-    SERVER_URL = (process.env.COUNTLY_CONFIG_PROTOCOL || "http") + "://" + (process.env.COUNTLY_CONFIG_HOSTNAME || "localhost");
+    SERVER_URL = (process.env.USEROVO_CONFIG_PROTOCOL || "http") + "://" + (process.env.USEROVO_CONFIG_HOSTNAME || "localhost");
 }
 plugins.dbConnection().then(async function(db) {
     var apps = await db.collection("apps").find().toArray();

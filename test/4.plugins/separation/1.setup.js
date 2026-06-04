@@ -11,7 +11,7 @@ var APP_KEY = "";
 
 describe('Retrieve API-KEY', function() {
     before('Create db connection', async function() {
-        testUtils.db = await plugins.dbConnection("countly");
+        testUtils.db = await plugins.dbConnection("userovo");
         testUtils.client = testUtils.db.client;
     });
     it('should create user', function(done) {

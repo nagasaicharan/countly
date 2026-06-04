@@ -1,11 +1,11 @@
 /*
 Script should be placed in ./bin/scripts/member-managament/delete_old_members.js
 
-Script calls Countly API endpoint to trigger member deletion for members, which have not been active for given amount of time;
+Script calls Userovo API endpoint to trigger member deletion for members, which have not been active for given amount of time;
 Query is editable to delete based on different criteria.
 */
 var pluginManager = require('./../../../plugins/pluginManager.js');
-var request = require('countly-request')(pluginManager.getConfig("security"));
+var request = require('userovo-request')(pluginManager.getConfig("security"));
 var Promise = require("bluebird");
 
 
@@ -27,8 +27,8 @@ if (dry_run) {
     console.log("This is dry run");
     console.log("Members will be only listed, not deleted");
 }
-Promise.all([pluginManager.dbConnection("countly")]).spread(function(countlyDb) {
-    countlyDb.collection("members").aggregate([{"$match": query}, {"$project": {"_id": true, "email": true, "username": true, "full_name": true}}], {allowDiskUse: true}, function(err, res) {
+Promise.all([pluginManager.dbConnection("userovo")]).spread(function(userovoDb) {
+    userovoDb.collection("members").aggregate([{"$match": query}, {"$project": {"_id": true, "email": true, "username": true, "full_name": true}}], {allowDiskUse: true}, function(err, res) {
         if (err) {
             console.log(err);
         }
@@ -61,11 +61,11 @@ Promise.all([pluginManager.dbConnection("countly")]).spread(function(countlyDb) 
                 console.log(errored + " requests failed");
             }
             console.log("ALL done");
-            countlyDb.close();
+            userovoDb.close();
         }).catch(function(rejection) {
             console.log("Error");
             console.log("Error:", rejection);
-            countlyDb.close();
+            userovoDb.close();
         });
     });
 

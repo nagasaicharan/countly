@@ -1,5 +1,5 @@
 var should = require('should');
-var countlyConfig = require("../frontend/express/config.js");
+var userovoConfig = require("../frontend/express/config.js");
 should.Assertion.add('haveSameItems', function(other) {
     this.params = { operator: 'to be have same items' };
 
@@ -28,13 +28,13 @@ var testUtils = function testUtils() {
     var isLoggedIn = false;
     var that = this;
     var props = {
-        APP_ID: process.env.COUNTLY_TEST_APP_ID || "",
-        APP_KEY: process.env.COUNTLY_TEST_APP_KEY || "",
-        API_KEY_ADMIN: process.env.COUNTLY_TEST_API_KEY_ADMIN || ""
+        APP_ID: process.env.USEROVO_TEST_APP_ID || "",
+        APP_KEY: process.env.USEROVO_TEST_APP_KEY || "",
+        API_KEY_ADMIN: process.env.USEROVO_TEST_API_KEY_ADMIN || ""
     };
     var RE = /^-{0,1}\d*\.{0,1}\d+$/;
 
-    this.url = (process.env.COUNTLY_CONFIG_PROTOCOL || "http") + "://" + (process.env.COUNTLY_CONFIG_HOSTNAME || "localhost") + (countlyConfig.path || "");
+    this.url = (process.env.USEROVO_CONFIG_PROTOCOL || "http") + "://" + (process.env.USEROVO_CONFIG_HOSTNAME || "localhost") + (userovoConfig.path || "");
     this.name = "Test Test";
     this.username = "test";
     this.password = "Test1test$";
@@ -54,7 +54,7 @@ var testUtils = function testUtils() {
     };
 
     this.CSRFfromBody = function(body) {
-        //var rePattern = new RegExp(/countlyGlobal\["csrf_token"\] = "([^"]*)";/);
+        //var rePattern = new RegExp(/userovoGlobal\["csrf_token"\] = "([^"]*)";/);
         var rePattern = new RegExp(/value="([^"]*)" name="_csrf"/);
         var arrMatches = body.match(rePattern);
         if (!arrMatches || !arrMatches[1]) {
@@ -105,7 +105,7 @@ var testUtils = function testUtils() {
             .get('/dashboard')
             .expect(200)
             .end(function(err, res) {
-                var rePattern = new RegExp(/countlyGlobal\["csrf_token"\] = "([^"]*)";/);
+                var rePattern = new RegExp(/userovoGlobal\["csrf_token"\] = "([^"]*)";/);
                 var arrMatches = res.text.match(rePattern);
                 csrf = arrMatches[1];
                 done();

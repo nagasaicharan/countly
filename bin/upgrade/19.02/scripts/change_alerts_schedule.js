@@ -1,8 +1,8 @@
 // 'every 5 minutes';every 59 mins starting on the 59 min
 var pluginManager = require('../../../../plugins/pluginManager');
 
-pluginManager.dbConnection().then((countlyDb) => {
-    countlyDb.collection('alerts').updateMany({
+pluginManager.dbConnection().then((userovoDb) => {
+    userovoDb.collection('alerts').updateMany({
         // 'period': 'every 5 minutes',
     }, {
         "$set": {
@@ -14,6 +14,6 @@ pluginManager.dbConnection().then((countlyDb) => {
         } else {
         console.log(`Changed alerts schedule time records count: ${result.modifiedCount}`)
         }
-        countlyDb.close();
+        userovoDb.close();
     });
 });

@@ -6,15 +6,15 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
 bash "$DIR/scripts/detect.init.sh"
 
 #upgrade all plugins
-bash "$DIR/scripts/countly.install.plugins.sh"
+bash "$DIR/scripts/userovo.install.plugins.sh"
 
 #enable new plugins
-countly plugin enable dashboards
-countly plugin enable assistant
-countly plugin enable flows
+userovo plugin enable dashboards
+userovo plugin enable assistant
+userovo plugin enable flows
 
 #update web-sdk
-countly update sdk-web
+userovo update sdk-web
 
-#install dependencies, process files and restart countly
-countly upgrade
+#install dependencies, process files and restart userovo
+userovo upgrade

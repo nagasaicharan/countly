@@ -17,15 +17,15 @@ if (dry_run) {
     console.log("Members will only be listed, not deleted");
 }
 
-pluginManager.dbConnection().then(async(countlyDb) => {
+pluginManager.dbConnection().then(async(userovoDb) => {
     try {
         // Find the invalid id users
         let invalidUsers = [];
         if (DELETE_ALL_INVALID_ID_USERS) {
-            invalidUsers = await getallInvalidIdUsers(countlyDb);
+            invalidUsers = await getallInvalidIdUsers(userovoDb);
         }
         else {
-            invalidUsers = await getallInvalidIdUsers(countlyDb, EMAILS);
+            invalidUsers = await getallInvalidIdUsers(userovoDb, EMAILS);
         }
         console.log(`The following ${invalidUsers.length} user(s) will be deleted: `);
         console.log(JSON.stringify(invalidUsers));
@@ -35,17 +35,17 @@ pluginManager.dbConnection().then(async(countlyDb) => {
                 let email = user.email;
                 let promises = [];
                 //auth tokens
-                promises.push(countlyDb.collection('auth_tokens').remove({ 'owner': userId }));
+                promises.push(userovoDb.collection('auth_tokens').remove({ 'owner': userId }));
                 //user notes
-                promises.push(countlyDb.collection('notes').remove({ 'owner': userId, }));
+                promises.push(userovoDb.collection('notes').remove({ 'owner': userId, }));
                 //dashboard
-                promises.push(countlyDb.collection('dashboards').update({}, { $pull: { shared_email_edit: email, shared_email_view: email } }, { multi: true }));
+                promises.push(userovoDb.collection('dashboards').update({}, { $pull: { shared_email_edit: email, shared_email_view: email } }, { multi: true }));
                 //reports
-                promises.push(countlyDb.collection("reports").remove({user: userId}, { multi: true }));
+                promises.push(userovoDb.collection("reports").remove({user: userId}, { multi: true }));
                 //groups
-                promises.push(countlyDb.collection("groups").update({}, { $pull: { users: userId}}, { multi: true }));
+                promises.push(userovoDb.collection("groups").update({}, { $pull: { users: userId}}, { multi: true }));
                 await Promise.all(promises);
-                await countlyDb.collection('members').remove({ '_id': userId });
+                await userovoDb.collection('members').remove({ '_id': userId });
                 console.log("User deleted: ", JSON.stringify(user));
             }));
             console.log("All done");
@@ -54,10 +54,10 @@ pluginManager.dbConnection().then(async(countlyDb) => {
     catch (error) {
         console.log("ERROR: ");
         console.log(error);
-        countlyDb.close();
+        userovoDb.close();
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
     }
 });
 

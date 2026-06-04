@@ -17,10 +17,10 @@ else {
     }
 
     //load marked version
-    if (fs.existsSync(__dirname + "/../../countly_marked_version.json")) { //read form file(if exist);
+    if (fs.existsSync(__dirname + "/../../userovo_marked_version.json")) { //read form file(if exist);
         var olderVersions = [];
         try {
-            var data = fs.readFileSync(__dirname + "/../../countly_marked_version.json");
+            var data = fs.readFileSync(__dirname + "/../../userovo_marked_version.json");
             try {
                 olderVersions = JSON.parse(data);
             }

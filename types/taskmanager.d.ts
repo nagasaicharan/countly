@@ -1,4 +1,4 @@
-// Type definitions for Countly Task Manager
+// Type definitions for Userovo Task Manager
 // Generated from /api/utils/taskmanager.js
 
 import { Db } from "mongodb";

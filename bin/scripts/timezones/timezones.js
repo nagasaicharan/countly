@@ -3,7 +3,7 @@
  * In case the `API_KEY` is invalid, please register with a new user.
  * If the API is not responding, check it here: `https://timezonedb.com/status` In that case, if API is broken, you can download it directly: `https://timezonedb.com/download`
  * Alternative timezones source: `https://raw.githubusercontent.com/moment/moment-timezone/develop/data/meta/latest.json`
- * That’s the script as per the scenario should create two JSON files these UI and Server Side and names is `countly.views.json` and `app.json` and main JavaScript file would be into `utils` directory which named is `timezones.js`
+ * That’s the script as per the scenario should create two JSON files these UI and Server Side and names is `userovo.views.json` and `app.json` and main JavaScript file would be into `utils` directory which named is `timezones.js`
  * You can use `npm run generate` or `yarn generate` command for execute script.
  */
 
@@ -12,7 +12,7 @@
     const fetch = require("node-fetch");
     const fs = require("fs");
 
-    let countlyTimezones = {};
+    let userovoTimezones = {};
     let countryNameArr = [];
 
     const FORMAT = "json"; // or xml
@@ -25,19 +25,19 @@
     zones.forEach((e) => {
         const countryCode = e.countryCode;
         const zoneCountryNameObject = {[`(GMT${moment().tz(e.zoneName).format("Z")}) ${e.zoneName.split("/")[1]}`]: e.zoneName};
-        if (Object.prototype.hasOwnProperty.call(countlyTimezones, countryCode)) {
-            countlyTimezones[countryCode].z.push(zoneCountryNameObject);
+        if (Object.prototype.hasOwnProperty.call(userovoTimezones, countryCode)) {
+            userovoTimezones[countryCode].z.push(zoneCountryNameObject);
         }
         else {
-            countlyTimezones[countryCode] = {};
-            countlyTimezones[countryCode].n = e.countryName;
-            countlyTimezones[countryCode].z = [];
-            countlyTimezones[countryCode].z.push(zoneCountryNameObject);
+            userovoTimezones[countryCode] = {};
+            userovoTimezones[countryCode].n = e.countryName;
+            userovoTimezones[countryCode].z = [];
+            userovoTimezones[countryCode].z.push(zoneCountryNameObject);
         }
         // for server side
         countryNameArr.push(e.zoneName);
     });
 
-    fs.writeFile("countly.views.json", JSON.stringify(countlyTimezones), (err) => err && console.log(`countly.views.js error: ${err}`));
+    fs.writeFile("userovo.views.json", JSON.stringify(userovoTimezones), (err) => err && console.log(`userovo.views.js error: ${err}`));
     fs.writeFile("apps.json", JSON.stringify(countryNameArr), (err) => err && console.log(`app.json error: ${err}`));
 })();

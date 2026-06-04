@@ -1,7 +1,7 @@
 /**
  *  Script to add no_snapshots flag to drill reports
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/reports_snapshot_flag.js
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/reports_snapshot_flag.js
  *  Command: node fix_null_uids.js
  */
 const pluginManager = require('../../../plugins/pluginManager.js');
@@ -10,11 +10,11 @@ var Promise = require("bluebird");
 console.log('looking for byval reports');
 
 
-Promise.all([pluginManager.dbConnection("countly")]).then(async function([countlyDb]) {
-    countlyDb.collection('long_tasks').find({"type": "drill", "linked_to._issuer": "wqm:drill", "manually_create": true}).toArray(function(err, reports) {
+Promise.all([pluginManager.dbConnection("userovo")]).then(async function([userovoDb]) {
+    userovoDb.collection('long_tasks').find({"type": "drill", "linked_to._issuer": "wqm:drill", "manually_create": true}).toArray(function(err, reports) {
         if (err) {
             console.log('Error while fetching reports', err);
-            countlyDb.close();
+            userovoDb.close();
             return;
         }
         else {
@@ -27,7 +27,7 @@ Promise.all([pluginManager.dbConnection("countly")]).then(async function([countl
                         report.request = JSON.parse(report.request);
                         if (report.request && report.request.json && report.request.json.method === "segmentation" && report.request.json.projectionKey && !report.request.json.no_snapshots) {
                             report.request.json.no_snapshots = true;
-                            countlyDb.collection('long_tasks').updateOne({_id: report._id}, {$set: {"request": JSON.stringify(report.request)}}, function(err) {
+                            userovoDb.collection('long_tasks').updateOne({_id: report._id}, {$set: {"request": JSON.stringify(report.request)}}, function(err) {
                                 if (err) {
                                     console.log('Error while updating report', report._id);
                                     reject();
@@ -50,11 +50,11 @@ Promise.all([pluginManager.dbConnection("countly")]).then(async function([countl
                 });
             }).then(function() {
                 console.log('Finished');
-                countlyDb.close();
+                userovoDb.close();
                 process.exit();
             }).catch(function() {
                 console.log('Unknown Error while executing script');
-                countlyDb.close();
+                userovoDb.close();
                 process.exit();
             });
         }

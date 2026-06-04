@@ -21,7 +21,7 @@ const ALERT_MODULES = {
 };
 /**
  * @class
- * @classdesc Class MonitorJob is Alert Monitor Job extend from Countly Job
+ * @classdesc Class MonitorJob is Alert Monitor Job extend from Userovo Job
  * @extends Job
  */
 class MonitorJob extends Job {

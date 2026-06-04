@@ -35,13 +35,13 @@ function mergeTimesOfDayCollections(collections, db) {
     return Promise.allSettled(processes);
 }
 
-pluginManager.dbConnection().then(async(countlyDb) => {
+pluginManager.dbConnection().then(async(userovoDb) => {
     try {
-        let timesOfDayCollections = await countlyDb.listCollections().toArray();
+        let timesOfDayCollections = await userovoDb.listCollections().toArray();
         let collectionNames = timesOfDayCollections.map(o => o.name);
         const oldTimesOfDayCollections = (collectionNames.filter(x => x.startsWith('timesofday')));
         try {
-            const result = await mergeTimesOfDayCollections(oldTimesOfDayCollections, countlyDb);
+            const result = await mergeTimesOfDayCollections(oldTimesOfDayCollections, userovoDb);
             const faileds = result.filter(x=>x.status === 'rejected');
             if (faileds.length) {
                 throw new Error(faileds.map(x=>x.reason).join('\n'));
@@ -56,6 +56,6 @@ pluginManager.dbConnection().then(async(countlyDb) => {
         console.log(`Error merging timesofdayAPPID collections: ${error}`);
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
     }
 });

@@ -7,11 +7,11 @@ var customDashboards = require('./../parts/dashboards.js');
 /** class RefreshDashboardsJob */
 class RefreshDashboardsJob extends job.Job {
     /** function run
-     * @param {object} countlyDb - db connection object
+     * @param {object} userovoDb - db connection object
      * @param {function} doneJob - function to call when finishing Job
      * @param {function} progressJob - fnction to call while running job
     */
-    run(countlyDb, doneJob, progressJob) {
+    run(userovoDb, doneJob, progressJob) {
         var total = 0;
         var current = 0;
         var bookmark = '';
@@ -40,19 +40,19 @@ class RefreshDashboardsJob extends job.Job {
             return doneJob();
         }
 
-        pluginManager.loadConfigs(countlyDb, async() => {
+        pluginManager.loadConfigs(userovoDb, async() => {
             //Fetch all sashboards.
             //Check for the ones that have set refresh rate.
             //Trigger regeneration for those dashboards.
             try {
-                var dashboards = await countlyDb.collection('dashboards').find({}).toArray();
+                var dashboards = await userovoDb.collection('dashboards').find({}).toArray();
                 for (var z = 0; z < dashboards.length; z++) {
                     if (dashboards[z].refreshRate && dashboards[z].refreshRate > 0) {
                         if (dashboards[z].refreshRate < 300) {
                             dashboards[z].refreshRate = 300;
                         }
                         log.d('Refreshing dashboard: ' + dashboards[z]._id);
-                        await customDashboards.refreshDashboard(countlyDb, dashboards[z]);
+                        await customDashboards.refreshDashboard(userovoDb, dashboards[z]);
                     }
                 }
             }

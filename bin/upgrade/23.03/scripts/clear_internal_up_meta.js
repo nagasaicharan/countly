@@ -5,14 +5,14 @@ console.log("Started: Clearing internal user properties from meta");
 
 Promise.all(
     [
-        pluginManager.dbConnection("countly"),
-        pluginManager.dbConnection("countly_drill")
+        pluginManager.dbConnection("userovo"),
+        pluginManager.dbConnection("userovo_drill")
     ])
-    .spread(async function(countlyDB, countlyDrillDB) {
+    .spread(async function(userovoDB, userovoDrillDB) {
         try {
-            let apps = await countlyDB.collection('apps').find({}).project({_id: 1}).toArray();
+            let apps = await userovoDB.collection('apps').find({}).project({_id: 1}).toArray();
             for (const appId of apps.map(a => a._id)) {
-                await countlyDrillDB.collection("drill_meta" + appId).updateOne(
+                await userovoDrillDB.collection("drill_meta" + appId).updateOne(
                     {_id: 'meta_up'},
                     {
                         $unset: {
@@ -36,13 +36,13 @@ Promise.all(
                 );
             }
             console.log('Complete: Clearing internal user properties from meta');
-            countlyDB.close();
-            countlyDrillDB.close();
+            userovoDB.close();
+            userovoDrillDB.close();
         }
         catch (e) {
             console.log('ERROR: Clearing internal user properties from meta');
             console.error(e);
-            countlyDB.close();
-            countlyDrillDB.close();
+            userovoDB.close();
+            userovoDrillDB.close();
         }
     });

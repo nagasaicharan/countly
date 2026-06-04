@@ -13,8 +13,8 @@ connection_string="mongodb://localhost"
 #prefix of collection
 prefix="app_users"
 
-#database which to export, countly has data in 2 database countly and countly_drill
-db="countly"
+#database which to export, userovo has data in 2 database userovo and userovo_drill
+db="userovo"
 
 #output where to store the exported files
 out_dir="./output"
@@ -36,7 +36,7 @@ rm $tmp_file
 
 
 prefix="drill_events"
-db="countly_drill"
+db="userovo_drill"
 out_dir="./output"
 
 if [ ! $out_dir ]; then

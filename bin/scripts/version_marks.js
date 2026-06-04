@@ -1,7 +1,7 @@
 const fs = require('fs'),
     pluginManager = require('../../plugins/pluginManager.js');
 
-const fsMarkedVersionPath = __dirname + "/../../countly_marked_version.json";
+const fsMarkedVersionPath = __dirname + "/../../userovo_marked_version.json";
 
 function writeMsg(type, msg) {
     process.stdout.write(JSON.stringify(msg));
@@ -109,11 +109,11 @@ function writeFsVersion(targetVersion) {
     }
 }
 
-function readDbVersion(countlyDb, closeConn, projection, cb) {
-    countlyDb.collection('plugins').find({'_id': 'version'}, projection).toArray(function(err, versionDocs) {
+function readDbVersion(userovoDb, closeConn, projection, cb) {
+    userovoDb.collection('plugins').find({'_id': 'version'}, projection).toArray(function(err, versionDocs) {
         if (err) {
             writeMsg("error", err);
-            countlyDb.close();
+            userovoDb.close();
             return;
         }
         var versionDoc = {};
@@ -125,15 +125,15 @@ function readDbVersion(countlyDb, closeConn, projection, cb) {
             versionDoc = versionDocs[0];
         }
         if (closeConn) {
-            countlyDb.close();
+            userovoDb.close();
         }
         cb(versionDoc);
     });
 }
 
 function compareDbVersion(targetVersion) {
-    pluginManager.dbConnection().then((countlyDb) => {
-        readDbVersion(countlyDb, true, {"version": 1}, function(versionDoc) {
+    pluginManager.dbConnection().then((userovoDb) => {
+        readDbVersion(userovoDb, true, {"version": 1}, function(versionDoc) {
             if (versionDoc.version === "") {
                 writeMsg("info", -1);
                 return;
@@ -144,26 +144,26 @@ function compareDbVersion(targetVersion) {
 }
 
 function writeDbVersion(targetVersion) {
-    pluginManager.dbConnection().then((countlyDb) => {
-        readDbVersion(countlyDb, false, {"version": 1, 'history': 1, "_id": 1}, function(versionDoc) {
+    pluginManager.dbConnection().then((userovoDb) => {
+        readDbVersion(userovoDb, false, {"version": 1, 'history': 1, "_id": 1}, function(versionDoc) {
             if (versionDoc.version === "" || versionDoc.version !== targetVersion) {
                 versionDoc.history.push({
                     version: targetVersion,
                     updated: Date.now()
                 });
-                countlyDb.collection('plugins').update({'_id': 'version'}, {
+                userovoDb.collection('plugins').update({'_id': 'version'}, {
                     $set: {
                         "history": versionDoc.history,
                         "version": targetVersion
                     }
                 }, {'upsert': true}, function() {
                     writeMsg("info", 1);
-                    countlyDb.close();
+                    userovoDb.close();
                 });
             }
             else {
                 writeMsg("info", 0);
-                countlyDb.close();
+                userovoDb.close();
             }
         });
     });

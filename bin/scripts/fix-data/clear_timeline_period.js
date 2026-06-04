@@ -1,7 +1,7 @@
 /**
  *  Script clears out data for chosen data labels from timeline and timeline meta so it can be fully regenerated
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/fix-data
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/fix-data
  *  Command: node clear_timeline_period.js
  */
 
@@ -11,20 +11,20 @@ const APPS = []; //leave array empty to process all apps;
 var query_ids = {"_id": {"$regex": "^2024:1:30.*"}};
 
 
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
     //get all apps
     var query = {};
     if (APPS.length > 0) {
         APPS.forEach(function(id, index) {
-            APPS[index] = countlyDb.ObjectID(id);
+            APPS[index] = userovoDb.ObjectID(id);
         });
         query = {_id: {$in: APPS}};
     }
 
-    countlyDb.collection("apps").find(query).toArray(function(err, apps) {
+    userovoDb.collection("apps").find(query).toArray(function(err, apps) {
         if (err) {
             console.log(err);
-            countlyDb.close();
+            userovoDb.close();
             drillDb.close();
             return;
         }
@@ -32,7 +32,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
             Promise.each(apps, function(app) {
                 return new Promise(function(resolve, reject) {
                     console.log("Clearing out data from timeline collection for: " + app.name);
-                    countlyDb.collection("eventTimes" + app._id).remove(query_ids, function(err) {
+                    userovoDb.collection("eventTimes" + app._id).remove(query_ids, function(err) {
                         if (err) {
                             console.log(err);
                             reject();
@@ -52,7 +52,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                 var regex2 = "^.{40}_" + query_ids._id.$regex.substring(1);
                 query2["_id"] = {"$regex": regex2};
                 console.log(JSON.stringify(query2));
-                countlyDb.collection("timelineStatus").update(query2, {$set: {"g": false}}, {multi: true}, function(err, res) {
+                userovoDb.collection("timelineStatus").update(query2, {$set: {"g": false}}, {multi: true}, function(err, res) {
                     if (err) {
                         console.log(err);
                     }
@@ -64,12 +64,12 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                     }
 
                     console.log("Finished cleanup. Data will be regenerated upon job starting rechecking process or upon API request triggering timeline generation.");
-                    countlyDb.close();
+                    userovoDb.close();
                     drillDb.close();
                 });
             }).catch(function(error) {
                 console.log(error);
-                countlyDb.close();
+                userovoDb.close();
                 drillDb.close();
             });
         }

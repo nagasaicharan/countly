@@ -3,7 +3,7 @@ var async = require("async");
 
 var reg = /^drill_events\.*/;
 
-pluginManager.dbConnection("countly_drill").then((db) => {
+pluginManager.dbConnection("userovo_drill").then((db) => {
     function deleteOldMeta(col, done) {
         var c = col.collectionName;
         //delete all meta docs

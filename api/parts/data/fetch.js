@@ -10,18 +10,19 @@ var fetch = {},
     common = require('./../../utils/common.js'),
     moment = require('moment-timezone'),
     async = require('async'),
-    countlyModel = require('../../lib/countly.model.js'),
-    countlySession = countlyModel.load("users"),
-    countlyCarrier = countlyModel.load("carriers"),
-    countlyDeviceDetails = countlyModel.load("device_details"),
-    countlyLocation = countlyModel.load("countries"),
-    countlyEvents = countlyModel.load("event"),
-    countlyCommon = require('../../lib/countly.common.js'),
+    userovoCommon = require('../../lib/userovo.common.js'),
     _ = require('underscore'),
     crypto = require('crypto'),
     usage = require('./usage.js'),
     STATUS_MAP = require('../jobs/job').STATUS_MAP,
     plugins = require('../../../plugins/pluginManager.js');
+
+const countlyModel = require('../../lib/countly.model.js');
+const userovoSession = countlyModel.load("users");
+const userovoCarrier = countlyModel.load("carriers");
+const userovoDeviceDetails = countlyModel.load("device_details");
+const userovoLocation = countlyModel.load("countries");
+const userovoEvents = countlyModel.load("event");
 
 /**
 * Prefetch event data, either by provided key or first event in the list and output result to browser
@@ -467,30 +468,30 @@ fetch.fetchDashboard = function(params) {
                     }];
                 }
 
-                countlyCommon.setTimezone(params.appTimezone);
-                countlySession.setDb(usersDoc || {});
-                countlyDeviceDetails.setDb(deviceDetailsDoc || {});
-                countlyCarrier.setDb(carriersDoc || {});
+                userovoCommon.setTimezone(params.appTimezone);
+                userovoSession.setDb(usersDoc || {});
+                userovoDeviceDetails.setDb(deviceDetailsDoc || {});
+                userovoCarrier.setDb(carriersDoc || {});
 
                 async.map(periods, function(period, callback) {
                     params.qstring.period = period.period;
 
                     fetch.getTotalUsersObj("users", params, function(dbTotalUsersObj) {
-                        countlyCommon.setPeriod(period.period);
+                        userovoCommon.setPeriod(period.period);
 
-                        countlySession.setTotalUsersObj(fetch.formatTotalUsersObj(dbTotalUsersObj), fetch.formatTotalUsersObj(dbTotalUsersObj, null, true));
+                        userovoSession.setTotalUsersObj(fetch.formatTotalUsersObj(dbTotalUsersObj), fetch.formatTotalUsersObj(dbTotalUsersObj, null, true));
 
                         var data = {
                             out: period.out,
                             data: {
-                                dashboard: countlySession.getSessionData(),
+                                dashboard: userovoSession.getSessionData(),
                                 top: {
-                                    platforms: countlyDeviceDetails.getBars("os"),
-                                    resolutions: countlyDeviceDetails.getBars("resolutions"),
-                                    carriers: countlyCarrier.getBars("carriers"),
-                                    users: countlySession.getBars()
+                                    platforms: userovoDeviceDetails.getBars("os"),
+                                    resolutions: userovoDeviceDetails.getBars("resolutions"),
+                                    carriers: userovoCarrier.getBars("carriers"),
+                                    users: userovoSession.getBars()
                                 },
-                                period: countlyCommon.getDateRange()
+                                period: userovoCommon.getDateRange()
                             }
                         };
 
@@ -573,7 +574,7 @@ fetch.fetchAllApps = function(params) {
                 ],
                 dataProps = [];
             dataProps.push(props);
-            return countlyCommon.extractChartData(db, countlySession.clearObject, chartData, dataProps).chartDP[0].data;
+            return userovoCommon.extractChartData(db, userovoSession.clearObject, chartData, dataProps).chartDP[0].data;
         }
 
         /**
@@ -584,7 +585,7 @@ fetch.fetchAllApps = function(params) {
             params.app_id = inAppId + "";
         }
 
-        countlyCommon.setTimezone(params.appTimezone);
+        userovoCommon.setTimezone(params.appTimezone);
 
         async.map(apps, function(app, callback) {
             setAppId(app._id);
@@ -596,10 +597,10 @@ fetch.fetchAllApps = function(params) {
                 setAppId(app._id);
 
                 fetch.getTotalUsersObj("users", params, function(dbTotalUsersObj) {
-                    countlySession.setDb(usersDoc || {});
-                    countlySession.setTotalUsersObj(fetch.formatTotalUsersObj(dbTotalUsersObj), fetch.formatTotalUsersObj(dbTotalUsersObj, null, true));
+                    userovoSession.setDb(usersDoc || {});
+                    userovoSession.setTotalUsersObj(fetch.formatTotalUsersObj(dbTotalUsersObj), fetch.formatTotalUsersObj(dbTotalUsersObj, null, true));
 
-                    var sessionData = countlySession.getSessionData();
+                    var sessionData = userovoSession.getSessionData();
                     var charts = {
                         "total-users": extractData(usersDoc || {}, {
                             name: "t",
@@ -658,7 +659,7 @@ fetch.fetchAllApps = function(params) {
 * @param {function} callback - callback function
 **/
 function getDataforTops(params, collection, callback) {
-    var periodObj = countlyCommon.getPeriodObj(params);
+    var periodObj = userovoCommon.getPeriodObj(params);
     var pipeline = [];
 
     var period = params.qstring.period || 'month'; //month is default
@@ -799,17 +800,17 @@ fetch.fetchTops = function(params) {
         fetchTimeObj('users', params, false, function(usersDoc) {
             fetchTimeObj('device_details', params, false, function(deviceDetailsDoc) {
                 fetchTimeObj('carriers', params, false, function(carriersDoc) {
-                    countlyCommon.setTimezone(params.appTimezone);
-                    countlySession.setDb(usersDoc || {});
-                    countlyDeviceDetails.setDb(deviceDetailsDoc || {});
-                    countlyCarrier.setDb(carriersDoc || {});
-                    countlyLocation.setDb(usersDoc || {});
+                    userovoCommon.setTimezone(params.appTimezone);
+                    userovoSession.setDb(usersDoc || {});
+                    userovoDeviceDetails.setDb(deviceDetailsDoc || {});
+                    userovoCarrier.setDb(carriersDoc || {});
+                    userovoLocation.setDb(usersDoc || {});
 
                     var output = {
-                        platforms: countlyDeviceDetails.getBars("os"),
-                        resolutions: countlyDeviceDetails.getBars("resolutions"),
-                        carriers: countlyCarrier.getBars("carriers"),
-                        countries: countlyLocation.getBars("countries")
+                        platforms: userovoDeviceDetails.getBars("os"),
+                        resolutions: userovoDeviceDetails.getBars("resolutions"),
+                        carriers: userovoCarrier.getBars("carriers"),
+                        countries: userovoLocation.getBars("countries")
                     };
 
                     common.returnOutput(params, output);
@@ -842,20 +843,20 @@ fetch.fetchCountries = function(params) {
             }
         ];
 
-        countlyCommon.setTimezone(params.appTimezone);
-        countlyLocation.setDb(locationsDoc || {});
+        userovoCommon.setTimezone(params.appTimezone);
+        userovoLocation.setDb(locationsDoc || {});
 
         async.map(periods, function(period, callback) {
             params.qstring.period = period.period;
 
             fetch.getTotalUsersObj("countries", params, function(dbTotalUsersObj) {
-                countlyCommon.setPeriod(period.period);
+                userovoCommon.setPeriod(period.period);
 
-                countlyLocation.setTotalUsersObj(fetch.formatTotalUsersObj(dbTotalUsersObj), fetch.formatTotalUsersObj(dbTotalUsersObj, null, true));
+                userovoLocation.setTotalUsersObj(fetch.formatTotalUsersObj(dbTotalUsersObj), fetch.formatTotalUsersObj(dbTotalUsersObj, null, true));
 
                 var data = {
                     out: period.out,
-                    data: countlyLocation.getLocationData({
+                    data: userovoLocation.getLocationData({
                         maxCountries: 10,
                         sort: "new"
                     })
@@ -882,12 +883,12 @@ fetch.fetchCountries = function(params) {
 **/
 fetch.fetchSessions = function(params) {
     fetchTimeObj('users', params, false, function(usersDoc) {
-        countlySession.setDb(usersDoc || {});
+        userovoSession.setDb(usersDoc || {});
         var options = {};
         if (params.qstring.bucket) {
             options.bucket = params.qstring.bucket;
         }
-        common.returnOutput(params, countlySession.getSubperiodData(options));
+        common.returnOutput(params, userovoSession.getSubperiodData(options));
     });
 };
 
@@ -901,7 +902,7 @@ fetch.fetchLoyalty = function(params) {
         if (doc.meta) {
             _meta = (doc.meta['l-ranges']) ? doc.meta['l-ranges'] : [];
         }
-        var chartData = countlyCommon.extractRangeData(doc, "l", _meta, function(index) {
+        var chartData = userovoCommon.extractRangeData(doc, "l", _meta, function(index) {
             return index;
         });
 
@@ -919,7 +920,7 @@ fetch.fetchFrequency = function(params) {
         if (doc.meta) {
             _meta = (doc.meta['f-ranges']) ? doc.meta['f-ranges'] : [];
         }
-        var chartData = countlyCommon.extractRangeData(doc, "f", _meta, function(index) {
+        var chartData = userovoCommon.extractRangeData(doc, "f", _meta, function(index) {
             return index;
         });
 
@@ -937,7 +938,7 @@ fetch.fetchDurations = function(params) {
         if (doc.meta) {
             _meta = (doc.meta['d-ranges']) ? doc.meta['d-ranges'] : [];
         }
-        var chartData = countlyCommon.extractRangeData(doc, "ds", _meta, function(index) {
+        var chartData = userovoCommon.extractRangeData(doc, "ds", _meta, function(index) {
             return index;
         });
 
@@ -1006,9 +1007,9 @@ fetch.getMetric = function(params, metric, totalUsersMetric, callback) {
 */
 fetch.getMetricWithOptions = function(params, metric, totalUsersMetric, fetchTimeOptions, callback) {
     var queryMetric = params.qstring.metric || metric;
-    countlyCommon.setTimezone(params.appTimezone);
+    userovoCommon.setTimezone(params.appTimezone);
     if (params.qstring.period) {
-        countlyCommon.setPeriod(params.qstring.period);
+        userovoCommon.setPeriod(params.qstring.period);
     }
     fetchTimeObj(metric, params, false, fetchTimeOptions, function(doc) {
         var clearMetricObject = function(obj) {
@@ -1036,7 +1037,7 @@ fetch.getMetricWithOptions = function(params, metric, totalUsersMetric, fetchTim
 
         if (doc.meta && doc.meta[queryMetric]) {
             fetch.getTotalUsersObjWithOptions(totalUsersMetric, params, { db: fetchTimeOptions.db }, function(dbTotalUsersObj) {
-                var data = countlyCommon.extractMetric(doc, doc.meta[queryMetric], clearMetricObject, [
+                var data = userovoCommon.extractMetric(doc, doc.meta[queryMetric], clearMetricObject, [
                     {
                         name: queryMetric,
                         func: function(rangeArr) {
@@ -1069,24 +1070,24 @@ fetch.metricToCollection = function(metric) {
     switch (metric) {
     case 'locations':
     case 'countries':
-        return ['users', "countries", countlyLocation];
+        return ['users', "countries", userovoLocation];
     case 'sessions':
     case 'users':
-        return ['users', null, countlySession];
+        return ['users', null, userovoSession];
     case 'app_versions':
-        return ["device_details", "app_versions", countlyDeviceDetails];
+        return ["device_details", "app_versions", userovoDeviceDetails];
     case 'os':
     case 'platforms':
-        return ["device_details", "os", countlyDeviceDetails];
+        return ["device_details", "os", userovoDeviceDetails];
     case 'os_versions':
     case 'platform_version':
-        return ["device_details", "os_versions", countlyDeviceDetails];
+        return ["device_details", "os_versions", userovoDeviceDetails];
     case 'resolutions':
-        return ["device_details", "resolutions", countlyDeviceDetails];
+        return ["device_details", "resolutions", userovoDeviceDetails];
     case 'device_type':
-        return ["device_details", "device_type", countlyDeviceDetails];
+        return ["device_details", "device_type", userovoDeviceDetails];
     case 'device_details':
-        return ['device_details', null, countlyDeviceDetails];
+        return ['device_details', null, userovoDeviceDetails];
     case 'devices':
         return ['devices', "devices", null];
     case 'manufacturers':
@@ -1163,10 +1164,10 @@ fetch.fetchDataEventsOverview = function(params) {
                     options.event_groups = true;
                     // options.segmentation = result.segments;
                     fetch.getMergedEventData(params, event.source_events, options, function(resultMergedEvents) {
-                        countlyEvents.setDb(resultMergedEvents || {});
-                        var my_line1 = countlyEvents.getNumber("c");
-                        var my_line2 = countlyEvents.getNumber("s");
-                        var my_line3 = countlyEvents.getNumber("dur");
+                        userovoEvents.setDb(resultMergedEvents || {});
+                        var my_line1 = userovoEvents.getNumber("c");
+                        var my_line2 = userovoEvents.getNumber("s");
+                        var my_line3 = userovoEvents.getNumber("dur");
 
                         data[event.key] = {};
                         data[event.key].data = {
@@ -1181,10 +1182,10 @@ fetch.fetchDataEventsOverview = function(params) {
                 else {
                     var collectionName = "events" + crypto.createHash('sha1').update(event.key + params.qstring.app_id).digest('hex');
                     fetch.getTimeObjForEvents(collectionName, ob, function(doc) {
-                        countlyEvents.setDb(doc || {});
-                        var my_line1 = countlyEvents.getNumber("c");
-                        var my_line2 = countlyEvents.getNumber("s");
-                        var my_line3 = countlyEvents.getNumber("dur");
+                        userovoEvents.setDb(doc || {});
+                        var my_line1 = userovoEvents.getNumber("c");
+                        var my_line2 = userovoEvents.getNumber("s");
+                        var my_line3 = userovoEvents.getNumber("dur");
                         data[event.key] = {};
                         data[event.key].data = {
                             "count": my_line1,
@@ -1225,7 +1226,7 @@ fetch.fetchDataTopEvents = function(params) {
                 if (filter === "duration") {
                     const { data, _id, ts, totalCount } = result;
                     let _data = Object.keys(data).map(function(key) {
-                        const decodeKey = countlyCommon.decode(key);
+                        const decodeKey = userovoCommon.decode(key);
                         const { total, change, trend } = data[key].data.duration;
                         return { name: decodeKey, duration: total, trend: trend, change: change };
                     });
@@ -1235,7 +1236,7 @@ fetch.fetchDataTopEvents = function(params) {
                 else if (filter === "sum") {
                     const { data, _id, ts, totalCount } = result;
                     let _data = Object.keys(data).map(function(key) {
-                        const decodeKey = countlyCommon.decode(key);
+                        const decodeKey = userovoCommon.decode(key);
                         const { total, change, trend } = data[key].data.sum;
                         return { name: decodeKey, sum: total, trend: trend, change: change };
                     });
@@ -1245,7 +1246,7 @@ fetch.fetchDataTopEvents = function(params) {
                 else {
                     const { data, _id, ts, totalCount } = result;
                     let _data = Object.keys(data).map(function(key) {
-                        const decodeKey = countlyCommon.decode(key);
+                        const decodeKey = userovoCommon.decode(key);
                         const { total, change, trend } = data[key].data.count;
                         return { name: decodeKey, count: total, trend: trend, change: change };
                     });
@@ -1255,7 +1256,7 @@ fetch.fetchDataTopEvents = function(params) {
             }
             const { data, _id, ts, totalCount, prevTotalCount, totalSum, prevTotalSum, totalDuration, prevTotalDuration, prevSessionCount, totalSessionCount, prevUsersCount, totalUsersCount } = result;
             let _data = Object.keys(data).map(function(key) {
-                const decodeKey = countlyCommon.decode(key);
+                const decodeKey = userovoCommon.decode(key);
                 return {
                     name: decodeKey,
                     count: (data[key].data.count && data[key].data.count.total) || 0,
@@ -1285,12 +1286,12 @@ fetch.fetchEvents = function(params) {
             if (params.qstring.bucket) {
                 options.bucket = params.qstring.bucket;
             }
-            countlyEvents.setDb(doc || {});
+            userovoEvents.setDb(doc || {});
             if (params.qstring.segmentation && params.qstring.segmentation !== "no-segment") {
-                common.returnOutput(params, countlyEvents.getSegmentedData(params.qstring.segmentation));
+                common.returnOutput(params, userovoEvents.getSegmentedData(params.qstring.segmentation));
             }
             else {
-                common.returnOutput(params, countlyEvents.getSubperiodData(options));
+                common.returnOutput(params, userovoEvents.getSubperiodData(options));
             }
         });
     }
@@ -1312,12 +1313,12 @@ fetch.fetchEvents = function(params) {
             async.each(params.qstring.events, function(event, done) {
                 let collectionName = crypto.createHash('sha1').update(event + params.app_id).digest('hex');
                 fetch.getTimeObjForEvents("events_data", params, {'id_prefix': params.app_id + "_" + collectionName + '_'}, function(doc) {
-                    countlyEvents.setDb(doc || {});
+                    userovoEvents.setDb(doc || {});
                     if (params.qstring.segmentation && params.qstring.segmentation !== "no-segment") {
-                        data[event] = countlyEvents.getSegmentedData(params.qstring.segmentation);
+                        data[event] = userovoEvents.getSegmentedData(params.qstring.segmentation);
                     }
                     else {
-                        data[event] = countlyEvents.getSubperiodData();
+                        data[event] = userovoEvents.getSubperiodData();
                     }
                     done();
                 });
@@ -1331,16 +1332,16 @@ fetch.fetchEvents = function(params) {
         let collectionName = "all";
         params.qstring.segmentation = "key";
         fetch.getTimeObjForEvents("events_data", params, {'id_prefix': params.app_id + "_" + collectionName + '_'}, function(doc) {
-            countlyEvents.setDb(doc || {});
+            userovoEvents.setDb(doc || {});
             var data2 = {};
-            data2.all = countlyEvents.getSegmentedData(params.qstring.segmentation);
+            data2.all = userovoEvents.getSegmentedData(params.qstring.segmentation);
             common.returnOutput(params, data2);
         });
     }
 };
 
 /**
-* Get Countly standard data model from database for segments or single level data as users, merging year and month and splitted docments together and output to browser
+* Get Userovo standard data model from database for segments or single level data as users, merging year and month and splitted docments together and output to browser
 * @param {string} collection - name of the collection where to get data from
 * @param {params} params - params object with app_id and date
 * @param {boolean} isCustomEvent - if value we are fetching for custom event or standard metric
@@ -1362,7 +1363,7 @@ fetch.fetchTimeObj = function(collection, params, isCustomEvent, options) {
 };
 
 /**
-* Get Countly standard data model from database for segments or single level data as users, merging year and month and splitted docments together
+* Get Userovo standard data model from database for segments or single level data as users, merging year and month and splitted docments together
 * @param {string} collection - name of the collection where to get data from
 * @param {params} params - params object with app_id and date
 * @param {object=} options - additional optional settings
@@ -1379,7 +1380,7 @@ fetch.getTimeObj = function(collection, params, options, callback) {
 };
 
 /**
-* Get Countly standard data model from database for events, merging year and month and splitted docments together
+* Get Userovo standard data model from database for events, merging year and month and splitted docments together
 * @param {string} collection - name of the collection where to get data from
 * @param {params} params - params object with app_id and date
 * @param {object=} options - additional optional settings
@@ -1449,7 +1450,7 @@ fetch.getTotalUsersObjWithOptions = function(metric, params, options, callback) 
     if (!plugins.getConfig("api", params.app && params.app.plugins, true).total_users) {
         return callback([]);
     }
-    var periodObj = countlyCommon.getPeriodObj(params, "30days");
+    var periodObj = userovoCommon.getPeriodObj(params, "30days");
 
     /*
             List of shortcodes in app_users document for different metrics
@@ -1476,7 +1477,7 @@ fetch.getTotalUsersObjWithOptions = function(metric, params, options, callback) 
         Aggregation query uses this variable for $match operation
         We skip uid-sequence document and filter results by last session timestamp
     */
-    var match = { ls: countlyCommon.getTimestampRangeQuery(params, true) };
+    var match = { ls: userovoCommon.getTimestampRangeQuery(params, true) };
 
     /*
         Let plugins register their short codes and match queries
@@ -1536,7 +1537,7 @@ fetch.getTotalUsersObjWithOptions = function(metric, params, options, callback) 
 
                     if (appUsersDbResult && plugins.getConfig("api", params.app && params.app.plugins, true).metric_changes && shortcodesForMetrics[metric]) {
 
-                        var metricChangesMatch = { ts: countlyCommon.getTimestampRangeQuery(params, true) };
+                        var metricChangesMatch = { ts: userovoCommon.getTimestampRangeQuery(params, true) };
 
                         metricChangesMatch[shortcodesForMetrics[metric] + ".o"] = { "$exists": true };
 
@@ -1605,7 +1606,7 @@ fetch.formatTotalUsersObj = function(obj, forMetric, prev) {
 
     switch (forMetric) {
     case "devices":
-        //processingFunction = countlyDevice.getDeviceFullName;
+        //processingFunction = userovoDevice.getDeviceFullName;
         break;
     }
 
@@ -1751,7 +1752,7 @@ function fetchTimeObj(collection, params, isCustomEvent, options, callback) {
         });
     }
     else {
-        var periodObj = countlyCommon.getPeriodObj(params, "30days"),
+        var periodObj = userovoCommon.getPeriodObj(params, "30days"),
             documents = [];
 
         if (isCustomEvent) {
@@ -2122,7 +2123,7 @@ function fetchTimeObj(collection, params, isCustomEvent, options, callback) {
 * @param {params} params - params object
 **/
 fetch.getPeriodObj = function(coll, params) {
-    common.returnOutput(params, countlyCommon.getPeriodObj(params, "30days"));
+    common.returnOutput(params, userovoCommon.getPeriodObj(params, "30days"));
 };
 
 /**
@@ -2302,10 +2303,10 @@ function fetchData(params, allMetrics, metric, cb) {
             model = metrics[2];
         }
         else if (typeof metrics[2] === "string" && metrics[2].length) {
-            model = countlyModel.load(metrics[2]);
+            model = userovoModel.load(metrics[2]);
         }
         else {
-            model = countlyModel.load(metrics[0]);
+            model = userovoModel.load(metrics[0]);
         }
         if (metrics[0] === metric && countInCol === 1) {
             getDataforTops(params, metrics[0], function(items) {
@@ -2329,11 +2330,11 @@ function fetchData(params, allMetrics, metric, cb) {
                     });
 
                     for (let k = items.length - 1; k >= 0; k--) {
-                        items[k].percent = countlyCommon.round(items[k].t * 100 / total, 1);
+                        items[k].percent = userovoCommon.round(items[k].t * 100 / total, 1);
                         totalPercent += items[k].percent;
                     }
 
-                    items = countlyCommon.fixPercentageDelta(items, totalPercent);
+                    items = userovoCommon.fixPercentageDelta(items, totalPercent);
 
                     for (let k = 0; k < items.length; k++) {
                         items[k].name = model.fetchValue(items[k].name);
@@ -2353,7 +2354,7 @@ function fetchData(params, allMetrics, metric, cb) {
                     if (metrics[1] === "os" || metrics[1] === "browser") {
                         sgMetric = "u";
                     }
-                    countlyCommon.setTimezone(params.appTimezone);
+                    userovoCommon.setTimezone(params.appTimezone);
                     model.setDb(db || {});
                     cb(model.getBars(metrics[1] || metrics[0], 3, sgMetric));
                 });

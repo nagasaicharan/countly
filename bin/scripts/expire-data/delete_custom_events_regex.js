@@ -1,7 +1,7 @@
 /**
- *  Description: Deletes custom events from countly and drill databases using a regular expression
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/expire-data
+ *  Description: Deletes custom events from userovo and drill databases using a regular expression
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/expire-data
  *  Command: node delete_custom_events_regex.js
  */
 
@@ -15,16 +15,16 @@ const APP_ID = "";
 const EVENTS_REGEX = ""; // If empty, no events will be deleted
 const CASE_INSENSITIVE = true;
 
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
     console.log("Connected to databases...");
 
     //SET COMMON DB AND DRILL DB
-    common.db = countlyDb;
+    common.db = userovoDb;
     common.drillDb = drillDb;
 
     //GET APP
     try {
-        const app = await countlyDb.collection("apps").findOne({_id: countlyDb.ObjectID(APP_ID)}, {_id: 1, name: 1});
+        const app = await userovoDb.collection("apps").findOne({_id: userovoDb.ObjectID(APP_ID)}, {_id: 1, name: 1});
         console.log("App:", app.name);
         //GET EVENTS
         var events = [];
@@ -32,7 +32,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
             try {
                 const regex = new RegExp(EVENTS_REGEX);
                 console.log("Regular expression:", regex);
-                events = await countlyDb.collection("events").aggregate([
+                events = await userovoDb.collection("events").aggregate([
                     {
                         $match: {_id: app._id}
                     },
@@ -86,8 +86,8 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
             try {
                 console.log(1 + ") Deleting drill events:");
                 await deleteDrillEvents(app._id, events);
-                console.log(2 + ") Deleting countly events:");
-                await deleteCountlyEvents(app._id, events);
+                console.log(2 + ") Deleting userovo events:");
+                await deleteUserovoEvents(app._id, events);
                 console.log(3 + ") Deleting event times:");
                 await deleteEventTimes(app._id, events);
                 console.log(4 + ") Deleting event groups:");
@@ -121,21 +121,21 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
         console.log("Cleared drill_meta");
     }
 
-    async function deleteCountlyEvents(appId, events) {
+    async function deleteUserovoEvents(appId, events) {
         for (let i = 0; i < events.length; i++) {
             var collectionName = 'events' + drillCommon.getEventHash(events[i], appId);
-            await countlyDb.collection(collectionName).drop();
+            await userovoDb.collection(collectionName).drop();
             console.log("Dropped collection:", collectionName);
             //clear from merged collection
-            await countlyDb.collection("events_data").remove({'_id': {"$regex": "^" + appId + "_" + drillCommon.getEventHash(events[i], appId) + "_.*"}});
+            await userovoDb.collection("events_data").remove({'_id': {"$regex": "^" + appId + "_" + drillCommon.getEventHash(events[i], appId) + "_.*"}});
             console.log("Cleared from agregated collection");
         }
     }
 
     async function deleteEventTimes(appId, events) {
-        await countlyDb.collection("eventTimes" + appId).update({}, {"$pull": {"e": {"e": {$in: events}}}}, {"multi": true});
+        await userovoDb.collection("eventTimes" + appId).update({}, {"$pull": {"e": {"e": {$in: events}}}}, {"multi": true});
         console.log("Cleared eventTimes");
-        await countlyDb.collection("timelineStatus").remove({'app_id': (appId + ""), "event": {$in: events}});
+        await userovoDb.collection("timelineStatus").remove({'app_id': (appId + ""), "event": {$in: events}});
         console.log("Cleared timelineStatus");
     }
 
@@ -146,12 +146,12 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
             unsetQuery[`map.${events[i]}`] = 1;
             unsetQuery[`omitted_segments.${events[i]}`] = 1;
         }
-        await countlyDb.collection("events").updateOne({_id: appId}, {$pull: {list: {$in: events}}, $unset: unsetQuery}, {$pull: {"overview": {eventKey: {$in: events}}}});
+        await userovoDb.collection("events").updateOne({_id: appId}, {$pull: {list: {$in: events}}, $unset: unsetQuery}, {$pull: {"overview": {eventKey: {$in: events}}}});
         console.log("Cleared events:", events);
     }
 
     async function deleteEventGroups(appId, events) {
-        await countlyDb.collection("event_groups").update({'app_id': (appId + "")}, {"$pull": {"source_events": {$in: events}}}, {"multi": true});
+        await userovoDb.collection("event_groups").update({'app_id': (appId + "")}, {"$pull": {"source_events": {$in: events}}}, {"multi": true});
         console.log("Cleared event_groups");
     }
 
@@ -162,7 +162,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
         else {
             console.log("Finished successfully.");
         }
-        countlyDb.close();
+        userovoDb.close();
         drillDb.close();
     }
 });

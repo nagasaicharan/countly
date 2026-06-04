@@ -18,13 +18,13 @@ var cachedSchema = {};
 /**Validate if token exists and is not expired(uzing authorize.js)
 * @param {object} params  params
 * @param {string} params.qstring.auth_token  authentication token
-* @param {string}params.req.headers.countly-token {string} authentication token
+* @param {string}params.req.headers.userovo-token {string} authentication token
 * @param {string} params.fullPath current full path
 * @returns {Promise} promise 
 */
 function validate_token_if_exists(params) {
     return new Promise(function(resolve) {
-        var token = params.qstring.auth_token || params.req.headers["countly-token"] || "";
+        var token = params.qstring.auth_token || params.req.headers["userovo-token"] || "";
         if (token && token !== "") {
             authorize.verify_return({
                 db: common.db,
@@ -284,7 +284,7 @@ exports.validateGlobalAdmin = function(params, callback, callbackParam) {
                     return false;
                 }
                 params.member = member;
-                params.member.auth_token = params.qstring.auth_token || params.req.headers["countly-token"] || "";
+                params.member.auth_token = params.qstring.auth_token || params.req.headers["userovo-token"] || "";
 
                 if (plugins.dispatch("/validation/user", {params: params})) {
                     if (!params.res.finished) {
@@ -362,7 +362,7 @@ exports.validateAppAdmin = function(params, callback, callbackParam) {
                     return false;
                 }
                 params.member = member;
-                params.member.auth_token = params.qstring.auth_token || params.req.headers["countly-token"] || "";
+                params.member.auth_token = params.qstring.auth_token || params.req.headers["userovo-token"] || "";
 
                 if (plugins.dispatch("/validation/user", {params: params})) {
                     if (!params.res.finished) {
@@ -1093,12 +1093,12 @@ function validateWrite(params, feature, accessType, callback, callbackParam) {
 exports.getBaseAppFilter = function(member, dbName, collectionName) {
     var base_filter = {};
     var apps = exports.getUserApps(member);
-    if (dbName === "countly_drill" && collectionName === "drill_events") {
+    if (dbName === "userovo_drill" && collectionName === "drill_events") {
         if (Array.isArray(apps) && apps.length > 0) {
             base_filter.a = {"$in": apps};
         }
     }
-    else if (dbName === "countly" && collectionName === "events_data") {
+    else if (dbName === "userovo" && collectionName === "events_data") {
         var in_array = [];
         if (Array.isArray(apps) && apps.length > 0) {
             for (var i = 0; i < apps.length; i++) {

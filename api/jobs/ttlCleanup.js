@@ -14,16 +14,16 @@ class TTLCleanup extends job.Job {
         log.d("Started running TTL clean up job");
         for (let i = 0; i < plugins.ttlCollections.length; i++) {
             const {
-                db = "countly",
+                db = "userovo",
                 collection,
                 property,
                 expireAfterSeconds = 0
             } = plugins.ttlCollections[i];
             let dbInstance;
             switch (db) {
-            case "countly": dbInstance = common.db; break;
-            case "countly_drill": dbInstance = common.drillDb; break;
-            case "countly_out": dbInstance = common.outDb; break;
+            case "userovo": dbInstance = common.db; break;
+            case "userovo_drill": dbInstance = common.drillDb; break;
+            case "userovo_out": dbInstance = common.outDb; break;
             }
             if (!dbInstance) {
                 log.e("Invalid db selection:", db);

@@ -1,6 +1,6 @@
-# Countly Push Plugin
+# Userovo Push Plugin
 
-These URLs need to be accessible by the Countly instance:
+These URLs need to be accessible by the Userovo instance:
 
 - for Android:
 	- fcm.googleapis.com

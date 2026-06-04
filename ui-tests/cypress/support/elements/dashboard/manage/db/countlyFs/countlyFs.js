@@ -1,9 +1,9 @@
 export default {
     PAGE_TITLE: 'header-title',
     PAGE_TITLE_VIEW_GUIDE_BUTTON: 'view-guide-button',
-    TAB_COUNTLY_DATABASE: 'tab-countly-database-title',
-    TAB_COUNTLY_OUT_DATABASE: 'tab-countly-out-database-title',
-    TAB_COUNTLY_FILE_SYSTEM_DATABASE: 'tab-countly-file-system-database-title',
+    TAB_USEROVO_DATABASE: 'tab-userovo-database-title',
+    TAB_USEROVO_OUT_DATABASE: 'tab-userovo-out-database-title',
+    TAB_USEROVO_FILE_SYSTEM_DATABASE: 'tab-userovo-file-system-database-title',
     COLLECTIONS_LISTBOX: 'collections-listbox-scroll',
     COLLECTIONS_LISTBOX_NO_DATA: 'cly-listbox-no-match-found-label',
     LISTBOX_APPLICATION_SELECT: 'dbviewer-app-select',

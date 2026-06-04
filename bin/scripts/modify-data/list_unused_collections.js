@@ -1,7 +1,7 @@
 /**
- * Script list collections that are not used by Countly
- * Server: countly server
- * Path: countly/bin/scripts/modify-data
+ * Script list collections that are not used by Userovo
+ * Server: userovo server
+ * Path: userovo/bin/scripts/modify-data
  * Command: node list_unused_collections.js
  */
 
@@ -11,11 +11,11 @@ var pluginManager = require('./../../../plugins/pluginManager.js'),
 
 
 var appIDs = [];
-console.log("This script will list collections not used by Countly");
+console.log("This script will list collections not used by Userovo");
 
-function checkEvents(countlyDb, collections, apps, callback) {
+function checkEvents(userovoDb, collections, apps, callback) {
 
-    countlyDb.collection("events").find({}, {"list": true}).toArray(function(err, eventsDb) {
+    userovoDb.collection("events").find({}, {"list": true}).toArray(function(err, eventsDb) {
         var hashMap = {};
         for (let z = 0; z < apps.length; z++) {
 
@@ -59,10 +59,10 @@ function checkEvents(countlyDb, collections, apps, callback) {
     });
 }
 
-function checkDrillEvents(countlyDb, drillDb, apps, callback) {
+function checkDrillEvents(userovoDb, drillDb, apps, callback) {
 
     drillDb.collections(function(error, collections) {
-        countlyDb.collection("events").find({}, {"list": true}).toArray(function(err, eventsDb) {
+        userovoDb.collection("events").find({}, {"list": true}).toArray(function(err, eventsDb) {
             var hashMap = {};
             for (let z = 0; z < apps.length; z++) {
 
@@ -107,11 +107,11 @@ function checkDrillEvents(countlyDb, drillDb, apps, callback) {
     });
 }
 
-function checkViewsCollections(countlyDb, collections, callback) {
+function checkViewsCollections(userovoDb, collections, callback) {
 
 
 
-    countlyDb.collection('views').aggregate([{"$project": {"_id": true, "segments": {"$objectToArray": "$segments"}}}, {"$unwind": "$segments"}, {"$project": {"_id": true, "segment": "$segments.k"}}], function(err, res) {
+    userovoDb.collection('views').aggregate([{"$project": {"_id": true, "segments": {"$objectToArray": "$segments"}}}, {"$unwind": "$segments"}, {"$project": {"_id": true, "segment": "$segments.k"}}], function(err, res) {
         if (err) {
             console.log(err);
             callback();
@@ -141,13 +141,13 @@ function checkViewsCollections(countlyDb, collections, callback) {
 
 }
 
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).spread(function(countlyDb, drillDb) {
-    countlyDb.collection("apps").find({}).toArray(function(err, res) {
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).spread(function(userovoDb, drillDb) {
+    userovoDb.collection("apps").find({}).toArray(function(err, res) {
         console.log("Currently have " + res.length + " apps");
         var obQuery = [];
         for (var k = 0; k < res.length; k++) {
             appIDs.push(res[k]._id + "");
-            obQuery.push(countlyDb.ObjectID(res[k]._id));
+            obQuery.push(userovoDb.ObjectID(res[k]._id));
         }
 
         var withID = ['app_users', 'metric_changes', 'event_flows', 'app_crashes', 'app_crashgroups', 'app_crashusers', 'app_nxret', 'app_userviews', 'app_viewsmeta', 'app_views', 'blocked_users', 'campaign_users', 'consent_history', 'crashes_jira', 'event_flows', 'eventTimes', 'flowSchema', 'flowData', 'flows_cache', 'timesofday', 'feedback', 'push_', 'apm_network', 'apm_device', 'app_user_merges', 'concurrent_users_new', 'concurrent_users', 'completed_surveys', 'logs', "survey", "nps"];
@@ -157,7 +157,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
             concurrent_users_active: true
         };
 
-        countlyDb.collections(function(error, collections) {
+        userovoDb.collections(function(error, collections) {
 
             console.log(err);
             var toRemove = [];
@@ -175,10 +175,10 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                 }
             }
             console.log("App collections", JSON.stringify(toRemove, null, 2));
-            checkViewsCollections(countlyDb, collections, function() {
-                checkEvents(countlyDb, collections, appIDs, function() {
-                    checkDrillEvents(countlyDb, drillDb, appIDs, function() {
-                        countlyDb.close();
+            checkViewsCollections(userovoDb, collections, function() {
+                checkEvents(userovoDb, collections, appIDs, function() {
+                    checkDrillEvents(userovoDb, drillDb, appIDs, function() {
+                        userovoDb.close();
                         drillDb.close();
                     });
                 });

@@ -1,7 +1,7 @@
 /**
  *  Script runs queries to try to determine if there are any signs of issues.
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/data-reports
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/data-reports
  *  Command: node diagnostic_report.js
  */
 
@@ -267,14 +267,14 @@ function validate_merges(db, callback) {
     }
 }
 
-Promise.all([pluginManager.dbConnection("countly")]).then(async function([countlyDb]) {
-    fetchSystemInfo(countlyDb, function() {
-        validate_merges(countlyDb, function() {
-            validate_user_profiles(countlyDb, function() {
-                validate_reports(countlyDb, function() {
-                    validate_flows(countlyDb, function() {
-                        validate_views(countlyDb, function() {
-                            countlyDb.close();
+Promise.all([pluginManager.dbConnection("userovo")]).then(async function([userovoDb]) {
+    fetchSystemInfo(userovoDb, function() {
+        validate_merges(userovoDb, function() {
+            validate_user_profiles(userovoDb, function() {
+                validate_reports(userovoDb, function() {
+                    validate_flows(userovoDb, function() {
+                        validate_views(userovoDb, function() {
+                            userovoDb.close();
                         });
                     });
                 });

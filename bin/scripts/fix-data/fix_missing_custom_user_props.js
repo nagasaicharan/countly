@@ -3,7 +3,7 @@
  *  or adds new values to existing biglist properties.
  *  It scans the app_users collection for the specified custom properties and
  *  ensures they are present in drill_meta with correct types and values.
- *  Path: $(countly dir)/bin/scripts/fix-data
+ *  Path: $(userovo dir)/bin/scripts/fix-data
  *  Command: node fix_missing_custom_user_props.js
  */
 
@@ -29,9 +29,9 @@ if (!PROPS.length) {
 }
 
 Promise.all([
-    pluginManager.dbConnection("countly"),
-    pluginManager.dbConnection("countly_drill")
-]).then(async function([countlyDb, drillDb]) {
+    pluginManager.dbConnection("userovo"),
+    pluginManager.dbConnection("userovo_drill")
+]).then(async function([userovoDb, drillDb]) {
     console.log("Connected to databases...");
     console.log("Date range: " + START.toISOString() + " - " + END.toISOString());
     console.log("Properties to fix: " + PROPS.join(", "));
@@ -43,7 +43,7 @@ Promise.all([
 
     try {
         // Load drill config limits from the database if available
-        var pluginsDoc = await countlyDb.collection("plugins").findOne({_id: "plugins"});
+        var pluginsDoc = await userovoDb.collection("plugins").findOne({_id: "plugins"});
         if (pluginsDoc && pluginsDoc.drill) {
             if (pluginsDoc.drill.list_limit !== undefined) {
                 LIST_LIMIT = parseInt(pluginsDoc.drill.list_limit, 10) || LIST_LIMIT;
@@ -91,7 +91,7 @@ Promise.all([
 
             if (!existingMeta) {
                 // New property — determine type from a small sample first
-                var samples = await countlyDb.collection(collection).aggregate([
+                var samples = await userovoDb.collection(collection).aggregate([
                     {$match: {lac: lacMatch, [fieldPath]: {$exists: true}}},
                     {$project: {_id: 0, val: "$" + fieldPath}},
                     {$limit: 100}
@@ -127,7 +127,7 @@ Promise.all([
 
                 // List/array type — need full distinct values aggregation
                 console.log("  [NEW] type: " + type + ", collecting distinct values...");
-                var distinctValues = await aggregateDistinctValues(countlyDb, collection, fieldPath, lacMatch, isArray);
+                var distinctValues = await aggregateDistinctValues(userovoDb, collection, fieldPath, lacMatch, isArray);
                 var totalDistinct = Object.keys(distinctValues).length;
                 console.log("  Found " + totalDistinct + " distinct value(s)");
 
@@ -168,7 +168,7 @@ Promise.all([
                 console.log("  Existing type: " + existingMeta.type + ", collecting distinct values...");
 
                 var isArrayExisting = existingMeta.type === "a";
-                var distinctValuesExisting = await aggregateDistinctValues(countlyDb, collection, fieldPath, lacMatch, isArrayExisting);
+                var distinctValuesExisting = await aggregateDistinctValues(userovoDb, collection, fieldPath, lacMatch, isArrayExisting);
                 var existingValues = existingBigLists[prop] || {};
                 var existingCount = Object.keys(existingValues).length;
 
@@ -283,7 +283,7 @@ Promise.all([
         console.error("Error:", err);
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
         drillDb.close();
         console.log("\nDone.");
     }

@@ -1,6 +1,6 @@
 /*
  * Script compares aggregated data from events collection with drill data for a given period.
- * Place the script in {countly}/bin/scripts/data-reports/compare_drill_aggregated.js
+ * Place the script in {userovo}/bin/scripts/data-reports/compare_drill_aggregated.js
  *
  * Usage:
  * node compare_drill_aggregated.js
@@ -19,17 +19,17 @@ const crypto = require("crypto");
 const fs = require('fs');
 var pluginManager = require("../../../plugins/pluginManager");
 var fetch = require("../../../api/parts/data/fetch.js");
-var countlyCommon = require("../../../api/lib/countly.common.js");
+var userovoCommon = require("../../../api/lib/userovo.common.js");
 var common = require("../../../api/utils/common.js");
 var moment = require("moment");
 
 var endReport = {};
 
 console.log("Script compares numbers in aggregated data with drill data for the given period.");
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
-    common.db = countlyDb;
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
+    common.db = userovoDb;
     console.log("Connected to databases...");
-    getAppList({db: countlyDb}, function(err, apps) {
+    getAppList({db: userovoDb}, function(err, apps) {
         if (!apps || !apps.length) {
             console.log("No apps found");
             return close();
@@ -39,7 +39,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
             Promise.each(apps, function(app) {
                 return new Promise(function(resolve, reject) {
                     console.log("Processing app: ", app.name);
-                    countlyDb.collection("events").findOne({_id: app._id}, {'list': 1}, function(err, events) {
+                    userovoDb.collection("events").findOne({_id: app._id}, {'list': 1}, function(err, events) {
                         if (err) {
                             console.log("Error getting events: ", err);
                             reject();
@@ -84,7 +84,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                                         };
 
                                         // Fetch drill data
-                                        var periodObject = countlyCommon.getPeriodObj({"appTimezone": app.timezone, "qstring": {"period": period}});
+                                        var periodObject = userovoCommon.getPeriodObj({"appTimezone": app.timezone, "qstring": {"period": period}});
                                         getDataFromDrill({event: event, app_id: app._id + "", timezone: app.timezone, drillDb: drillDb, periodObj: periodObject}, function(err, drillData) {
                                             if (err) {
                                                 console.log("    Error getting drill data: ", err);
@@ -269,8 +269,8 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
         }
         function close() {
             try {
-                if (countlyDb?.close) {
-                    countlyDb.close();
+                if (userovoDb?.close) {
+                    userovoDb.close();
                 }
                 if (drillDb?.close) {
                     drillDb.close();

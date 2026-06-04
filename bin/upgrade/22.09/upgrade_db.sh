@@ -2,7 +2,7 @@
 
 VER="22.09"
 
-CONTINUE="$(countly check before upgrade db "$VER")"
+CONTINUE="$(userovo check before upgrade db "$VER")"
 
 if [ "$CONTINUE" != "1" ] && [ "$1" != "combined" ]
 then
@@ -31,11 +31,11 @@ then
     nodejs "$DIR/upgrade/22.09/scripts/merge_apm_collections.js"
     
     if [ "$1" != "combined" ]; then
-        countly upgrade;
+        userovo upgrade;
     fi
 
     #call after check
-    countly check after upgrade db "$VER"
+    userovo check after upgrade db "$VER"
 elif [ "$CONTINUE" == "0" ]
 then
     echo "Database is already upgraded to $VER"

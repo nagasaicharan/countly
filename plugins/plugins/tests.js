@@ -17,7 +17,7 @@ describe('Testing Plugins', function() {
             .get('/o/plugins?api_key=' + API_KEY_ADMIN)
             .expect(200)
             .end(function(err, res) {
-                //{"name":"countly-plugins","title":"Plugins manager","version":"1.0.0","description":"Plugin manager to view and enable/disable plugins","author":"Count.ly","homepage":"https://count.ly","support":"http://community.count.ly/","keywords":["countly","analytics","mobile","plugins"],"dependencies":{},"private":true,"enabled":true,"code":"plugins"}
+                //{"name":"userovo-plugins","title":"Plugins manager","version":"1.0.0","description":"Plugin manager to view and enable/disable plugins","author":"Count.ly","homepage":"https://count.ly","support":"http://community.count.ly/","keywords":["userovo","analytics","mobile","plugins"],"dependencies":{},"private":true,"enabled":true,"code":"plugins"}
                 if (err) {
                     return done(err);
                 }
@@ -26,7 +26,7 @@ describe('Testing Plugins', function() {
                 ob.should.be.an.instanceOf(Array);
                 for (var i = 0; i < ob.length; i++) {
                     ob[i].should.have.property("name");
-                    if (ob[i].name === "countly-plugins") {
+                    if (ob[i].name === "userovo-plugins") {
                         ob[i].should.have.property("title", "Plugins manager");
                         ob[i].should.have.property("description", "Plugin manager to view and enable/disable plugins");
                         ob[i].should.have.property("author", "Count.ly");

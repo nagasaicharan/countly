@@ -8,15 +8,15 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
 bash "$DIR/scripts/detect.init.sh"
 
 #update plugins
-countly plugin upgrade crashes
-countly plugin upgrade push
+userovo plugin upgrade crashes
+userovo plugin upgrade push
 (cd "$DIR/../plugins/push/api/parts/apn" && sudo npm install --unsafe-perm)
 
 #udpate packages
 (cd "$DIR" && sudo npm update --unsafe-perm)
 
 #update sdk
-countly update sdk-web
+userovo update sdk-web
 
-#install dependencies, process files and restart countly
-countly upgrade
+#install dependencies, process files and restart userovo
+userovo upgrade

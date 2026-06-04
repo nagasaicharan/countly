@@ -50,7 +50,7 @@ class Sender {
 
         let plugins = await common.db.collection('plugins').findOne({_id: "plugins"});
         if (!plugins) {
-            throw new PushError('No plugins configuration', ERROR.DATA_COUNTLY);
+            throw new PushError('No plugins configuration', ERROR.DATA_USEROVO);
         }
 
         if (plugins.push) {

@@ -3,8 +3,8 @@ var pluginManager = require('../../../../plugins/pluginManager.js');
 /**
  * Get plugins config object
  * */
-pluginManager.dbConnection().then((countlyDb) => {
-    countlyDb.collection('plugins').findOne({ _id: "plugins" }, function(err, pluginsConfig) {
+pluginManager.dbConnection().then((userovoDb) => {
+    userovoDb.collection('plugins').findOne({ _id: "plugins" }, function(err, pluginsConfig) {
         if (!pluginsConfig || err) {
             console.log('api-config-script:somethings went wrong while getting plugins config object.');
             console.log(err);
@@ -22,17 +22,17 @@ pluginManager.dbConnection().then((countlyDb) => {
             }
             // make changes persistent
             if (edited) {
-                countlyDb.collection('plugins').findAndModify({"_id": pluginsConfig._id }, {}, {$set: { "security.api_additional_headers": modifiedApiAdditionalHeaders }}, function(err) {
+                userovoDb.collection('plugins').findAndModify({"_id": pluginsConfig._id }, {}, {$set: { "security.api_additional_headers": modifiedApiAdditionalHeaders }}, function(err) {
                     if (!err) {
                         console.log("api-config-script:updated configs succcesfully");
-                        countlyDb.close();
+                        userovoDb.close();
                         process.exit(0);
                     }
                 });
             }
             else {
                 console.log("api-config-script:this configs already has access-control-allow-origin value.");
-                countlyDb.close();
+                userovoDb.close();
                 process.exit(0);
             }
         }

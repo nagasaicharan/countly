@@ -1,9 +1,9 @@
 var pluginManager = require('../../../../plugins/pluginManager.js');
 
-pluginManager.dbConnection().then(function(countlyDb) {
-    console.log("Connected to Countly database...");
+pluginManager.dbConnection().then(function(userovoDb) {
+    console.log("Connected to Userovo database...");
     try {
-        countlyDb.collection("cohorts").find({"name": {"$regex": "^\\[CLY\\]_AB.*"}}, {"_id": 1, "steps": 1, "name": 1}).toArray(function(err, cohorts) {
+        userovoDb.collection("cohorts").find({"name": {"$regex": "^\\[CLY\\]_AB.*"}}, {"_id": 1, "steps": 1, "name": 1}).toArray(function(err, cohorts) {
             if (cohorts) {
                 var updateObj = [];
                 for (var k = 0; k < cohorts.length; k++) {
@@ -33,7 +33,7 @@ pluginManager.dbConnection().then(function(countlyDb) {
                     }
                 }
                 if (!(updateObj.length === 0)) {
-                    countlyDb.collection("cohorts").bulkWrite(updateObj, {ordered: false}, function(err) {
+                    userovoDb.collection("cohorts").bulkWrite(updateObj, {ordered: false}, function(err) {
                         if (err) {
                             console.error(err);
                             close();
@@ -57,7 +57,7 @@ pluginManager.dbConnection().then(function(countlyDb) {
     }
 
     function close() {
-        countlyDb.close();
+        userovoDb.close();
         console.log("Done.");
     }
 });

@@ -1,21 +1,21 @@
 #!/bin/bash
 
-countly_start () { 
-    launchctl start com.countly.api;
-    launchctl start com.countly.dashboard;
+userovo_start () { 
+    launchctl start com.userovo.api;
+    launchctl start com.userovo.dashboard;
 }
 
-countly_stop () { 
-    launchctl stop com.countly.api;
-    launchctl stop com.countly.dashboard;
+userovo_stop () { 
+    launchctl stop com.userovo.api;
+    launchctl stop com.userovo.dashboard;
 }
 
-countly_restart () {
-    countly start;
-    countly stop;
+userovo_restart () {
+    userovo start;
+    userovo stop;
 }
 
-countly_status () { 
-    launchctl list | grep com.countly.api;
-    launchctl list | grep com.countly.dashboard;
+userovo_status () { 
+    launchctl list | grep com.userovo.api;
+    launchctl list | grep com.userovo.dashboard;
 }

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer">
+    <link href='<%- cdn %>stylesheets/pre-login/main.css?v=userovo-base-20260604' rel='stylesheet' type='text/css'>
+    <link href='<%- cdn %>stylesheets/pre-login/landing.css?v=userovo-landing-20260604-2' rel='stylesheet' type='text/css'>
+    <link rel="icon" type="image/png" href="<%- countlyFavicon %>">
+    <title><%- countlyTitle %></title>
+</head>
+<body class="userovo-landing-page">
+    <header class="userovo-site-header">
+        <a class="userovo-site-logo" href="<%- path %>/">
+            <img src="<%- cdn %>images/pre-login/countly-logo-dark.svg" alt="Userovo" />
+        </a>
+        <nav class="userovo-site-nav" aria-label="Primary">
+            <a href="#platform">Platform</a>
+            <a href="#analytics">Analytics</a>
+            <a href="#privacy">Privacy</a>
+            <a href="#pricing">Pricing</a>
+        </nav>
+        <div class="userovo-site-actions">
+            <a class="userovo-link-button" href="<%- path %>/login">Log in</a>
+            <a class="userovo-primary-button" href="<%- path %>/login">Get started</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="userovo-hero">
+            <div class="userovo-hero-inner">
+                <div class="userovo-eyebrow">
+                    <span></span>
+                    #1 Privacy-focused digital analytics, now AI-ready
+                </div>
+                <h1>First-party analytics and customer experience</h1>
+                <p class="userovo-hero-copy">Understand users across every device and touchpoint and build meaningful connections supported by privacy, data ownership, and an AI-ready foundation.</p>
+                <div class="userovo-hero-actions">
+                    <a class="userovo-primary-button userovo-large-button" href="<%- path %>/login">Get started for free</a>
+                    <a class="userovo-secondary-button userovo-large-button" href="#platform">Schedule a demo</a>
+                </div>
+                <div class="userovo-hero-visual" aria-hidden="true">
+                    <div class="userovo-dashboard-shell">
+                        <div class="userovo-dashboard-top">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <div class="userovo-dashboard-grid">
+                            <div class="userovo-metric-card">
+                                <strong>64.8K</strong>
+                                <small>Monthly users</small>
+                            </div>
+                            <div class="userovo-metric-card">
+                                <strong>92%</strong>
+                                <small>Consent ready</small>
+                            </div>
+                            <div class="userovo-chart-card">
+                                <i style="height: 48%"></i>
+                                <i style="height: 72%"></i>
+                                <i style="height: 38%"></i>
+                                <i style="height: 84%"></i>
+                                <i style="height: 62%"></i>
+                            </div>
+                            <div class="userovo-flow-card">
+                                <span></span><span></span><span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="userovo-intro">
+            <p>Data without action is wasted. Analytics without privacy is risky. Userovo helps you capture, analyze, and act on data from any device or touchpoint while keeping it private.</p>
+        </section>
+
+        <section class="userovo-section" id="platform">
+            <div class="userovo-section-copy">
+                <span class="userovo-section-label">Capture</span>
+                <h2>Capture data from all your key touchpoints</h2>
+                <p>Collect first-party data across digital products with SDKs and pipelines designed for reliable, comprehensive analytics.</p>
+                <a href="#analytics">Explore data management</a>
+            </div>
+            <div class="userovo-feature-panel">
+                <h3>Data sovereignty built in</h3>
+                <p>Self-hosted or private cloud, Userovo keeps your product data under your control.</p>
+                <ul>
+                    <li>Full access control</li>
+                    <li>No third-party tracking</li>
+                    <li>Data portability</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="userovo-section userovo-section-alt" id="analytics">
+            <div class="userovo-feature-panel userovo-feature-panel-dark">
+                <h3>AI-ready analytics</h3>
+                <p>Connect clean behavioral context to your internal systems, copilots, or automation flows without compromising privacy.</p>
+            </div>
+            <div class="userovo-section-copy">
+                <span class="userovo-section-label">Act</span>
+                <h2>Boost engagement with powerful automations</h2>
+                <p>Optimize product experiences with journeys, surveys, feedback, A/B testing, and smart personalization.</p>
+                <a href="#privacy">Explore engagement</a>
+            </div>
+        </section>
+
+        <section class="userovo-section" id="privacy">
+            <div class="userovo-section-copy">
+                <span class="userovo-section-label">Data privacy</span>
+                <h2>Protect user data and stay compliant</h2>
+                <p>Built-in privacy controls, hosting flexibility, and security-first product analytics help you meet modern compliance requirements.</p>
+                <a href="<%- path %>/login">Explore data privacy</a>
+            </div>
+            <div class="userovo-privacy-grid">
+                <div><strong>Built for privacy</strong><span>Control data collection and consent.</span></div>
+                <div><strong>Hosting control</strong><span>Deploy on your own infrastructure.</span></div>
+                <div><strong>Data security</strong><span>Protect product data across its lifecycle.</span></div>
+            </div>
+        </section>
+
+        <section class="userovo-pricing" id="pricing">
+            <span class="userovo-section-label">Pricing</span>
+            <h2>Start with the deployment that fits your team</h2>
+            <div class="userovo-pricing-grid">
+                <article>
+                    <h3>Community</h3>
+                    <p>For self-hosted teams getting started with private analytics.</p>
+                    <strong>Free</strong>
+                </article>
+                <article>
+                    <h3>Enterprise</h3>
+                    <p>For teams needing private, customizable analytics at scale.</p>
+                    <strong>Custom</strong>
+                </article>
+            </div>
+        </section>
+
+        <section class="userovo-final-cta">
+            <h2>A whole new way to grow your product is here.</h2>
+            <a class="userovo-primary-button userovo-large-button" href="<%- path %>/login">Get started for free</a>
+        </section>
+    </main>
+</body>
+</html>

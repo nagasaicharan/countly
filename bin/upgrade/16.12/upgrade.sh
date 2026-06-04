@@ -18,31 +18,31 @@ bash "$DIR/scripts/detect.init.sh"
 
 #remove previous dependencies, as they need to be rebuild for new nodejs version
 rm -rf "$DIR/../node_modules"
-countly upgrade
+userovo upgrade
 
 #upgrade graph colors for new UI
-mv "$DIR/../frontend/express/public/javascripts/countly/countly.config.js" "$DIR/../frontend/express/public/javascripts/countly/countly.config.backup.js"
-cp -n "$DIR/../frontend/express/public/javascripts/countly/countly.config.sample.js" "$DIR/../frontend/express/public/javascripts/countly/countly.config.js"
+mv "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.js" "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.backup.js"
+cp -n "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.sample.js" "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.js"
 
 pkill -f executor.js
 
 #upgrade plugins
-countly plugin upgrade push
-countly plugin upgrade systemlogs
-countly plugin upgrade errorlogs
-countly plugin upgrade web
-countly plugin upgrade geo
+userovo plugin upgrade push
+userovo plugin upgrade systemlogs
+userovo plugin upgrade errorlogs
+userovo plugin upgrade web
+userovo plugin upgrade geo
 
-countly update sdk-web
+userovo update sdk-web
 
 #add new plugins
-countly plugin enable compare
-countly plugin enable server-stats
-countly plugin enable slipping-away-users
-countly plugin enable star-rating
+userovo plugin enable compare
+userovo plugin enable server-stats
+userovo plugin enable slipping-away-users
+userovo plugin enable star-rating
 
 #add indexes
 nodejs "$DIR/scripts/add_indexes.js"
 
-#install dependencies, process files and restart countly
-countly upgrade
+#install dependencies, process files and restart userovo
+userovo upgrade

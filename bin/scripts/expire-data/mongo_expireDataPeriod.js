@@ -5,7 +5,7 @@
  *  Command: mongo < mongo_expireDataPeriod.js
  */
 
-var COUNTLY_DRILL = 'countly_drill',
+var USEROVO_DRILL = 'userovo_drill',
     start = 1157738337000, //min timestamp
     end = 1657738337000; //max timestamp
 
@@ -26,7 +26,7 @@ authDB.auth('<username>', '<password>');
 
  **/
 
-var drill = conn.getDB(COUNTLY_DRILL);
+var drill = conn.getDB(USEROVO_DRILL);
 
 var collections = drill.getCollectionNames();
 

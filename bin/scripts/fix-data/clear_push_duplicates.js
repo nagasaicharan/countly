@@ -36,8 +36,8 @@ function clearing_out(options, callback) {
     }
 }
 
-Promise.all([pluginManager.dbConnection("countly")]).spread(function(countlyDb) {
-    getAppList({db: countlyDb}, function(err, apps) {
+Promise.all([pluginManager.dbConnection("userovo")]).spread(function(userovoDb) {
+    getAppList({db: userovoDb}, function(err, apps) {
         if (err) {
             console.log(err);
             console.log("exiting with error");
@@ -50,7 +50,7 @@ Promise.all([pluginManager.dbConnection("countly")]).spread(function(countlyDb) 
 
                     var pipeline = [{"$match": {"tk": {"$ne": {}}}}, {"$project": {"_id": true, "tk": {"$objectToArray": "$tk"}}}, {"$unwind": "$tk"}, {"$group": {"_id": "$tk", "uid": {"$addToSet": "$_id"}}}, {"$addFields": {"cn": {"$size": "$uid"}}}, {"$match": {"cn": {"$gt": 1}}}];
 
-                    countlyDb.collection("push_" + appId).aggregate(pipeline, function(err, res) {
+                    userovoDb.collection("push_" + appId).aggregate(pipeline, function(err, res) {
                         if (err) {
                             console.log(err);
                             reject();
@@ -60,7 +60,7 @@ Promise.all([pluginManager.dbConnection("countly")]).spread(function(countlyDb) 
                                 console.log("found " + res.length + " tokens with multiple owners");
                                 Promise.each(res, function(data) {
                                     return new Promise(function(resolve1, reject1) {
-                                        countlyDb.collection("app_users" + appId).aggregate([{"$match": {"uid": {"$in": data.uid}}}, {"$project": {"_id": true, "uid": true, "lac": true, "ls": true}}], function(err2, res2) {
+                                        userovoDb.collection("app_users" + appId).aggregate([{"$match": {"uid": {"$in": data.uid}}}, {"$project": {"_id": true, "uid": true, "lac": true, "ls": true}}], function(err2, res2) {
                                             if (err2) {
                                                 console.log(err2);
                                                 reject1();
@@ -81,7 +81,7 @@ Promise.all([pluginManager.dbConnection("countly")]).spread(function(countlyDb) 
                                                         }
                                                     }
                                                 }
-                                                clearing_out({db: countlyDb, appId: appId, data: delete_us}, function() {
+                                                clearing_out({db: userovoDb, appId: appId, data: delete_us}, function() {
                                                     if (res2.length > 0) {
                                                         var uid = res2[0].uid;
                                                         var bestValue = res2[0].lac || res2[0].ls;
@@ -109,13 +109,13 @@ Promise.all([pluginManager.dbConnection("countly")]).spread(function(countlyDb) 
                                                             else {
                                                                 var uu = {};
                                                                 uu["tk" + data["_id"]["k"]] = "";
-                                                                countlyDb.collection("app_users" + appId).update({"_id": {"$in": copy}}, {"$unset": uu}, {"multi": true}, function(err4) {
+                                                                userovoDb.collection("app_users" + appId).update({"_id": {"$in": copy}}, {"$unset": uu}, {"multi": true}, function(err4) {
                                                                     if (err4) {
                                                                         console.log(err4);
                                                                     }
                                                                     var uu2 = {};
                                                                     uu2["tk." + data["_id"]["k"]] = "";
-                                                                    countlyDb.collection("push_" + appId).update({"_id": {"$in": copyUid}}, {"$unset": uu2}, {"multi": true}, function(err5) {
+                                                                    userovoDb.collection("push_" + appId).update({"_id": {"$in": copyUid}}, {"$unset": uu2}, {"multi": true}, function(err5) {
                                                                         if (err5) {
                                                                             console.log(err5);
                                                                         }
@@ -152,11 +152,11 @@ Promise.all([pluginManager.dbConnection("countly")]).spread(function(countlyDb) 
                 });
             }).then(function() {
                 console.log("ALL done");
-                countlyDb.close();
+                userovoDb.close();
             }).catch(function(rejection) {
                 console.log("Error");
                 console.log("Error:", rejection);
-                countlyDb.close();
+                userovoDb.close();
             });
         }
     });

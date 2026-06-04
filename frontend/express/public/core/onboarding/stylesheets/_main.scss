@@ -1,4 +1,5 @@
-.setup-logo { margin-top: 38px; margin-left: 72px; width:165px; height:50px; background-image:url('../../images/pre-login/countly-logo-dark.svg'); background-repeat: no-repeat; background-size: contain;position: fixed; left: 0px; top: 0px; }
+.setup-logo { margin-top: 26px; margin-left: 72px; width:260px; height:70px; background-image:url('../../images/pre-login/countly-logo-dark.svg'); background-repeat: no-repeat; background-size: contain;position: fixed; left: 0px; top: 0px; }
+.setup-logo img { display:block; width:260px; height:70px; object-fit:contain; }
 
 .centered-content {
     min-height: 100vh;
@@ -9,7 +10,7 @@
 }
 
 .setup-byline {
-    color: #81868D;
+    color: #475569;
     margin-top: 12px;
     font-size: 14px;
 }
@@ -26,7 +27,7 @@
 }
 
 .setup-radio .el-radio.is-checked {
-    background-color: #E1EFFF;
+    background-color: #EEF6FF;
 }
 
 .setup-radio .el-radio {
@@ -53,12 +54,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #E1EFFF;
+    background-color: #EEF6FF;
     border-radius: 100%;
 }
 
 .is-checked .setup-radio-icon-bg {
-    background-color: #0166D6;
+    background-color: #2563EB;
     color: white;
 }
 
@@ -95,7 +96,7 @@
 }
 
 .consent-blurb {
-    color: #81868D;
+    color: #475569;
     font-size: 14px;
 }
 
@@ -113,15 +114,15 @@
 }
 
 .quickstart-item-desc {
-    color: #81868D;
+    color: #475569;
     text-align: left;
     word-break: break-word;
 }
 
 .quickstart-link, .quickstart-link:visited {
-    color: #0166D6;
+    color: #2563EB;
 } 
 
 .quickstart-link:hover {
-    color: #333c48;
+    color: #172554;
 }

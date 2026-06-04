@@ -14,7 +14,7 @@ var plugin = {},
         var params = ob.params;
 
         validateGlobalAdmin(params, function() {
-            /*if (process.env.COUNTLY_CONTAINER === 'api') {
+            /*if (process.env.USEROVO_CONTAINER === 'api') {
                 common.returnMessage(params, 400, 'Not allowed in containerized environment');
                 return false;
             }*/
@@ -384,8 +384,8 @@ var plugin = {},
                     local_path = path;
                 }
             }
-            let subject = 'Countly test email';
-            let message = 'Countly test email succesfully delivered!';
+            let subject = 'Userovo test email';
+            let message = 'Userovo test email succesfully delivered!';
             if (fs.existsSync(local_path)) {
                 var local_properties = fs.readFileSync(local_path);
                 local_properties = parser.parse(local_properties);

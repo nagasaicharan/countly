@@ -2,8 +2,8 @@
  *  Script runs queries to try to determine if there are any app_user documents without uid.
  *  In dry mode it just outputs information
  *  If dry_run is set to false, then app_users documents are fixed right away. Fixing includes deleting documents that were not matched. It is suggested to run in dry_run=true first to make sure nothing unexpected gets deleted.
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/fix-data
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/fix-data
  *  Command: node fix_null_uids.js
  */
 const pluginManager = require('../../../plugins/pluginManager.js'),
@@ -15,22 +15,22 @@ var dry_run = true;
 var results = {};
 var apps = [];
 
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
     var query = {};
     if (apps.length > 0) {
         for (var k = 0;k < apps.length;k++) {
-            apps[k] = countlyDb.ObjectID(apps[k]);
+            apps[k] = userovoDb.ObjectID(apps[k]);
         }
         query = {_id: {$in: apps}};
     }
 
-    countlyDb.collection('apps').find(query).toArray(function(err, apps) {
+    userovoDb.collection('apps').find(query).toArray(function(err, apps) {
         apps = apps || [];
         console.log(apps.length + " apps found");
         Promise.each(apps, function(app) {
             return new Promise(function(resolveApp, rejectApp) {
                 console.log("Running for:" + app.name + "(" + app._id + ")");
-                countlyDb.collection("app_users" + app._id).find({uid: {$exists: false}}, {"uid": 1, "_id": 1, "last_req_post": 1, "last_req_get": 1}).toArray(function(err, users) {
+                userovoDb.collection("app_users" + app._id).find({uid: {$exists: false}}, {"uid": 1, "_id": 1, "last_req_post": 1, "last_req_get": 1}).toArray(function(err, users) {
                     if (err) {
                         console.log(err);
                         resolveApp();
@@ -105,7 +105,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                                                             if (res && res.length > 0) {
                                                                 res = res[0];
                                                                 //if this uid does not exist - update doc, else - delete this null doc
-                                                                countlyDb.collection("app_users" + app._id).findOne({uid: res.uid}, function(err3, res2) {
+                                                                userovoDb.collection("app_users" + app._id).findOne({uid: res.uid}, function(err3, res2) {
                                                                     if (err3) {
                                                                         console.e(err3);
                                                                     }
@@ -116,7 +116,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                                                                             results[app._id].delete_duplicate.push(user._id);
                                                                             if (!dry_run) {
                                                                                 //delete document as there is alredy one with correct uid
-                                                                                countlyDb.collection("app_users" + app._id).remove({_id: user._id}, function(err4) {
+                                                                                userovoDb.collection("app_users" + app._id).remove({_id: user._id}, function(err4) {
                                                                                     if (err4) {
                                                                                         console.log(err4);
                                                                                     }
@@ -133,7 +133,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                                                                             results[app._id].update.push([{"_id": user._id}, {"$set": {"uid": res.uid}}]);
                                                                             if (!dry_run) {
                                                                                 //update document with correct uid
-                                                                                countlyDb.collection("app_users" + app._id).update({_id: user._id}, {$set: {uid: res.uid}}, function(err4) {
+                                                                                userovoDb.collection("app_users" + app._id).update({_id: user._id}, {$set: {uid: res.uid}}, function(err4) {
                                                                                     if (err4) {
                                                                                         console.log(err4);
                                                                                     }
@@ -163,7 +163,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                                                 results[app._id].delete = results[app._id].delete || [];
                                                 results[app._id].delete.push(user._id);
                                                 if (!dry_run) {
-                                                    countlyDb.collection("app_users" + app._id).remove({_id: user._id}, function(err8) {
+                                                    userovoDb.collection("app_users" + app._id).remove({_id: user._id}, function(err8) {
                                                         if (err8) {
                                                             console.log(err8);
                                                         }
@@ -187,7 +187,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                                         results[app._id].delete = results[app._id].delete || [];
                                         results[app._id].delete.push(user._id);
                                         if (!dry_run) {
-                                            countlyDb.collection("app_users" + app._id).remove({_id: user._id}, function(err8) {
+                                            userovoDb.collection("app_users" + app._id).remove({_id: user._id}, function(err8) {
                                                 if (err8) {
                                                     console.log(err8);
                                                 }
@@ -232,7 +232,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                 }
             }
             console.log("Done");
-            countlyDb.close();
+            userovoDb.close();
             drillDb.close();
         }).catch(function(error) {
             console.log(error);
@@ -255,7 +255,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                     }
                 }
             }
-            countlyDb.close();
+            userovoDb.close();
             drillDb.close();
         });
     });

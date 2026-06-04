@@ -1,20 +1,20 @@
 /*
- *  Generates a list of crashgroup ids that is older than the specified timestamp for each Countly app
+ *  Generates a list of crashgroup ids that is older than the specified timestamp for each Userovo app
  *  If DRY_RUN is false, will also delete those crashgroups and their related documents
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/data-cleanup
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/data-cleanup
  *  Command: node remove_old_crashes.js
  */
 
 // API key here with permission to delete crashgroups, crashes, crashusers
 const API_KEY = '';
-// Countly app id, if not specified will remove crashes from all Countly apps
+// Userovo app id, if not specified will remove crashes from all Userovo apps
 const APP_ID = '';
 // if true, nothing will be deleted
 const DRY_RUN = true;
-// countly instance public url, something like 'https://name.count.ly'
+// userovo instance public url, something like 'https://name.count.ly'
 const SERVER_URL = '';
-// the limit of crashgroups to delete per Countly app
+// the limit of crashgroups to delete per Userovo app
 const BATCH_LIMIT = 1000;
 // format 'YYYY-MM-DD', crashes with last occurence older than this will be removed
 const LAST_TIMESTAMP = '';
@@ -25,7 +25,7 @@ const moment = require('moment-timezone');
 const _ = require('underscore');
 
 const pluginManager = require('../../../plugins/pluginManager.js');
-const request = require('countly-request')(pluginManager.getConfig('security'));
+const request = require('userovo-request')(pluginManager.getConfig('security'));
 
 if (API_KEY.length === 0) {
     console.warn('Please provide an API_KEY');
@@ -108,7 +108,7 @@ pluginManager.dbConnection().then(async(db) => {
         urlObj = new URL(SERVER_URL);
     }
     catch (err) {
-        urlObj = new URL((process.env.COUNTLY_CONFIG_PROTOCOL || "http") + "://" + (process.env.COUNTLY_CONFIG_HOSTNAME || "localhost"));
+        urlObj = new URL((process.env.USEROVO_CONFIG_PROTOCOL || "http") + "://" + (process.env.USEROVO_CONFIG_HOSTNAME || "localhost"));
     }
     urlObj.pathname = 'i/crashes/delete';
 

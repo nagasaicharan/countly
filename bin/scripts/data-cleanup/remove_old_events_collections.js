@@ -2,7 +2,7 @@
 Script to delete events collections after migrating to single collection
 !! DO NOT RUN IT BEFORE MAKING SURE DATA IS MIGRATED TO SINGLE COLLECTION !!
 
- Path: $(countly dir)/bin/scripts/data-cleanup
+ Path: $(userovo dir)/bin/scripts/data-cleanup
 To run this script use the following command
 node <path>/remove_old_events_collections.js
 */
@@ -14,21 +14,21 @@ if (force === false) {
 }
 console.log("Removing old Events collections");
 var failedCn = 0;
-pluginManager.dbConnection().then(async(countlyDb) => {
+pluginManager.dbConnection().then(async(userovoDb) => {
     //get list with all collections
     try {
-        let allCollections = await countlyDb.listCollections().toArray();
+        let allCollections = await userovoDb.listCollections().toArray();
         let collectionNames = allCollections.map(o => o.name);
 
         for (var z = 0; z < collectionNames.length; z++) {
             if (collectionNames[z].indexOf("events") === 0 && collectionNames[z].length > 16) {
                 if (force) {
                     console.log("Dropping collection: " + collectionNames[z]);
-                    await countlyDb.collection(collectionNames[z]).drop();
+                    await userovoDb.collection(collectionNames[z]).drop();
                 }
                 else {
                     await new Promise((resolve) => {
-                        countlyDb.collection(collectionNames[z]).findOne({"merged": {"$ne": true}}, {"_id": 1}, function(err, res) {
+                        userovoDb.collection(collectionNames[z]).findOne({"merged": {"$ne": true}}, {"_id": 1}, function(err, res) {
                             if (err) {
                                 console.log(err);
                                 failedCn++;
@@ -41,7 +41,7 @@ pluginManager.dbConnection().then(async(countlyDb) => {
                                     resolve();
                                 }
                                 else {
-                                    countlyDb.collection(collectionNames[z]).drop(function(err) {
+                                    userovoDb.collection(collectionNames[z]).drop(function(err) {
                                         if (err) {
                                             console.log(err);
                                             failedCn++;
@@ -58,13 +58,13 @@ pluginManager.dbConnection().then(async(countlyDb) => {
     }
     catch (error) {
         console.log(`Error removing old events collections: ${error}`);
-        countlyDb.close();
+        userovoDb.close();
     }
     finally {
         if (failedCn > 0) {
             console.log("Failed to remove collections: ", failedCn);
         }
         console.log("Done");
-        countlyDb.close();
+        userovoDb.close();
     }
 });

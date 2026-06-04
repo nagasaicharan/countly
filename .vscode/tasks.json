@@ -6,13 +6,13 @@
             "type": "shell",
             "command": "./.vscode/create_worktrees.sh",
             "options": {
-                "cwd": "/opt/countly"
+                "cwd": "/opt/userovo"
             }
         },
         {
-            "label": "Kill Countly Processes",
+            "label": "Kill Userovo Processes",
             "type": "shell",
-            "command": "sudo kill -9 $(ps aux | grep 'countly' | grep -v 'grep' | awk '{print $2}')",
+            "command": "sudo kill -9 $(ps aux | grep 'userovo' | grep -v 'grep' | awk '{print $2}')",
             "problemMatcher": [],
             "group": "none"
         },
@@ -85,7 +85,7 @@
             "command": "node plugin.js enable ${input:pluginName}",
             "options": {
                 "env": {
-                    "COUNTLY_CONFIG__SYMLINKED": "true",
+                    "USEROVO_CONFIG__SYMLINKED": "true",
                     "FORCE_NPM_INSTALL": "true"
                 },
                 "cwd": "${workspaceFolder}/bin/commands/scripts"
@@ -97,7 +97,7 @@
             "command": "node plugin.js disable ${input:pluginName}",
             "options": {
                 "env": {
-                    "COUNTLY_CONFIG__SYMLINKED": "true"
+                    "USEROVO_CONFIG__SYMLINKED": "true"
                 },
                 "cwd": "${workspaceFolder}/bin/commands/scripts"
             }
@@ -112,7 +112,7 @@
             ],
             "options": {
                 "env": {
-                    "COUNTLY_CONFIG__SYMLINKED": "true"
+                    "USEROVO_CONFIG__SYMLINKED": "true"
                 },
                 "cwd": "${workspaceFolder}"
             },
@@ -132,7 +132,7 @@
             "id": "dirName",
             "type": "promptString",
             "description": "Enter the plugin directory name:",
-            "default": "my-countly"
+            "default": "my-userovo"
         },
         {
             "type": "promptString",

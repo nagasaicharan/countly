@@ -2,13 +2,13 @@ const pluginManager = require('../../../../plugins/pluginManager.js');
 
 console.log("Assign creation info to cohorts from systemlogs");
 
-pluginManager.dbConnection().then(async(countlyDb) => {
+pluginManager.dbConnection().then(async(userovoDb) => {
 
     var requests = [];
 
     async function update(cohort) {
         try {
-            var log = await countlyDb.collection('systemlogs').findOne({ 'i._id': cohort._id, 'a': "cohort_added" });
+            var log = await userovoDb.collection('systemlogs').findOne({ 'i._id': cohort._id, 'a': "cohort_added" });
             if (log) {
                 requests.push({
                     'updateOne': {
@@ -22,7 +22,7 @@ pluginManager.dbConnection().then(async(countlyDb) => {
                     //Execute per 500 operations and re-init
                     console.log("Flushing changes:" + requests.length);
                     try {
-                        await countlyDb.collection('cohorts').bulkWrite(requests);
+                        await userovoDb.collection('cohorts').bulkWrite(requests);
                     }
                     catch (err) {
                         console.error(err);
@@ -37,7 +37,7 @@ pluginManager.dbConnection().then(async(countlyDb) => {
     }
 
     try {
-        var cohorts = await countlyDb.collection('cohorts').find({ $or: [{ 'creator': null }, { 'created_at': null }] }).toArray();
+        var cohorts = await userovoDb.collection('cohorts').find({ $or: [{ 'creator': null }, { 'created_at': null }] }).toArray();
         if (cohorts.length == 0) {
             console.log("No changes");
         }
@@ -48,7 +48,7 @@ pluginManager.dbConnection().then(async(countlyDb) => {
             if (requests.length > 0) {
                 console.log("Flushing changes:" + requests.length);
                 try {
-                    await countlyDb.collection('cohorts').bulkWrite(requests);
+                    await userovoDb.collection('cohorts').bulkWrite(requests);
                 }
                 catch (err) {
                     console.error(err);
@@ -61,6 +61,6 @@ pluginManager.dbConnection().then(async(countlyDb) => {
         console.log(err);
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
     }
 });

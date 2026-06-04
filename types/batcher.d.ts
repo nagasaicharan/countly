@@ -1,4 +1,4 @@
-// Type definitions for Countly Database Batcher
+// Type definitions for Userovo Database Batcher
 // Generated from /api/parts/data/batcher.js
 
 import { Db, Collection, BulkWriteOptions } from "mongodb";
@@ -132,7 +132,7 @@ declare class InsertBatcher {
    * Provide a document to insert into collection
    * @param collection - Name of the collection where to insert data
    * @param doc - One document or array of documents to insert
-   * @param db - Name of the database for which to write data (default: "countly")
+   * @param db - Name of the database for which to write data (default: "userovo")
    */
   insert(collection: string, doc: Record<string, any> | Record<string, any>[], db?: string): void;
 }
@@ -193,7 +193,7 @@ declare class WriteBatcher {
    * Get operation on document by id (returns reference for modification)
    * @param collection - Name of the collection where to update data
    * @param id - ID of the document
-   * @param db - Name of the database for which to write data (default: "countly")
+   * @param db - Name of the database for which to write data (default: "userovo")
    * @returns BulkWrite query for document by reference
    */
   get(collection: string, id: string, db?: string): Record<string, any>;
@@ -203,7 +203,7 @@ declare class WriteBatcher {
    * @param collection - Name of the collection where to update data
    * @param id - ID of the document
    * @param operation - MongoDB update operation
-   * @param db - Name of the database for which to write data (default: "countly")
+   * @param db - Name of the database for which to write data (default: "userovo")
    * @param options - Options for operation (upsert control)
    */
   add(collection: string, id: string, operation: Record<string, any>, db?: string, options?: AddOptions): void;

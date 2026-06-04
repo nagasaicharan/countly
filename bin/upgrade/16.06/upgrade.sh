@@ -18,8 +18,8 @@ bash "$DIR/scripts/detect.init.sh"
 #remove previous dependencies, as they need to be rebuild for new nodejs version
 rm -rf "$DIR/../node_modules"
 
-#install dependencies, process files and restart countly
-countly upgrade
+#install dependencies, process files and restart userovo
+userovo upgrade
 
 #install push dependencies
 bash "$DIR/scripts/install.nghttp2.sh"
@@ -27,12 +27,12 @@ bash "$DIR/scripts/install.nghttp2.sh"
 (cd "$DIR/.." ; npm install readable-stream)
 
 #upgrade live plugin if it is installed
-countly plugin upgrade push
-countly plugin upgrade live
-countly plugin upgrade reports
+userovo plugin upgrade push
+userovo plugin upgrade live
+userovo plugin upgrade reports
 
 #for those who had drill bookmark api plugin, it is now in core
-countly plugin disable drillbookmarks
+userovo plugin disable drillbookmarks
 
-countly update sdk-web
-countly upgrade
+userovo update sdk-web
+userovo upgrade

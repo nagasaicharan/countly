@@ -1,10 +1,10 @@
 var countlyModel = require('./countly.model.js'),
-    countlyCommon = require('./countly.common.js');
+    userovoCommon = require('./userovo.common.js');
 
 /**
 * This module defines default model to handle users collection data
-* @module "api/lib/countly.users"
-* @extends module:api/lib/countly.model~countlyMetric
+* @module "api/lib/userovo.users"
+* @extends module:api/lib/userovo.model~userovoMetric
 */
 
 /**
@@ -12,16 +12,16 @@ var countlyModel = require('./countly.model.js'),
 * @returns {object} new model
 */
 function create() {
-    /** @lends module:api/lib/countly.users */
-    var countlySession = countlyModel.create();
-    countlySession.setMetrics(["t", "n", "u", "d", "e", "m", "p"]);
-    countlySession.setUniqueMetrics(["u", "m", "p"]);
+    /** @lends module:api/lib/userovo.users */
+    var userovoSession = countlyModel.create();
+    userovoSession.setMetrics(["t", "n", "u", "d", "e", "m", "p"]);
+    userovoSession.setUniqueMetrics(["u", "m", "p"]);
 
     /**
     * Get main dashboard data, which is displayed on main dashboard
     * @returns {object} dashboard data about users and sessions
     */
-    countlySession.getSessionData = function() {
+    userovoSession.getSessionData = function() {
         var map = {
             t: "total_sessions",
             n: "new_users",
@@ -30,7 +30,7 @@ function create() {
             e: "events"
         };
         var ret = {};
-        var data = countlyCommon.getDashboardData(countlySession.getDb(), ["t", "n", "u", "d", "e"], ["u"], {u: countlySession.getTotalUsersObj().users}, {u: countlySession.getTotalUsersObj(true).users});
+        var data = userovoCommon.getDashboardData(userovoSession.getDb(), ["t", "n", "u", "d", "e"], ["u"], {u: userovoSession.getTotalUsersObj().users}, {u: userovoSession.getTotalUsersObj(true).users});
         for (let i in data) {
             ret[map[i]] = data[i];
         }
@@ -40,7 +40,7 @@ function create() {
         ret.total_time["prev-total"] /= 60;
 
         //calculate average duration
-        var changeAvgDuration = countlyCommon.getPercentChange(
+        var changeAvgDuration = userovoCommon.getPercentChange(
             (ret.total_sessions["prev-total"] === 0) ? 0 : ret.total_time["prev-total"] / ret.total_sessions["prev-total"],
             (ret.total_sessions.total === 0) ? 0 : ret.total_time.total / ret.total_sessions.total);
         ret.avg_time = {
@@ -50,13 +50,13 @@ function create() {
             "trend": changeAvgDuration.trend
         };
 
-        ret.total_time.total = countlyCommon.timeString(ret.total_time.total);
-        ret.total_time["prev-total"] = countlyCommon.timeString(ret.total_time["prev-total"]);
-        ret.avg_time.total = countlyCommon.timeString(ret.avg_time.total);
-        ret.avg_time["prev-total"] = countlyCommon.timeString(ret.avg_time["prev-total"]);
+        ret.total_time.total = userovoCommon.timeString(ret.total_time.total);
+        ret.total_time["prev-total"] = userovoCommon.timeString(ret.total_time["prev-total"]);
+        ret.avg_time.total = userovoCommon.timeString(ret.avg_time.total);
+        ret.avg_time["prev-total"] = userovoCommon.timeString(ret.avg_time["prev-total"]);
 
         //calculate average events
-        var changeAvgEvents = countlyCommon.getPercentChange(
+        var changeAvgEvents = userovoCommon.getPercentChange(
             (ret.total_users["prev-total"] === 0) ? 0 : ret.events["prev-total"] / ret.total_users["prev-total"],
             (ret.total_users.total === 0) ? 0 : ret.events.total / ret.total_users.total);
         ret.avg_requests = {
@@ -83,7 +83,7 @@ function create() {
     * @param {object} options - options object (options.bucket - daily or monthly)
     * @returns {array} with metric data objects
     */
-    countlySession.getSubperiodData = function(options) {
+    userovoSession.getSubperiodData = function(options) {
 
         var dataProps = [
             { name: "t" },
@@ -93,8 +93,8 @@ function create() {
             { name: "e" }
         ];
         options = options || {};
-        return countlyCommon.extractData(countlySession.getDb(), countlySession.clearObject, dataProps, countlyCommon.calculatePeriodObject(null, options.bucket));
+        return userovoCommon.extractData(userovoSession.getDb(), userovoSession.clearObject, dataProps, userovoCommon.calculatePeriodObject(null, options.bucket));
     };
-    return countlySession;
+    return userovoSession;
 }
 module.exports = create;

@@ -1,23 +1,23 @@
 var plugins = require('../../pluginManager.js');
 var exported = {};
-var countlyConfig = require('../../../frontend/express/config', 'dont-enclose');
-var countlyFs = require('../../../api/utils/countlyFs.js');
+var userovoConfig = require('../../../frontend/express/config', 'dont-enclose');
+var userovoFs = require('../../../api/utils/userovoFs.js');
 var common = require('../../../api/utils/common.js');
 var path = require('path');
 var log = common.log('dashboards:frontend');
 
 (function(plugin) {
-    plugin.init = function(/*app, countlyDb*/) {
+    plugin.init = function(/*app, userovoDb*/) {
 
     };
 
     plugin.renderDashboard = function(ob) {
-        ob.data.countlyGlobal.sharing_status = plugins.getConfig("dashboards").sharing_status;
-        ob.data.countlyGlobal.allow_public_dashboards = plugins.getConfig("dashboards").allow_public_dashboards;
+        ob.data.userovoGlobal.sharing_status = plugins.getConfig("dashboards").sharing_status;
+        ob.data.userovoGlobal.allow_public_dashboards = plugins.getConfig("dashboards").allow_public_dashboards;
     };
 
-    plugin.staticPaths = function(app/*, countlyDb*/) {
-        app.get(countlyConfig.path + "/dashboards/images/screenshots/*", function(req, res) {
+    plugin.staticPaths = function(app/*, userovoDb*/) {
+        app.get(userovoConfig.path + "/dashboards/images/screenshots/*", function(req, res) {
             if (!req || !req.params) {
                 return res.send(false);
             }
@@ -29,12 +29,12 @@ var log = common.log('dashboards:frontend');
             if (!requestPath) {
                 return res.send(false);
             }
-            countlyFs.getStats("screenshots", requestPath, {id: "dashboards/" + fileName}, function(err, stats) {
+            userovoFs.getStats("screenshots", requestPath, {id: "dashboards/" + fileName}, function(err, stats) {
                 if (err || !stats || !stats.size) {
                     return res.send(false);
                 }
 
-                countlyFs.getStream("screenshots", requestPath, {id: "dashboards/" + fileName}, function(err2, stream) {
+                userovoFs.getStream("screenshots", requestPath, {id: "dashboards/" + fileName}, function(err2, stream) {
                     if (err2 || !stream) {
                         return res.send(false);
                     }

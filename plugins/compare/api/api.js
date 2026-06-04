@@ -1,8 +1,8 @@
 var exported = {},
     plugins = require('../../pluginManager.js'),
     countlyModel = require('../../../api/lib/countly.model.js'),
-    countlySession = countlyModel.load("users"),
-    countlyCommon = require('../../../api/lib/countly.common.js'),
+    userovoSession = countlyModel.load("users"),
+    userovoCommon = require('../../../api/lib/userovo.common.js'),
     common = require('../../../api/utils/common.js'),
     fetch = require('../../../api/parts/data/fetch.js'),
     crypto = require('crypto'),
@@ -21,7 +21,7 @@ const FEATURE_NAME = 'compare';
     * @apiName CompareEvents
     * @apiGroup Compare
     * @apiDescription Compare Events
-    * @apiQuery {String} period Default period format for Countly
+    * @apiQuery {String} period Default period format for Userovo
     * @apiQuery {String} events stringified argument with  an array of events to be compared
     * Example: [
                 "Fund Transfer Begin",
@@ -106,7 +106,7 @@ const FEATURE_NAME = 'compare';
     * @apiName CompareApps
     * @apiGroup Compare
     * @apiDescription Compare Apps
-    * @apiQuery {String} period Default period format for Countly
+    * @apiQuery {String} period Default period format for Userovo
     * @apiQuery {String} apps stringified argument with  an array of apps to be compared
     * Example: [
                     "6263b8cef96e9e029d9802dc",
@@ -188,7 +188,7 @@ const FEATURE_NAME = 'compare';
                         ],
                         dataProps = [];
                     dataProps.push(props);
-                    return countlyCommon.extractChartData(db, countlySession.clearObject, chartData, dataProps).chartDP[0].data;
+                    return userovoCommon.extractChartData(db, userovoSession.clearObject, chartData, dataProps).chartDP[0].data;
                 }
 
                 /**
@@ -199,7 +199,7 @@ const FEATURE_NAME = 'compare';
                     params.app_id = inAppId + "";
                 }
 
-                countlyCommon.setTimezone(params.appTimezone);
+                userovoCommon.setTimezone(params.appTimezone);
 
                 async.map(apps, function(app, callback) {
                     console.log(JSON.stringify(app));
@@ -212,10 +212,10 @@ const FEATURE_NAME = 'compare';
                         setAppId(app._id);
 
                         fetch.getTotalUsersObj("users", params, function(dbTotalUsersObj) {
-                            countlySession.setDb(usersDoc || {});
-                            countlySession.setTotalUsersObj(fetch.formatTotalUsersObj(dbTotalUsersObj), fetch.formatTotalUsersObj(dbTotalUsersObj, null, true));
+                            userovoSession.setDb(usersDoc || {});
+                            userovoSession.setTotalUsersObj(fetch.formatTotalUsersObj(dbTotalUsersObj), fetch.formatTotalUsersObj(dbTotalUsersObj, null, true));
 
-                            var sessionData = countlySession.getSessionData();
+                            var sessionData = userovoSession.getSessionData();
                             var charts = {
                                 "total-users": extractData(usersDoc || {}, {
                                     name: "t",

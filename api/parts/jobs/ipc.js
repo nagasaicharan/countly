@@ -150,7 +150,7 @@ class IdStartsWithChannel extends Channel {
 
 
 
-/** Countly master process, just pass through messages to specific pid in `to` field of message */
+/** Userovo master process, just pass through messages to specific pid in `to` field of message */
 class PassThrough {
     /** Constructor */
     constructor() {
@@ -253,7 +253,7 @@ class CentralSuper {
     }
 }
 
-/** Countly master process, just pass through messages to specific pid in `to` field of message */
+/** Userovo master process, just pass through messages to specific pid in `to` field of message */
 class CentralMaster extends CentralSuper {
 
     /**
@@ -329,7 +329,7 @@ class CentralMaster extends CentralSuper {
     }
 }
 
-/** Countly master process, just pass through messages to specific pid in `to` field of message */
+/** Userovo master process, just pass through messages to specific pid in `to` field of message */
 class CentralWorker extends CentralSuper {
     /**
      * Constructor

@@ -1,7 +1,7 @@
 /**
  *  Modifies all member emails and where these emails are used to lowercase
- *  Server: countly
- *  Path: countly dir/bin/scripts/convert_member_emails_to_lowercase.js
+ *  Server: userovo
+ *  Path: userovo dir/bin/scripts/convert_member_emails_to_lowercase.js
  *  Command: convert_member_emails_to_lowercase.js
  */
 
@@ -149,10 +149,10 @@ function updateReportEmails(db) {
 }
 
 async function context() {
-    const countlyDb = await pluginManager.dbConnection("countly");
+    const userovoDb = await pluginManager.dbConnection("userovo");
 
     try {
-        await updateCohortSharedEmails(countlyDb);
+        await updateCohortSharedEmails(userovoDb);
         console.log("Cohorts update successful.");
     }
     catch (err) {
@@ -160,7 +160,7 @@ async function context() {
     }
 
     try {
-        await updateNotesSharedEmails(countlyDb);
+        await updateNotesSharedEmails(userovoDb);
         console.log("Notes update successful.");
     }
     catch (err) {
@@ -168,7 +168,7 @@ async function context() {
     }
 
     try {
-        await updateDashboardSharedEmails(countlyDb);
+        await updateDashboardSharedEmails(userovoDb);
         console.log("Dashboards update successful.");
     }
     catch (err) {
@@ -176,7 +176,7 @@ async function context() {
     }
 
     try {
-        await updateMemberEmails(countlyDb);
+        await updateMemberEmails(userovoDb);
         console.log("Members update successful.");
     }
     catch (err) {
@@ -184,14 +184,14 @@ async function context() {
     }
 
     try {
-        await updateReportEmails(countlyDb);
+        await updateReportEmails(userovoDb);
         console.log("Reports update successful.");
     }
     catch (err) {
         console.error("Error updating dashboards:", err);
     }
 
-    countlyDb.close();
+    userovoDb.close();
     console.log("All done!");
 }
 

@@ -1,0 +1,262 @@
+/*global UserovoHelpers, userovoDeviceDetails, userovoAppVersion, userovoCommon, _, jQuery, userovoOsMapping*/
+(function() {
+
+    window.userovoDeviceDetails = window.userovoDeviceDetails || {};
+    UserovoHelpers.createMetricModel(window.userovoDeviceDetails, {name: "device_details", estOverrideMetric: "platforms"}, jQuery);
+
+    //If you add something to the os mappings, dont forget to add it to the os mappings in the backend
+    userovoDeviceDetails.os_mapping = userovoOsMapping;
+
+    userovoDeviceDetails.getCleanVersion = function(version) {
+        for (var i in userovoDeviceDetails.os_mapping) {
+            version = version.replace(new RegExp("^" + userovoDeviceDetails.os_mapping[i].short, "g"), "");
+        }
+        return version;
+    };
+
+    userovoDeviceDetails.callback = function(isRefresh, data) {
+        if (isRefresh) {
+            userovoAppVersion.refresh(data);
+        }
+        else {
+            userovoAppVersion.initialize();
+        }
+    };
+
+    userovoDeviceDetails.getPlatforms = function() {
+        return userovoDeviceDetails.getMeta("os");
+    };
+
+    userovoDeviceDetails.checkOS = function(os, data, osName) {
+        return new RegExp("^" + "\\[" + osName + "\\]").test(data);
+    };
+
+    userovoDeviceDetails.getPlatformData = function() {
+
+        var chartData = userovoCommon.extractTwoLevelData(userovoDeviceDetails.getDb(), userovoDeviceDetails.getMeta("os"), userovoDeviceDetails.clearObject, [
+            {
+                name: "os_",
+                func: function(rangeArr) {
+                    if (userovoDeviceDetails.os_mapping[rangeArr.toLowerCase()]) {
+                        return userovoDeviceDetails.os_mapping[rangeArr.toLowerCase()].name;
+                    }
+                    return rangeArr;
+                }
+            },
+            {
+                name: "origos_",
+                func: function(rangeArr) {
+                    return rangeArr;
+                }
+            },
+            { "name": "t" },
+            { "name": "u" },
+            { "name": "n" }
+        ], "platforms");
+        chartData.chartData = userovoCommon.mergeMetricsByName(chartData.chartData, "os_");
+        var platformNames = _.pluck(chartData.chartData, 'os_'),
+            platformTotal = _.pluck(chartData.chartData, 'u'),
+            chartData2 = [];
+
+        /*var sum = _.reduce(platformTotal, function(memo, num) {
+            return memo + num;
+        }, 0);*/
+
+        for (var i = 0; i < platformNames.length; i++) {
+            chartData2[i] = {
+                data: [
+                    [0, platformTotal[i]]
+                ],
+                label: platformNames[i]
+            };
+        }
+
+        chartData.chartDP = {};
+        chartData.chartDP.dp = chartData2;
+
+        return chartData;
+    };
+
+    userovoDeviceDetails.getResolutionData = function() {
+        var chartData = userovoCommon.extractTwoLevelData(userovoDeviceDetails.getDb(), userovoDeviceDetails.getMeta("resolutions"), userovoDeviceDetails.clearObject, [
+            {
+                name: "resolution",
+                func: function(rangeArr) {
+                    return rangeArr;
+                }
+            },
+            {
+                name: "width",
+                func: function(rangeArr) {
+                    return "<a>" + rangeArr.split("x")[0] + "</a>";
+                }
+            },
+            {
+                name: "height",
+                func: function(rangeArr) {
+                    return "<a>" + rangeArr.split("x")[1] + "</a>";
+                }
+            },
+            { "name": "t" },
+            { "name": "u" },
+            { "name": "n" }
+        ], "resolutions");
+
+        var resolutions = _.pluck(chartData.chartData, 'resolution'),
+            resolutionTotal = _.pluck(chartData.chartData, 'u'),
+            resolutionNew = _.pluck(chartData.chartData, 'n'),
+            chartData2 = [],
+            chartData3 = [];
+
+        /*var sum = _.reduce(resolutionTotal, function(memo, num) {
+            return memo + num;
+        }, 0);*/
+        var i = 0;
+        for (i = 0; i < resolutions.length; i++) {
+            //var percent = (resolutionTotal[i] / sum) * 100;
+            chartData2[i] = {
+                data: [
+                    [0, resolutionTotal[i]]
+                ],
+                label: resolutions[i]
+            };
+        }
+
+        /*var sum2 = _.reduce(resolutionNew, function(memo, num) {
+            return memo + num;
+        }, 0);*/
+
+        for (i = 0; i < resolutions.length; i++) {
+            //var percent = (resolutionNew[i] / sum) * 100;
+            chartData3[i] = {
+                data: [
+                    [0, resolutionNew[i]]
+                ],
+                label: resolutions[i]
+            };
+        }
+
+        chartData.chartDPTotal = {};
+        chartData.chartDPTotal.dp = chartData2;
+
+        chartData.chartDPNew = {};
+        chartData.chartDPNew.dp = chartData3;
+
+        return chartData;
+    };
+
+    userovoDeviceDetails.__getBars = userovoDeviceDetails.getBars;
+    userovoDeviceDetails.getBars = function(metric) {
+        var data = userovoDeviceDetails.__getBars(metric);
+
+        if (metric === "os_versions") {
+            for (var i = 0; i < data.length; i++) {
+                data[i].name = userovoDeviceDetails.fixOSVersion(data[i].name);
+            }
+        }
+
+        return data;
+    };
+
+    userovoDeviceDetails.fixOSVersion = function(osName) {
+        osName = (osName + "").replace(/:/g, ".");
+
+        for (var i in userovoDeviceDetails.os_mapping) {
+            osName = osName.replace(new RegExp("^" + userovoDeviceDetails.os_mapping[i].short, "g"), userovoDeviceDetails.os_mapping[i].name + " ");
+        }
+        return osName;
+    };
+
+    userovoDeviceDetails.eliminateOSVersion = function(data, osSegmentation, segment, fullname) {
+        var oSVersionData = JSON.parse(JSON.stringify(data));
+        var chartData = [];
+        var osName = osSegmentation;
+        if (osSegmentation) {
+            if (userovoDeviceDetails.os_mapping[osSegmentation.toLowerCase()]) {
+                osName = userovoDeviceDetails.os_mapping[osSegmentation.toLowerCase()].short;
+            }
+        }
+
+        if (oSVersionData.chartData) {
+            var regTest = new RegExp("^" + osName);
+            var reg = new RegExp("^" + osName);
+            for (var i = 0; i < oSVersionData.chartData.length; i++) {
+                var shouldDelete = true;
+                oSVersionData.chartData[i][segment] = oSVersionData.chartData[i][segment].replace(/:/g, ".");
+                if (regTest.test(oSVersionData.chartData[i][segment])) {
+                    shouldDelete = false;
+                    if (!fullname) {
+                        oSVersionData.chartData[i][segment] = oSVersionData.chartData[i][segment].replace(reg, "");
+                    }
+                }
+                else if (userovoDeviceDetails.checkOS && userovoDeviceDetails.checkOS(osSegmentation, oSVersionData.chartData[i][segment], osName)) {
+                    oSVersionData.chartData[i][segment] = oSVersionData.chartData[i][segment].replace("[" + osName + "]", "");
+                    shouldDelete = false;
+                }
+                if (!shouldDelete) {
+                    chartData.push(oSVersionData.chartData[i]);
+                }
+            }
+        }
+
+        oSVersionData.chartData = chartData;
+
+        return oSVersionData;
+    };
+
+    userovoDeviceDetails.getOSVersionList = function(name) {
+        var codes = {};
+        var lowerCase = name.toLowerCase();
+        for (var i in userovoDeviceDetails.os_mapping) {
+            if (userovoDeviceDetails.os_mapping[i].name.toLowerCase().startsWith(lowerCase)) {
+                codes[userovoDeviceDetails.os_mapping[i].short] = true;
+            }
+            else {
+                var changed = lowerCase.replace(new RegExp("^" + userovoDeviceDetails.os_mapping[i].name.toLowerCase(), "g"), userovoDeviceDetails.os_mapping[i].short);
+                changed = changed.replace(/ /g, ""); //removes spaces
+                changed = (changed + "").replace(/\./g, ":");
+                codes[changed] = true;
+            }
+
+        }
+        return Object.keys(codes);
+    };
+
+    userovoDeviceDetails.fixBarSegmentData = function(segment, rangeData) {
+        var i;
+        if (segment === "os_versions") {
+            var _os = userovoDeviceDetails.getPlatforms();
+            var newRangeData = {chartData: []};
+            var doneOs = {};
+            for (i = 0; i < _os.length; i++) {
+                var osSegmentation = _os[i];
+
+                if (doneOs[osSegmentation.toLowerCase()]) {
+                    continue;
+                }
+
+                doneOs[osSegmentation.toLowerCase()] = 1;
+                //Important to note here that segment parameter is passed as "range" because its extracted under name range from extractTwoLevelData
+                var fixedRangeData = userovoDeviceDetails.eliminateOSVersion(rangeData, osSegmentation, "range", true);
+                newRangeData.chartData = [].concat.apply([], [newRangeData.chartData, fixedRangeData.chartData]);
+            }
+
+            rangeData = newRangeData.chartData.length ? newRangeData : rangeData;
+        }
+
+        if (segment === "os") {
+            var chartData = rangeData.chartData;
+            for (i = 0; i < chartData.length; i++) {
+                if (userovoDeviceDetails.os_mapping[chartData[i].range.toLowerCase()]) {
+                    chartData[i].os = userovoDeviceDetails.os_mapping[chartData[i].range.toLowerCase()].name;
+                }
+            }
+
+            chartData = userovoCommon.mergeMetricsByName(chartData, "os");
+            rangeData.chartData = chartData;
+        }
+
+        return rangeData;
+    };
+
+}());

@@ -1,6 +1,6 @@
 # Frontend Agent Guide
 
-This guide is for AI agents and developers working in the `frontend/` dashboard of Countly Server.
+This guide is for AI agents and developers working in the `frontend/` dashboard of Userovo Server.
 
 ## Essentials
 - **Tech:** Vue 2, Element UI

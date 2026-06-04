@@ -5,11 +5,11 @@ var plugins = require('../../pluginManager.js');
 const fs = require('fs');
 const fse = require('fs-extra');
 var path = require('path');
-var countlyFs = require('../../../api/utils/countlyFs.js');
+var userovoFs = require('../../../api/utils/userovoFs.js');
 var cp = require('child_process'); //call process
 var spawn = cp.spawn; //for calling comannd line
 const os = require('os'); //hostname, eol
-const request = require('countly-request')(plugins.getConfig("security"));
+const request = require('userovo-request')(plugins.getConfig("security"));
 var common = require('../../../api/utils/common.js');
 
 module.exports = function(my_db) {
@@ -38,20 +38,20 @@ module.exports = function(my_db) {
     };
     var create_con_strings = function() {
         var dbargs = [];
-        var db_params = plugins.getDbConnectionParams('countly');
+        var db_params = plugins.getDbConnectionParams('userovo');
         for (var p in db_params) {
             dbargs.push("--" + p);
             dbargs.push(db_params[p]);
         }
         var dbargs_drill = [];
-        db_params = plugins.getDbConnectionParams('countly_drill');
+        db_params = plugins.getDbConnectionParams('userovo_drill');
         for (var k in db_params) {
             dbargs_drill.push("--" + k);
             dbargs_drill.push(db_params[k]);
         }
 
         var dbargs_out = [];
-        db_params = plugins.getDbConnectionParams('countly_out');
+        db_params = plugins.getDbConnectionParams('userovo_out');
         for (var r in db_params) {
             dbargs_out.push("--" + r);
             dbargs_out.push(db_params[r]);
@@ -502,8 +502,8 @@ module.exports = function(my_db) {
             var scripts = [];
             var dbargs = [];
             var dbargs0 = [];
-            var countly_db_name = "";
-            var db_params = plugins.getDbConnectionParams('countly');
+            var userovo_db_name = "";
+            var db_params = plugins.getDbConnectionParams('userovo');
             for (var p in db_params) {
                 dbargs.push("--" + p);
                 dbargs.push(db_params[p]);
@@ -512,19 +512,19 @@ module.exports = function(my_db) {
                     dbargs0.push(db_params[p]);
                 }
                 else {
-                    countly_db_name = db_params[p];
+                    userovo_db_name = db_params[p];
                 }
             }
 
             var dbargs_drill = [];
-            db_params = plugins.getDbConnectionParams('countly_drill');
+            db_params = plugins.getDbConnectionParams('userovo_drill');
             for (var z in db_params) {
                 dbargs_drill.push("--" + z);
                 dbargs_drill.push(db_params[z]);
             }
 
             var dbargs_out = [];
-            db_params = plugins.getDbConnectionParams('countly_out');
+            db_params = plugins.getDbConnectionParams('userovo_out');
             for (var g in db_params) {
                 dbargs_out.push("--" + g);
                 dbargs_out.push(db_params[g]);
@@ -540,9 +540,9 @@ module.exports = function(my_db) {
                     }
                     else {
                         //remove redirect field and add it after dump.
-                        scripts.push({cmd: 'mongo', args: [countly_db_name, ...dbargs0, "--eval", 'db.apps.update({ "_id": ObjectId("' + appid + '")}, { "$unset": { "redirect_url": 1 } })']});
+                        scripts.push({cmd: 'mongo', args: [userovo_db_name, ...dbargs0, "--eval", 'db.apps.update({ "_id": ObjectId("' + appid + '")}, { "$unset": { "redirect_url": 1 } })']});
                         scripts.push({cmd: 'mongodump', args: [...dbargs, "--collection", "apps", "-q", '{ "_id": {"$oid":"' + appid + '"}}', "--out", my_folder]});
-                        scripts.push({cmd: 'mongo', args: [countly_db_name, ...dbargs0, "--eval", 'db.apps.update({ "_id": ObjectId("' + appid + '")}, { $set: { redirect_url: "' + res.redirect_url + '" } })']});
+                        scripts.push({cmd: 'mongo', args: [userovo_db_name, ...dbargs0, "--eval", 'db.apps.update({ "_id": ObjectId("' + appid + '")}, { $set: { redirect_url: "' + res.redirect_url + '" } })']});
                     }
 
                     var appDocs = ['app_users', 'metric_changes', 'app_crashes', 'app_crashgroups', 'app_crashusers', 'app_nxret', 'app_viewdata', 'app_views', 'app_userviews', 'app_viewsmeta', 'blocked_users', 'campaign_users', 'consent_history', 'crashes_jira', 'event_flows', 'timesofday', 'feedback', 'push_', 'apm', "nps", "survey", "completed_surveys"];
@@ -657,9 +657,9 @@ module.exports = function(my_db) {
     var copy_app_image = function(data) {
         return new Promise(function(resolve) {
             var imagepath = path.resolve(__dirname, './../../../frontend/express/public/appimages/' + data.appid + ".png");
-            countlyFs.exists("appimages", imagepath, {id: data.appid + ".png"}, function(err, exist) {
+            userovoFs.exists("appimages", imagepath, {id: data.appid + ".png"}, function(err, exist) {
                 if (exist) {
-                    countlyFs.getStream("appimages", imagepath, {id: data.appid + ".png"}, function(err1, stream) {
+                    userovoFs.getStream("appimages", imagepath, {id: data.appid + ".png"}, function(err1, stream) {
                         if (!err1 && stream) {
                             var wstream = fs.createWriteStream(data.image_folder + '/' + data.appid + '.png');
 
@@ -738,7 +738,7 @@ module.exports = function(my_db) {
             if (folder === false) {
                 reject(Error('Bad Archive'));
             }
-            folder = folder + '/countly_app_icons';
+            folder = folder + '/userovo_app_icons';
             if (!fs.existsSync(folder)) {
                 resolve("There are no icons");
             }
@@ -751,7 +751,7 @@ module.exports = function(my_db) {
                 }
                 Promise.all(objlist.map(function(obj) {
                     return new Promise(function(resolve1, reject1) {
-                        countlyFs.saveFile("appimages", obj.imagepath, obj.source, {id: obj.id}, function(err) {
+                        userovoFs.saveFile("appimages", obj.imagepath, obj.source, {id: obj.id}, function(err) {
                             if (err) {
                                 reject1(err);
                             }
@@ -782,7 +782,7 @@ module.exports = function(my_db) {
             if (folder === false) {
                 reject(Error('Bad Archive'));
             }
-            folder = folder + '/countly_symbolication_files';
+            folder = folder + '/userovo_symbolication_files';
             if (!fs.existsSync(folder)) {
                 resolve("data-migration.there-are-no-symbolication-files");
             }
@@ -802,7 +802,7 @@ module.exports = function(my_db) {
                 else {
                     Promise.all(objlist.map(function(obj) {
                         return new Promise(function(resolve1, reject1) {
-                            countlyFs.saveFile("crash_symbols", obj.imagepath, obj.source, {id: obj.id}, function(err) {
+                            userovoFs.saveFile("crash_symbols", obj.imagepath, obj.source, {id: obj.id}, function(err) {
                                 if (err) {
                                     reject1(err);
                                 }
@@ -856,9 +856,9 @@ module.exports = function(my_db) {
         return new Promise(function(resolve, reject) {
             var tmp_path = path.resolve(__dirname, './../../crash_symbolication/crashsymbols/' + obj.appid + "/" + obj.symbolid + ".cly_symbol");
 
-            countlyFs.exists("crash_symbols", tmp_path, {id: obj.appid + "." + obj.symbolid + ".cly_symbol"}, function(err, exist) {
+            userovoFs.exists("crash_symbols", tmp_path, {id: obj.appid + "." + obj.symbolid + ".cly_symbol"}, function(err, exist) {
                 if (exist) {
-                    countlyFs.getStream("crash_symbols", tmp_path, {id: obj.appid + "." + obj.symbolid + ".cly_symbol"}, function(err1, stream) {
+                    userovoFs.getStream("crash_symbols", tmp_path, {id: obj.appid + "." + obj.symbolid + ".cly_symbol"}, function(err1, stream) {
                         if (err1 || !stream) {
                             reject();
                         }
@@ -891,7 +891,7 @@ module.exports = function(my_db) {
 
     var copy_symbolication_files = function(data) {
         return new Promise(function(resolve, reject) {
-            //aditional_files:path.resolve(my_folder,'./countly_symbolication_files')
+            //aditional_files:path.resolve(my_folder,'./userovo_symbolication_files')
             db.collection("app_crashsymbols" + data.appid).find().toArray(function(err, res) {
                 if (err) {
                     log.e(err); reject();
@@ -947,7 +947,7 @@ module.exports = function(my_db) {
         var moredata = {"app_ids": imported_ids, "app_names": imported_apps, "exportid": my_exportid, reason: message};
         if (my_params && my_params.qstring && my_params.qstring.exportid) {
             moredata.using_token = true;
-            moredata.token = my_params.qstring.auth_token || my_params.req.headers["countly-token"];
+            moredata.token = my_params.qstring.auth_token || my_params.req.headers["userovo-token"];
             moredata.serverip = my_params.req.headers["x-real-ip"];
             moredata.host = my_params.req.headers.host;
 
@@ -1017,7 +1017,7 @@ module.exports = function(my_db) {
 
             for (let i = 0; i < myfiles.length; i++) {
                 //folder for each app
-                if (myfiles[i] !== '.' && myfiles[i] !== '..' && fs.lstatSync(path.resolve(folder, './' + myfiles[i])).isDirectory() && myfiles[i] !== 'countly_app_icons') {
+                if (myfiles[i] !== '.' && myfiles[i] !== '..' && fs.lstatSync(path.resolve(folder, './' + myfiles[i])).isDirectory() && myfiles[i] !== 'userovo_app_icons') {
                     var subdirectory = fs.readdirSync(path.resolve(folder, './' + myfiles[i]));
                     for (var j = 0; j < subdirectory.length; j++) {
                         if (constr.dbargs.indexOf(subdirectory[j]) > -1) {
@@ -1191,10 +1191,10 @@ module.exports = function(my_db) {
             var scriptobj = [];
             exportid = crypto.createHash('SHA1').update(JSON.stringify(apps)).digest('hex');
             var my_folder = path.resolve(__dirname, './../export/' + exportid);
-            var image_folder = path.resolve(my_folder, './countly_app_icons');
+            var image_folder = path.resolve(my_folder, './userovo_app_icons');
             for (let i = 0; i < apps.length; i++) {
                 let subfolder = path.resolve(my_folder, './' + apps[i]);
-                scriptobj.push({appid: apps[i], my_folder: subfolder, image_folder: image_folder, additional_files: path.resolve(my_folder, './countly_symbolication_files')});
+                scriptobj.push({appid: apps[i], my_folder: subfolder, image_folder: image_folder, additional_files: path.resolve(my_folder, './userovo_symbolication_files')});
             }
 
 
@@ -1291,7 +1291,7 @@ module.exports = function(my_db) {
                     var scriptobj = [];
 
                     //creates dir for app icons
-                    var image_folder = path.resolve(my_folder, './countly_app_icons');
+                    var image_folder = path.resolve(my_folder, './userovo_app_icons');
                     if (!fs.existsSync(image_folder)) {
                         try {
                             fs.mkdirSync(image_folder, 484);
@@ -1303,7 +1303,7 @@ module.exports = function(my_db) {
 
                     for (let i = 0; i < apps.length; i++) {
                         let subfolder = path.resolve(my_folder, './' + apps[i]);
-                        scriptobj.push({appid: apps[i], my_folder: subfolder, image_folder: image_folder, aditional_files: path.resolve(my_folder, './countly_symbolication_files')});
+                        scriptobj.push({appid: apps[i], my_folder: subfolder, image_folder: image_folder, aditional_files: path.resolve(my_folder, './userovo_symbolication_files')});
                         if (!fs.existsSync(subfolder)) {
                             try {
                                 fs.mkdirSync(subfolder, 484);
@@ -1343,7 +1343,7 @@ module.exports = function(my_db) {
                                         }
 
                                         //creates dir for app icons
-                                        var subfolder = path.resolve(my_folder, './countly_app_icons');
+                                        var subfolder = path.resolve(my_folder, './userovo_app_icons');
                                         if (!fs.existsSync(subfolder)) {
                                             try {
                                                 fs.mkdirSync(subfolder, 484);
@@ -1358,7 +1358,7 @@ module.exports = function(my_db) {
                                                 log_me(my_logpath, result0, false);
                                                 if (params.qstring.aditional_files) {
                                                     //creates folder for symbolication files
-                                                    subfolder = path.resolve(my_folder, './countly_symbolication_files');
+                                                    subfolder = path.resolve(my_folder, './userovo_symbolication_files');
                                                     if (!fs.existsSync(subfolder)) {
                                                         try {
                                                             fs.mkdirSync(subfolder, 484);

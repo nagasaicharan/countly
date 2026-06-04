@@ -1,7 +1,7 @@
 /**
  * Script to reset merge count for app_users.
- * Server: countly server
- * Path: countly/bin/scripts/modify-data
+ * Server: userovo server
+ * Path: userovo/bin/scripts/modify-data
  * Command: node resetAppUserMergeCount.js
  */
 const pluginManager = require('../../../plugins/pluginManager.js');
@@ -11,20 +11,20 @@ const Promise = require('bluebird');
 const APPS = []; //leave array empty to process all apps;
 var limit = 0; //increase number if you want to keep some merge count. Only numbers bigger than this will be set to 0.
 
-Promise.all([pluginManager.dbConnection("countly")]).then(async function([countlyDb]) {
+Promise.all([pluginManager.dbConnection("userovo")]).then(async function([userovoDb]) {
     console.log("Connected to databases...");
     var query = {};
     if (APPS.length > 0) {
         APPS.forEach(function(id, index) {
-            APPS[index] = countlyDb.ObjectID(id);
+            APPS[index] = userovoDb.ObjectID(id);
         });
         query = {_id: {$in: APPS}};
     }
 
-    countlyDb.collection("apps").find(query, {"_id": 1}).toArray(function(err, apps) {
+    userovoDb.collection("apps").find(query, {"_id": 1}).toArray(function(err, apps) {
         if (err) {
             console.log(err);
-            countlyDb.close();
+            userovoDb.close();
         }
         else {
             apps = apps || [];
@@ -36,7 +36,7 @@ Promise.all([pluginManager.dbConnection("countly")]).then(async function([countl
                     if (limit > 0) {
                         query["merges"] = {"$gt": limit};
                     }
-                    countlyDb.collection("app_users" + app._id).updateMany(query, {$set: {"merges": 0}}, function(err, rr) {
+                    userovoDb.collection("app_users" + app._id).updateMany(query, {$set: {"merges": 0}}, function(err, rr) {
                         if (err) {
                             console.log("Error resetting merge count for app " + app._id + ": ", err);
                             reject(err);
@@ -51,10 +51,10 @@ Promise.all([pluginManager.dbConnection("countly")]).then(async function([countl
 
             }).then(function() {
                 console.log("Finished resetting merge count.");
-                countlyDb.close();
+                userovoDb.close();
             }).catch(function(error) {
                 console.log("Error resetting merge count: ", error);
-                countlyDb.close();
+                userovoDb.close();
             });
         }
     });

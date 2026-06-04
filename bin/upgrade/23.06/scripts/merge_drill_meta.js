@@ -6,7 +6,7 @@ console.log("Merging all meta");
 
 function process_cohort_docs(options, callback) {
     var app_id = options.app_id + "";
-    options.countlyDrillDB.collection(options.coll).aggregate([{"$match": {'_id': {"$regex": "^cohorts_"}}}, {"$addFields": {"_id": {"$concat": [options.app_id, "_", "$_id"]}, "app_id": app_id, "cohort": true}}, {"$merge": {"into": "drill_meta", "on": "_id", "whenMatched": "keepExisting"}}], function(err) {
+    options.userovoDrillDB.collection(options.coll).aggregate([{"$match": {'_id': {"$regex": "^cohorts_"}}}, {"$addFields": {"_id": {"$concat": [options.app_id, "_", "$_id"]}, "app_id": app_id, "cohort": true}}, {"$merge": {"into": "drill_meta", "on": "_id", "whenMatched": "keepExisting"}}], function(err) {
         if (err) {
             console.log(err);
             callback(err);
@@ -19,7 +19,7 @@ function process_cohort_docs(options, callback) {
 
 function move_biglists(options, callback) {
     var app_id = options.app_id + "";
-    options.countlyDrillDB.collection(options.coll).aggregate([{"$match": {'biglist': true}}, {"$addFields": {"_id": {"$concat": [options.app_id, "_", "$_id"]}, "app_id": app_id}}, {"$merge": {"into": "drill_meta", "on": "_id", "whenMatched": "merge"}}], function(err) {
+    options.userovoDrillDB.collection(options.coll).aggregate([{"$match": {'biglist': true}}, {"$addFields": {"_id": {"$concat": [options.app_id, "_", "$_id"]}, "app_id": app_id}}, {"$merge": {"into": "drill_meta", "on": "_id", "whenMatched": "merge"}}], function(err) {
         if (err) {
             console.log(err);
             callback(err);
@@ -32,9 +32,9 @@ function move_biglists(options, callback) {
 
 async function process_meta_docs(options, callback) {
     var coll = options.coll;
-    var countlyDrillDB = options.countlyDrillDB;
+    var userovoDrillDB = options.userovoDrillDB;
     var app_id = options.app_id;
-    var cursor = await countlyDrillDB.collection(coll).find({});
+    var cursor = await userovoDrillDB.collection(coll).find({});
     var doc = await cursor.next();
     var baseprops = ['status', 'lts'];
     while (doc) {
@@ -155,7 +155,7 @@ async function process_meta_docs(options, callback) {
         }
         if (queries.length > 0) {
             try {
-                await countlyDrillDB.collection("drill_meta").bulkWrite(queries, {ignore_errors: [11000]});
+                await userovoDrillDB.collection("drill_meta").bulkWrite(queries, {ignore_errors: [11000]});
             }
             catch (ee) {
                 if (ee.code !== 11000) {
@@ -167,13 +167,13 @@ async function process_meta_docs(options, callback) {
     }
     callback();
 }
-function merge_meta_from_collection(countlyDB, countlyDrillDB, coll) {
+function merge_meta_from_collection(userovoDB, userovoDrillDB, coll) {
     return new Promise(function(resolve, reject) {
-        //get app_id from collection name and check if app exists in countly
+        //get app_id from collection name and check if app exists in userovo
         var app_id = coll.substring(10);
         console.log('app_id: ' + app_id);
         if (app_id.length > 0) {
-            countlyDB.collection("apps").findOne({_id: countlyDB.ObjectID(app_id)}, function(err, app) {
+            userovoDB.collection("apps").findOne({_id: userovoDB.ObjectID(app_id)}, function(err, app) {
                 if (err) {
                     reject(err);
                     return;
@@ -181,21 +181,21 @@ function merge_meta_from_collection(countlyDB, countlyDrillDB, coll) {
                 else {
                     if (app) {
                         console.log('copying cohort meta');
-                        process_cohort_docs({countlyDrillDB: countlyDrillDB, app_id: app_id, coll: coll}, function(err) {
+                        process_cohort_docs({userovoDrillDB: userovoDrillDB, app_id: app_id, coll: coll}, function(err) {
                             if (err) {
                                 reject(err);
                             }
                             else {
                                 console.log('done');
                                 console.log('copying biglist docs');
-                                move_biglists({countlyDrillDB: countlyDrillDB, app_id: app_id, coll: coll}, function(err) {
+                                move_biglists({userovoDrillDB: userovoDrillDB, app_id: app_id, coll: coll}, function(err) {
                                     if (err) {
                                         console.log(err);
                                     }
                                     //copying meta_up and event meta docs
                                     console.log('done');
                                     console.log('processing meta_up and event meta docs');
-                                    process_meta_docs({countlyDB: countlyDB, countlyDrillDB: countlyDrillDB, app_id: app_id, coll: coll}, function(err) {
+                                    process_meta_docs({userovoDB: userovoDB, userovoDrillDB: userovoDrillDB, app_id: app_id, coll: coll}, function(err) {
                                         if (err) {
                                             reject(err);
                                         }
@@ -221,16 +221,16 @@ function merge_meta_from_collection(countlyDB, countlyDrillDB, coll) {
 
 Promise.all(
     [
-        pluginManager.dbConnection("countly"),
-        pluginManager.dbConnection("countly_drill")
+        pluginManager.dbConnection("userovo"),
+        pluginManager.dbConnection("userovo_drill")
     ])
-    .spread(async function(countlyDB, countlyDrillDB) {
+    .spread(async function(userovoDB, userovoDrillDB) {
         //Getting all drill_meta collections;
-        countlyDrillDB.collections(function(err, colls) {
+        userovoDrillDB.collections(function(err, colls) {
             if (err) {
                 console.log('Script failed. Exiting');
-                countlyDB.close();
-                countlyDrillDB.close();
+                userovoDB.close();
+                userovoDrillDB.close();
             }
             else {
                 //filter out list with only drill_meta collections. but not outr merged collection
@@ -242,17 +242,17 @@ Promise.all(
                 });
 
                 Promise.each(drillMetaCollections, function(coll) {
-                    return merge_meta_from_collection(countlyDB, countlyDrillDB, coll);
+                    return merge_meta_from_collection(userovoDB, userovoDrillDB, coll);
                 }
                 ).then(function() {
                     console.log("All drill meta collections merged");
-                    countlyDB.close();
-                    countlyDrillDB.close();
+                    userovoDB.close();
+                    userovoDrillDB.close();
                 }).catch(function(err5) {
                     console.log(err5);
                     console.log('Script failed. Exiting');
-                    countlyDB.close();
-                    countlyDrillDB.close();
+                    userovoDB.close();
+                    userovoDrillDB.close();
                 });
 
             }

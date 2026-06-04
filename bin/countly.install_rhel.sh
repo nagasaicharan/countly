@@ -110,7 +110,7 @@ if [ "$INSIDE_DOCKER" == "1" ]; then
     sudo mongod -f /etc/mongod.conf &
 fi
 
-cp "$DIR/../frontend/express/public/javascripts/countly/countly.config.sample.js" "$DIR/../frontend/express/public/javascripts/countly/countly.config.js"
+cp "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.sample.js" "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.js"
 
 sudo sed -e "s/Defaults requiretty/#Defaults requiretty/" /etc/sudoers | sudo tee /etc/sudoers2
 sudo cp /etc/sudoers /etc/sudoers.bak
@@ -124,11 +124,11 @@ sudo bash "$DIR/scripts/detect.init.sh"
 set +e
 #configure and start nginx
 if [ -f /etc/nginx/sites-available/default ]; then
-    sudo countly save /etc/nginx/sites-available/default "$DIR/config/nginx"
+    sudo userovo save /etc/nginx/sites-available/default "$DIR/config/nginx"
 elif [ -f /etc/nginx/conf.d/default.conf ]; then
-    sudo countly save /etc/nginx/conf.d/default.conf "$DIR/config/nginx"
+    sudo userovo save /etc/nginx/conf.d/default.conf "$DIR/config/nginx"
 fi
-sudo countly save /etc/nginx/nginx.conf "$DIR/config/nginx"
+sudo userovo save /etc/nginx/nginx.conf "$DIR/config/nginx"
 sudo cp "$DIR/config/nginx.server.conf" /etc/nginx/conf.d/default.conf
 sudo cp "$DIR/config/nginx.conf" /etc/nginx/nginx.conf
 sudo systemctl restart nginx > /dev/null || echo "nginx service does not exist"
@@ -159,28 +159,28 @@ node "$DIR/scripts/install_plugins"
 nodejs "$DIR/scripts/loadCitiesInDb.js"
 
 #get web sdk
-sudo countly update sdk-web
+sudo userovo update sdk-web
 
 # close google services for China area
 if ping -c 1 google.com >> /dev/null 2>&1; then
     echo "Pinging Google successful. Enabling Google services."
 else
     echo "Cannot reach Google. Disabling Google services. You can enable this from Configurations later."
-    countly config "frontend.use_google" false --force
+    userovo config "frontend.use_google" false --force
 fi
 
 #compile scripts for production
-sudo countly task dist-all
+sudo userovo task dist-all
 
 # disable transparent huge pages
-#countly thp
+#userovo thp
 
 # after install call
-sudo countly check after install
+sudo userovo check after install
 
-#finally start countly api and dashboard
+#finally start userovo api and dashboard
 if [ "$INSIDE_DOCKER" != "1" ]; then
-    sudo countly start
+    sudo userovo start
 else
     sudo pkill mongod
 fi
@@ -189,5 +189,5 @@ bash "$DIR/scripts/done.sh";
 
 ENABLED=$(getenforce)
 if [ "$ENABLED" == "Enforcing" ]; then
-  echo -e "\e[31mSELinux is enabled, please disable it or add nginx to exception for Countly to work properly\e[0m"
+  echo -e "\e[31mSELinux is enabled, please disable it or add nginx to exception for Userovo to work properly\e[0m"
 fi

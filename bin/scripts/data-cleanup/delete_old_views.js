@@ -1,7 +1,7 @@
 /**
  *  Description: Delete old views (before a certain date).
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/data-cleanup
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/data-cleanup
  *  Command: node delete_old_views.js
  */
 
@@ -9,14 +9,14 @@ const pluginManager = require('../../../plugins/pluginManager.js');
 const drillCommon = require('../../../plugins/drill/api/common.js');
 
 const moment = require('moment-timezone');
-const request = require('countly-request')(pluginManager.getConfig('security'));
+const request = require('userovo-request')(pluginManager.getConfig('security'));
 const { ObjectId } = require('mongodb');
 
 //
 const DRY_RUN = false; //set to true to test the script without deleting any data
 //
 const API_KEY = ""; //API key here with permission to delete views
-const SERVER_URL = ""; //countly server URL
+const SERVER_URL = ""; //userovo server URL
 //
 const APP_LIST = []; //valid app_ids here. If an empty array is passed, the script will process all apps.
 const EXPIRATION_DATE = "2024-03-10"; //expiration date for the data
@@ -26,11 +26,11 @@ var deleted_views = {};
 var event = "[CLY]_view";
 //
 
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
     console.log("Connected to databases...");
     try {
         // GET APP LIST
-        const apps = await getAppList({db: countlyDb});
+        const apps = await getAppList({db: userovoDb});
         if (!apps || !apps.length) {
             return close();
         }
@@ -63,12 +63,12 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
         try {
             var session, drillSession;
             //start sessions
-            session = await countlyDb.client.startSession();
+            session = await userovoDb.client.startSession();
             drillSession = await drillDb.client.startSession();
             //SET EXPIRATION TIMESTAMP
             var expiration_timestamp = moment(EXPIRATION_DATE).tz(app.timezone).endOf('day').valueOf();
             var collectionName = drillCommon.getCollectionName(event, app._id);
-            var cursor = session.client.db("countly").collection("app_viewsmeta" + app._id).find({checked: {$exists: false}});
+            var cursor = session.client.db("userovo").collection("app_viewsmeta" + app._id).find({checked: {$exists: false}});
             var refreshTimestamp = new Date();
             try {
                 while (cursor && await cursor.hasNext()) {
@@ -77,8 +77,8 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                     if ((new Date() - refreshTimestamp) / 1000 > 1) {
                         console.log("Refreshing session");
                         try {
-                            await session.client.db("countly").admin().command({ refreshSessions: [session.id] });
-                            await drillSession.client.db("countly_drill").admin().command({ refreshSessions: [drillSession.id] });
+                            await session.client.db("userovo").admin().command({ refreshSessions: [session.id] });
+                            await drillSession.client.db("userovo_drill").admin().command({ refreshSessions: [drillSession.id] });
                             refreshTimestamp = new Date();
                         }
                         catch (err) {
@@ -89,8 +89,8 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                     //get next view
                     let view = await cursor.next();
                     //Find one drill entry for the view with timestamp greater than expiration date
-                    var drillEntry = await drillSession.client.db("countly_drill").collection(collectionName).findOne({"sg.name": view.view, "ts": { $gt: expiration_timestamp }}, {ts: 1});
-                    var drillEntry2 = await drillSession.client.db("countly_drill").collection("drill_events").findOne({"a": app._id + "", "e": event, "sg.name": view.view, "ts": { $gt: expiration_timestamp }}, {ts: 1});
+                    var drillEntry = await drillSession.client.db("userovo_drill").collection(collectionName).findOne({"sg.name": view.view, "ts": { $gt: expiration_timestamp }}, {ts: 1});
+                    var drillEntry2 = await drillSession.client.db("userovo_drill").collection("drill_events").findOne({"a": app._id + "", "e": event, "sg.name": view.view, "ts": { $gt: expiration_timestamp }}, {ts: 1});
                     //If no entry found, delete the view
                     if (!drillEntry && !drillEntry2) {
                         console.log("Deleting view: ", view.view);
@@ -120,7 +120,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                     }
                     else {
                         //flag the view as checked
-                        await session.client.db("countly").collection("app_viewsmeta" + app._id).updateOne({_id: view._id}, {$set: {checked: true}});
+                        await session.client.db("userovo").collection("app_viewsmeta" + app._id).updateOne({_id: view._id}, {$set: {checked: true}});
                     }
                 }
             }
@@ -175,12 +175,12 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
         else {
             console.log("Finished successfully.");
         }
-        countlyDb.close();
+        userovoDb.close();
         drillDb.close();
     }
 
     /**
- * Function to senmd simulated request to countly server
+ * Function to senmd simulated request to userovo server
  * 
  * @param {*} params params Object
  * @param {*} callback callback fn

@@ -3,8 +3,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 usage (){
     echo "";
-    echo "countly mongo:";
-    echo "    countly mongo <dbname> # outputs mongo cmd params to connect to specified countly db";
+    echo "userovo mongo:";
+    echo "    userovo mongo <dbname> # outputs mongo cmd params to connect to specified userovo db";
 }
 if [ -z "$1" ]
 then

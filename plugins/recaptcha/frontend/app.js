@@ -1,5 +1,5 @@
 var exportedPlugin = {},
-    countlyConfig = require('../../../frontend/express/config', 'dont-enclose'),
+    userovoConfig = require('../../../frontend/express/config', 'dont-enclose'),
     recaptcha = require('express-recaptcha');
 var plugins = require("../../pluginManager.js");
 
@@ -10,8 +10,8 @@ plugins.setConfigs("recaptcha", {
 });
 
 (function(plugin) {
-    plugin.init = function(app, countlyDb) {
-        plugins.loadConfigs(countlyDb, function() {
+    plugin.init = function(app, userovoDb) {
+        plugins.loadConfigs(userovoDb, function() {
             if (plugins.getConfig("recaptcha").enable && plugins.getConfig("recaptcha").site_key !== "" && plugins.getConfig("recaptcha").secret_key !== "") {
                 try {
                     recaptcha.init(plugins.getConfig("recaptcha").site_key, plugins.getConfig("recaptcha").secret_key);
@@ -21,7 +21,7 @@ plugins.setConfigs("recaptcha", {
                 }
             }
         });
-        app.post(countlyConfig.path + '/login', function(req, res, next) {
+        app.post(userovoConfig.path + '/login', function(req, res, next) {
             if (req.session.fails && plugins.getConfig("recaptcha").enable && plugins.getConfig("recaptcha").site_key !== "" && plugins.getConfig("recaptcha").secret_key !== "") {
                 // Skip captcha when the user already completed 2FA in this
                 // session. Previously this branch checked
@@ -41,7 +41,7 @@ plugins.setConfigs("recaptcha", {
                             next();
                         }
                         else {
-                            res.redirect(countlyConfig.path + '/login?message=recaptcha.incorrect');
+                            res.redirect(userovoConfig.path + '/login?message=recaptcha.incorrect');
                         }
                     });
                 }
@@ -50,10 +50,10 @@ plugins.setConfigs("recaptcha", {
                 next();
             }
         });
-        app.get(countlyConfig.path + '/login', function(req, res, next) {
+        app.get(userovoConfig.path + '/login', function(req, res, next) {
             if (req.session.fails && plugins.getConfig("recaptcha").enable && plugins.getConfig("recaptcha").site_key !== "" && plugins.getConfig("recaptcha").secret_key !== "") {
                 req.template.html += "<link href='./recaptcha/stylesheets/main.css' rel='stylesheet' type='text/css'>";
-                req.template.js += "addLocalization('recaptcha', countlyGlobal[\"cdn\"]+'recaptcha/localization/');";
+                req.template.js += "addLocalization('recaptcha', userovoGlobal[\"cdn\"]+'recaptcha/localization/');";
                 req.template.js += "$(document).ready(function() {" +
                     "$('body').addClass('recaptcha-enabled');" +
                     "});";

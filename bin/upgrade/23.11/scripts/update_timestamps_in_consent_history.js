@@ -2,11 +2,11 @@ var pluginManager = require('../../../../plugins/pluginManager.js'),
     asyncjs = require('async');
 
 console.log("Updating consent_history data");
-pluginManager.dbConnection().then((countlyDb) => {
-    countlyDb.collection('apps').find({}).toArray(function(err, apps) {
+pluginManager.dbConnection().then((userovoDb) => {
+    userovoDb.collection('apps').find({}).toArray(function(err, apps) {
         function update(app, done) {
             console.log("Updating consent_history for " + app.name);
-            var cursor = countlyDb.collection('consent_history' + app._id).find({}, {projection: {_id: 1, ts: 1}});
+            var cursor = userovoDb.collection('consent_history' + app._id).find({}, {projection: {_id: 1, ts: 1}});
             var requests = [];
             var promises = [];
             cursor.forEach(function(consent) {
@@ -25,7 +25,7 @@ pluginManager.dbConnection().then((countlyDb) => {
                 if (requests.length === 500) {
                     //Execute per 500 operations and re-init
                     try {
-                        promises.push(countlyDb.collection('consent_history' + app._id).bulkWrite(requests, {ordered: false}));
+                        promises.push(userovoDb.collection('consent_history' + app._id).bulkWrite(requests, {ordered: false}));
                     }
                     catch (ex) {
                         console.error(ex);
@@ -35,7 +35,7 @@ pluginManager.dbConnection().then((countlyDb) => {
             }, function() {
                 if (requests.length > 0) {
                     try {
-                        promises.push(countlyDb.collection('consent_history' + app._id).bulkWrite(requests, {ordered: false}));
+                        promises.push(userovoDb.collection('consent_history' + app._id).bulkWrite(requests, {ordered: false}));
                     }
                     catch (ex) {
                         console.error(ex);
@@ -46,7 +46,7 @@ pluginManager.dbConnection().then((countlyDb) => {
         }
         asyncjs.eachSeries(apps, update, function() {
             console.log("consent_history data update finished");
-            countlyDb.close();
+            userovoDb.close();
         });
     });
 });

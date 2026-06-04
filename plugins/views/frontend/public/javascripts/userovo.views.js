@@ -1,0 +1,1255 @@
+/*global UserovoHelpers, userovoAuth, userovoSegmentation, userovoCommon, userovoGlobal, userovoViews, app, $, jQuery, moment, userovoVue, userovoViewsPerSession, CV,userovoTokenManager, userovoGraphNotesCommon*/
+
+(function() {
+    var FEATURE_NAME = "views";
+
+    var EditViewsView = userovoVue.views.create({
+        template: CV.T("/views/templates/manageViews.html"),
+        mixins: [
+            userovoVue.mixins.auth(FEATURE_NAME),
+            userovoVue.mixins.commonFormatters,
+        ],
+        data: function() {
+            return {
+                description: CV.i18n('views.title-desc'),
+                remoteTableDataSource: userovoVue.vuex.getServerDataSource(this.$store, "userovoViews", "viewsEditTable"),
+                isDeleteButtonDisabled: true,
+                isUpdateButtonDisabled: true,
+                selectedViews: [],
+                deleteDialogTitle: CV.i18n('views.delete-confirm-title'),
+                deleteDialogText: "",
+                deleteDialogConfirmText: CV.i18n('views.yes-delete-view'),
+                showDeleteDialog: false,
+                availableSegments: ["platform"],
+                omitList: [],
+                segmentsLoaded: false,
+            };
+        },
+        mounted: function() {
+            var self = this;
+            this.$store.dispatch('userovoViews/fetchMetaData').then(function() {
+                var segments = self.$store.state.userovoViews.segments || {};
+                self.availableSegments = [];
+                for (var key in segments) {
+                    self.availableSegments.push({value: key, label: key});
+                }
+                var omittedSegments = self.$store.getters['userovoViews/getOmittedSegments'];
+                self.omitList = omittedSegments || [];
+                self.segmentsLoaded = true;
+
+            });
+        },
+        methods: {
+            handleSelectionChange: function(selectedRows) {
+                if (selectedRows.length > 0) {
+                    //this.$refs.deleteManyButton.disabled = false;
+                    this.isDeleteButtonDisabled = false;
+                    this.selectedViews = selectedRows;
+                }
+                else {
+                    this.isDeleteButtonDisabled = true;
+                }
+            },
+            displayNameChanged: function(value, scope, rowscope) {
+                var rows = this.$refs.editViewsTable.sourceRows;
+                for (var k = 0; k < rows.length; k++) {
+                    if (rowscope.row._id === rows[k]._id) {
+                        rows[k].editedDisplay = value; //have to change stored value
+                        scope.patch(rowscope.row, {display: value});
+                    }
+                }
+            },
+            omitSegments: function() {
+                var self = this;
+                UserovoHelpers.confirm(CV.i18n('views.omit-segments-confirm'), "red", function(result) {
+                    if (!result) {
+                        return true;
+                    }
+                    self.$store.dispatch("userovoViews/omitSegments", JSON.stringify(self.omitList)).then(function() {
+                        if (self.$store.getters["userovoViews/updateError"]) {
+                            UserovoHelpers.notify({type: "error", title: jQuery.i18n.map["common.error"], message: self.$store.getters["userovoViews/updateError"], sticky: false, clearAll: true});
+                        }
+                        else {
+                            UserovoHelpers.notify({type: "ok", title: jQuery.i18n.map["common.success"], message: jQuery.i18n.map["events.general.changes-saved"], sticky: false, clearAll: true});
+                        }
+                    });
+                });
+            },
+            deleteManyViews: function() {
+                if (this.selectedViews.length > 0) {
+                    if (this.selectedViews.length === 1) {
+                        this.deleteDialogTitle = CV.i18n('views.delete-confirm-title');
+                        this.deleteDialogText = CV.i18n('views.delete-confirm').replace("{0}", this.selectedViews[0].display);
+                        this.deleteDialogConfirmText = CV.i18n('views.yes-delete-view');
+                    }
+                    else {
+                        var names = [];
+                        for (var k = 0; k < this.selectedViews.length; k++) {
+                            names.push(this.selectedViews[k].display);
+                        }
+                        this.deleteDialogTitle = CV.i18n('views.delete-many-confirm-title');
+
+                        this.deleteDialogText = CV.i18n('views.delete-confirm-many', names.join(", "));
+                        this.deleteDialogConfirmText = CV.i18n('views.yes-delete-many-view');
+                    }
+                    this.showDeleteDialog = true;
+                }
+            },
+            submitDeleteForm: function() {
+                var self = this;
+                this.showDeleteDialog = false;
+
+                if (this.selectedViews && this.selectedViews.length > 0) {
+                    var ids = [];
+                    for (var k = 0; k < this.selectedViews.length; k++) {
+                        ids.push(this.selectedViews[k]._id);
+                    }
+                    this.$store.dispatch("userovoViews/deleteViews", ids.join(",")).then(function() {
+                        if (self.$store.getters["userovoViews/updateError"]) {
+                            UserovoHelpers.notify({type: "error", title: jQuery.i18n.map["common.error"], message: self.$store.getters["userovoViews/updateError"], sticky: false, clearAll: true});
+                        }
+                        else {
+                            UserovoHelpers.notify({type: "ok", title: jQuery.i18n.map["common.success"], message: jQuery.i18n.map["events.general.changes-saved"], sticky: false, clearAll: true});
+                        }
+                    });
+                }
+            },
+            closeDeleteForm: function() {
+                this.showDeleteDialog = false;
+            },
+            updateManyViews: function() {
+                var changes = [];
+                var self = this;
+                var rows = this.$refs.editViewsTable.sourceRows;
+                for (var k = 0; k < rows.length; k++) {
+                    if (rows[k].editedDisplay !== rows[k].display) {
+                        if (rows[k].editedDisplay === rows[k].view) {
+                            changes.push({"key": rows[k]._id, "value": ""});
+                        }
+                        else {
+                            changes.push({"key": rows[k]._id, "value": rows[k].editedDisplay});
+                        }
+                    }
+                }
+                if (changes.length > 0) {
+                    this.$store.dispatch("userovoViews/updateViews", changes).then(function() {
+                        if (self.$store.getters["userovoViews/updateError"]) {
+                            UserovoHelpers.notify({type: "error", title: jQuery.i18n.map["common.error"], message: self.$store.getters["userovoViews/updateError"], sticky: false, clearAll: true});
+                        }
+                        else {
+                            UserovoHelpers.notify({type: "ok", title: jQuery.i18n.map["common.success"], message: jQuery.i18n.map["events.general.changes-saved"], sticky: false, clearAll: true});
+                        }
+                    });
+                }
+            }
+        }
+    });
+
+    var drillViewDrawer = userovoVue.views.create({
+        template: CV.T("/views/templates/drillViewDrawer.html"),
+        mixins: [userovoVue.mixins.i18n],
+        props: {
+            controls: {
+                type: Object,
+                required: true
+            }
+        },
+        computed: {
+            views: function() {
+                return Object.entries(userovoViews.getViewsNames()).map(function([key, value]) {
+                    return {
+                        value: key,
+                        label: value
+                    };
+                });
+            },
+            availableSegments: function() {
+                var segments = this.$store.state.userovoViews.segments || {};
+                var sortedKeys = Object.keys(segments).sort(Intl.Collator().compare);
+                var list = [{"value": "all", "label": jQuery.i18n.map["views.all-segments"]}];
+                for (var i = 0; i < sortedKeys.length; i++) {
+                    list.push({"value": sortedKeys[i], "label": sortedKeys[i]});
+                }
+                return list;
+            },
+            omittedSegments: function() {
+                var omittedSegmentsObj = {
+                    label: CV.i18n("events.all.omitted.segments"),
+                    options: []
+                };
+                var omittedSegments = this.$store.getters['userovoViews/getOmittedSegments'];
+                if (omittedSegments) {
+                    omittedSegmentsObj.options = omittedSegments.map(function(item) {
+                        return {
+                            "label": item,
+                            "value": item
+                        };
+                    });
+                }
+                return omittedSegmentsObj;
+            },
+            segmentValues: function() {
+                const segments = this.$store.state.userovoViews.segments || {};
+                const selectedSegment = this.$refs.drawerScope.editedObject.selectedSegment;
+
+                if (!selectedSegment || !segments[selectedSegment]) {
+                    return [];
+                }
+
+                return segments[selectedSegment].map(function(value) {
+                    return {
+                        value: value,
+                        label: value
+                    };
+                });
+            },
+        },
+        methods: {
+            onSubmit: function(doc) {
+                let URLparams = {
+                    event: "[CLY]_view",
+                    period: doc.period,
+                    dbFilter: {},
+                    byVal: [],
+                    executed: false
+                };
+                if (doc.selectedViews.length > 0) {
+                    URLparams.dbFilter[`sg.name`] = { "$in": doc.selectedViews };
+                }
+                if (doc.selectedSegment !== "all" && doc.selectedSegmentValues.length > 0) {
+                    if (doc.selectedSegment === "segment" || doc.selectedSegment === "platform") {
+                        URLparams.dbFilter.$or = [
+                            { "sg.platform": { "$in": doc.selectedSegmentValues } },
+                            { "sg.segment": { "$in": doc.selectedSegmentValues } }
+                        ];
+                    }
+                    else {
+                        URLparams.dbFilter[`sg.${doc.selectedSegment}`] = { "$in": doc.selectedSegmentValues };
+                    }
+                }
+                //Go to drill page
+                app.navigate("#/drill/" + JSON.stringify(URLparams), true);
+            },
+            onCopy: function() {
+            },
+            onClose: function() {
+            },
+            onSegmentChange: function() {
+                this.$refs.drawerScope.editedObject.selectedSegmentValues = [];
+            }
+        }
+    });
+
+    var ViewsView = userovoVue.views.create({
+        template: CV.T("/views/templates/views.html"),
+        components: {
+            "drill-view-drawer": drillViewDrawer
+        },
+        data: function() {
+            var showScrollingCol = false;
+            var showActionMapColumn = false;
+
+            if (userovoGlobal.apps[userovoCommon.ACTIVE_APP_ID].type !== "mobile") {
+                showScrollingCol = true;
+            }
+
+            var cards = this.calculateTotalCards();
+            var series = {"series": []};
+            var dynamicCols = [{
+                value: "u",
+                width: "180",
+                label: CV.i18n('common.table.total-users'),
+                default: true
+            },
+            {
+                value: "n",
+                width: "180",
+                label: CV.i18n('common.table.new-users'),
+                default: true
+            },
+            {
+                value: "t",
+                width: "130",
+                label: CV.i18n('views.total-visits'),
+                default: true
+            },
+            {
+                value: "s",
+                width: "130",
+                label: CV.i18n('views.starts'),
+                default: true
+            },
+            {
+                value: "e",
+                width: "130",
+                label: CV.i18n('views.exits'),
+                default: true
+            },
+            {
+                value: "d",
+                width: "130",
+                label: CV.i18n('views.avg-duration'),
+                default: true
+            },
+            {
+                value: "b",
+                width: "130",
+                label: CV.i18n('views.bounces'),
+                default: true
+            },
+            {
+                value: "br",
+                label: CV.i18n('views.br'),
+                width: "140",
+                default: true
+            }];
+
+            if (showScrollingCol) {
+                dynamicCols.push({
+                    value: "scr",
+                    label: CV.i18n('views.scrolling-avg'),
+                    default: true,
+                    width: "130"
+                });
+            }
+
+            dynamicCols.push({
+                value: "uvc",
+                label: CV.i18n('views.uvc'),
+                width: "180",
+                default: true
+            });
+
+            return {
+                description: CV.i18n('views.description'),
+                remoteTableDataSource: userovoVue.vuex.getServerDataSource(this.$store, "userovoViews", "viewsMainTable"),
+                showScrollingCol: showScrollingCol,
+                filter: {segment: "all", segmentKey: "all"},
+                "all": jQuery.i18n.map["common.all"],
+                totalCards: cards,
+                lineOptions: series,
+                totalViewCountWarning: "",
+                showViewCountWarning: false,
+                tableDynamicCols: dynamicCols,
+                isGraphLoading: true,
+                isTableLoading: true,
+                showActionMapColumn: showActionMapColumn, //for action map
+                domains: [], //for action map
+                persistentSettings: [],
+                tablePersistKey: "views_table_" + userovoCommon.ACTIVE_APP_ID,
+                tableMode: "all",
+                tableModes: [
+                    {"key": "all", "label": CV.i18n('common.all')},
+                    {"key": "selected", "label": CV.i18n('views.selected-views')}
+                ],
+                isSpecialPeriod: userovoCommon.periodObj.isSpecialPeriod,
+            };
+        },
+        mounted: function() {
+            var self = this;
+            // var persistentSettings = userovoCommon.getPersistentSettings()["pageViewsItems_" + userovoCommon.ACTIVE_APP_ID] || [];
+            self.persistentSettings = userovoCommon.getPersistentSettings()["pageViewsItems_" + userovoCommon.ACTIVE_APP_ID] || [];
+            this.$store.dispatch('userovoViews/onSetSelectedViews', self.persistentSettings);
+            this.$store.dispatch('userovoViews/fetchData').then(function() {
+                self.calculateGraphSeries();
+                self.showActionsMapColumn(); //for action map
+                self.setUpDomains(); //for action map
+            });
+
+            this.$store.dispatch('userovoViews/fetchTotalViewsCount').then(function() {
+                self.validateTotalViewCount();
+            });
+            self.$store.dispatch('userovoViews/fetchTotals').then(function() {
+                self.totalCards = self.calculateTotalCards();
+            });
+            this.$store.dispatch("userovoViews/fetchViewsMainTable", {"segmentKey": this.$store.state.userovoViews.selectedSegment, "segmentValue": this.$store.state.userovoViews.selectedSegmentValue}).then(function() {
+                self.isTableLoading = false;
+            });
+
+        },
+        methods: {
+            refresh: function(force) {
+                var self = this;
+                if (force) {
+                    self.isGraphLoading = true;
+                    self.isTableLoading = true;
+                }
+                this.$store.dispatch('userovoViews/fetchData').then(function() {
+                    self.calculateGraphSeries();
+                    self.showActionsMapColumn();//for action map
+                    self.setUpDomains();//for action map
+                });
+                this.$store.dispatch('userovoViews/fetchTotals').then(function() {
+                    self.totalCards = self.calculateTotalCards();
+                });
+                this.$store.dispatch('userovoViews/fetchTotalViewsCount').then(function() {
+                    self.validateTotalViewCount();
+                });
+
+                this.$store.dispatch("userovoViews/fetchViewsMainTable", {"segmentKey": this.$store.state.userovoViews.selectedSegment, "segmentValue": this.$store.state.userovoViews.selectedSegmentValue}).then(function() {
+                    self.isTableLoading = false;
+                });
+            },
+            validateTotalViewCount: function() {
+                this.totalViewCount = this.$store.state.userovoViews.totalViewsCount;
+                if (this.totalViewCount >= userovoGlobal.views_limit) {
+                    this.showViewCountWarning = true;
+                    this.totalViewCountWarning = CV.i18n('views.max-views-limit', userovoGlobal.views_limit);
+                }
+            },
+            showActionsMapColumn: function() {
+                //for action map
+                var domains = this.$store.state.userovoViews.domains;
+                if (userovoGlobal.apps[userovoCommon.ACTIVE_APP_ID].type === "web" && (domains.length || userovoGlobal.apps[userovoCommon.ACTIVE_APP_ID].app_domain && userovoGlobal.apps[userovoCommon.ACTIVE_APP_ID].app_domain.length > 0)) {
+                    this.showActionMapColumn = true;
+                }
+            },
+            setUpDomains: function() {
+                //for action map
+                var domains = [];
+                var dd = this.$store.state.userovoViews.domains || [];
+                for (var k = 0; k < dd.length; k++) {
+                    domains.push({"value": userovoCommon.decode(dd[k]), "label": userovoCommon.decode(dd[k])});
+                }
+                this.domains = domains;
+            },
+            viewActionMapClick: function(url, viewid, domain) {
+                var self = this;
+                if (domain) {
+                    url = url.replace("#/analytics/views/action-map/", "");
+                    url = domain + url;
+                }
+                var newWindow = window.open("");
+                userovoTokenManager.createToken("View heatmap", "/o/actions", true, userovoCommon.ACTIVE_APP_ID, 1800, function(err, token) {
+                    self.token = token && token.result;
+                    if (self.token) {
+                        newWindow.name = "cly:" + JSON.stringify({"token": self.token, "purpose": "heatmap", period: userovoCommon.getPeriodForAjax(), showHeatMap: true, app_key: userovoCommon.ACTIVE_APP_KEY, url: window.location.protocol + "//" + window.location.host});
+                        newWindow.location.href = url;
+                    }
+                });
+            },
+            deselectAll: function() {
+                var self = this;
+                var selected = userovoCommon.getPersistentSettings()["pageViewsItems_" + userovoCommon.ACTIVE_APP_ID] || [];
+
+                var highestTotalUserSelected = {total: 0, _id: null};
+                this.$refs.viewsTable.sourceRows.forEach(row => {
+                    if (row.selected && row.u > highestTotalUserSelected.total) {
+                        highestTotalUserSelected.total = row.u;
+                        highestTotalUserSelected._id = row._id;
+                    }
+                });
+                selected.splice(0, selected.length);
+                selected.push(highestTotalUserSelected._id);
+
+                var persistData = {};
+                persistData["pageViewsItems_" + userovoCommon.ACTIVE_APP_ID] = selected;
+                userovoCommon.setPersistentSettings(persistData);
+
+                if (this.$refs.viewsTable) {
+                    for (var k = 0; k < this.$refs.viewsTable.sourceRows.length; k++) {
+                        if (selected.indexOf(this.$refs.viewsTable.sourceRows[k]._id) === -1) {
+                            this.$refs.viewsTable.sourceRows[k].selected = false;
+                        }
+                    }
+                }
+
+                this.persistentSettings = selected;
+                this.$store.dispatch('userovoViews/onSetSelectedViews', selected).then(function() {
+                    self.isGraphLoading = true;
+                    self.$store.dispatch('userovoViews/fetchData').then(function() {
+                        self.calculateGraphSeries();
+                    });
+                });
+
+                this.refresh(true);
+            },
+            handleSelectionChange: function(selectedRows) {
+                var self = this;
+                var selected = userovoCommon.getPersistentSettings()["pageViewsItems_" + userovoCommon.ACTIVE_APP_ID] || [];
+                var map = {};
+                for (var kz = 0; kz < selected.length; kz++) {
+                    map[selected[kz]] = true;
+                }
+                selected = Object.keys(map); //get distinct
+                if (selected.indexOf(selectedRows) === -1) {
+                    selected.push(selectedRows);
+                }
+                else {
+                    var index = selected.indexOf(selectedRows);
+                    selected.splice(index, 1);
+                }
+                var persistData = {};
+                persistData["pageViewsItems_" + userovoCommon.ACTIVE_APP_ID] = selected;
+                userovoCommon.setPersistentSettings(persistData);
+
+                if (this.$refs.viewsTable) {
+                    for (var k = 0; k < this.$refs.viewsTable.sourceRows.length; k++) {
+                        if (selected.indexOf(this.$refs.viewsTable.sourceRows[k]._id) > -1) {
+                            this.$refs.viewsTable.sourceRows[k].selected = true;
+                        }
+                        else {
+                            this.$refs.viewsTable.sourceRows[k].selected = false;
+                        }
+                    }
+                }
+
+                this.persistentSettings = selected;
+                this.$store.dispatch('userovoViews/onSetSelectedViews', selected).then(function() {
+                    self.isGraphLoading = true;
+                    self.$store.dispatch('userovoViews/fetchData').then(function() {
+                        self.calculateGraphSeries();
+                    });
+                });
+                return true;
+            },
+            segmentChosen: function(val) {
+                var self = this;
+                this.isGraphLoading = true;
+                this.isTableLoading = true;
+                if (val.segment && val.segment !== "all" && val.segmentKey && val.segmentKey !== "all") {
+                    this.$store.dispatch('userovoViews/onSetSelectedSegment', val.segment);
+                    this.$store.dispatch('userovoViews/onSetSelectedSegmentValue', val.segmentKey);
+                }
+                else {
+                    this.$store.dispatch('userovoViews/onSetSelectedSegment', "");
+                    this.$store.dispatch('userovoViews/onSetSelectedSegmentValue', "");
+                }
+                this.$store.dispatch('userovoViews/fetchData').then(function() {
+                    self.calculateGraphSeries();
+                });
+                this.$store.dispatch("userovoViews/fetchViewsMainTable", {"segmentKey": this.$store.state.userovoViews.selectedSegment, "segmentValue": this.$store.state.userovoViews.selectedSegmentValue}).then(function() {
+                    self.isTableLoading = false;
+                });
+            },
+            calculateTotalCards: function() {
+                var totals = this.$store.state.userovoViews.totals || {};
+                totals.t = totals.t || 0;
+                totals.uvc = totals.uvc || 0;
+                totals.s = totals.s || 0;
+                totals.b = totals.b || 0;
+                if (totals.s) {
+                    totals.br = Math.round(totals.b / totals.s * 1000) / 10;
+                }
+                else {
+                    totals.br = 0;
+                }
+
+                return [
+                    {
+                        "name": CV.i18n('views.total_page_views.title'),
+                        "description": CV.i18n('views.total_page_views.desc'),
+                        "value": userovoCommon.formatNumber(totals.t),
+                        "percent": 0,
+                        isPercentage: false
+                    },
+                    {
+                        "name": CV.i18n('views.uvc'),
+                        "description": CV.i18n('views.unique_page_views.desc'),
+                        "value": userovoCommon.formatNumber(totals.uvc),
+                        "percent": 0,
+                        isPercentage: false
+                    },
+                    {
+                        "name": CV.i18n('views.br'),
+                        "description": CV.i18n('views.bounce_rate.desc'),
+                        "value": totals.br + "%",
+                        "percent": Math.min(totals.br, 100),
+                        isPercentage: true,
+                        "color": "#F96300"
+                    }
+                ];
+            },
+            calculateGraphSeries: function() {
+                var self = this;
+                this.$store.dispatch("userovoViews/calculateGraphData").then(function(data2) {
+                    var have_names = false;
+                    var good_ones = [];
+                    for (var k = 0; k < data2.length; k++) {
+                        if (data2[k].name !== data2[k]._id) {
+                            good_ones.push(data2[k]._id);
+                            have_names = true;
+                        }
+                    }
+                    if (have_names && good_ones.length !== data2.length) { //If we have loaded names - we can clear out the ones without name. (It means not existing, deleted views)
+                        var persistData = {};
+                        persistData["pageViewsItems_" + userovoCommon.ACTIVE_APP_ID] = good_ones;
+                        userovoCommon.setPersistentSettings(persistData);
+                        self.$store.dispatch('userovoViews/onSetSelectedViews', good_ones);
+                    }
+                    self.lineOptions = {
+                        series: data2,
+                        tooltip: {
+                            position: function(point, params, dom, rect, size) {
+                                if (size.viewSize[0] <= point[0] + 180) {
+                                    return [point[0] - 180, point[1] + 10];
+                                }
+                                else {
+                                    return [point[0], point[1] + 10];
+                                }
+                            },
+                        }
+                    };
+                    if (self.selectedProperty === "d") {
+                        self.lineOptions.yAxis = {
+                            axisLabel: {
+                                formatter: function(value) {
+                                    return userovoCommon.formatSecond(value);
+                                }
+                            }
+                        };
+                    }
+                    self.isGraphLoading = false;
+                });
+            },
+            getExportQuery: function() {
+
+                // var set = this.dtable.fnSettings();
+                var requestPath = userovoCommon.API_PARTS.data.r + "?method=views&action=getExportQuery" + "&period=" + userovoCommon.getPeriodAsDateStrings() + "&iDisplayStart=0&app_id=" + userovoCommon.ACTIVE_APP_ID + '&api_key=' + userovoGlobal.member.api_key;
+
+
+                var segment = this.$store.state.userovoViews.selectedSegment;
+                var segmentValue = this.$store.state.userovoViews.selectedSegmentValue;
+                if (segment && segment !== "" && segmentValue && segmentValue !== "") {
+                    requestPath += "&segment=" + segment;
+                    requestPath += "&segmentVal=" + segmentValue;
+                }
+                /*if (set && set.oPreviousSearch && set.oPreviousSearch.sSearch) {
+												requestPath += "&sSearch=" + set.oPreviousSearch.sSearch;
+											}
+											if (set && set.aaSorting && set.aaSorting[0]) {
+												if (set.aaSorting[0][1] === 'asc' || set.aaSorting[0][1] === 'desc') {
+													requestPath += "&iSortCol_0=" + set.aaSorting[0][0];
+													requestPath += "&sSortDir_0=" + set.aaSorting[0][1];
+												}
+											}*/
+                var apiQueryData = {
+                    api_key: userovoGlobal.member.api_key,
+                    app_id: userovoCommon.ACTIVE_APP_ID,
+                    path: requestPath,
+                    method: "GET",
+                    filename: "Views" + userovoCommon.ACTIVE_APP_ID + "_on_" + moment().format("DD-MMM-YYYY"),
+                    prop: ['aaData'],
+                    type_name: "views",
+                    "url": "/o/export/requestQuery"
+                };
+                return apiQueryData;
+            },
+            numberFormatter: function(row, col, value) {
+                return userovoCommon.formatNumber(value, 0);
+            },
+            formatChartValue: function(value) {
+                if (this.selectedProperty === "br") {
+                    return userovoCommon.getShortNumber(value) + '%';
+                }
+                if (this.selectedProperty === "d") {
+                    return userovoCommon.formatSecond(value);
+                }
+                return userovoCommon.getShortNumber(value);
+            },
+            dateChanged: function() {
+                this.isSpecialPeriod = userovoCommon.periodObj.isSpecialPeriod;
+                this.refresh(true);
+            },
+            openDrillViewDrawer: function() {
+                let self = this;
+                let args = {
+                    "period": userovoCommon.getPeriodAsDateStrings(),
+                    "selectedSegment": this.filter.segment,
+                    "selectedSegmentValues": (this.filter.segmentKey && this.filter.segmentKey !== "all") ? [this.filter.segmentKey] : [],
+                    "selectedViews": this.$store.state.userovoViews.selectedViews.map(function(id) {
+                        let view = self.selectedTableRows.find(function(row) {
+                            return row._id === id;
+                        });
+                        return view ? view.view : id;
+                    })
+                };
+                this.openDrawer("drill-view", args);
+            }
+        },
+        computed: {
+            data: function() {
+                return this.$store.state.userovoViews.appData;
+            },
+            selectedTableRows: function() {
+                return this.$store.getters["userovoViews/selectedTableRows"];
+            },
+            filterFields: function() {
+                return [
+                    {
+                        label: CV.i18n('views.segment-key'),
+                        key: "segment",
+                        items: this.chooseSegment,
+                        default: "all",
+                        searchable: true,
+                        disabled: this.omittedSegments
+                    },
+                    {
+                        label: CV.i18n('views.segment-value'),
+                        key: "segmentKey",
+                        items: this.chooseSegmentValue,
+                        default: "all",
+                        searchable: true
+                    }
+                ];
+            },
+            chooseProperties: function() {
+                return [
+                    {"value": "t", "name": CV.i18n('views.total-visits')},
+                    {"value": "u", "name": CV.i18n('common.table.total-users')},
+                    {"value": "n", "name": CV.i18n('common.table.new-users')},
+                    {"value": "d", "name": CV.i18n('views.avg-duration')},
+                    {"value": "s", "name": CV.i18n('views.starts')},
+                    {"value": "e", "name": CV.i18n('views.exits')},
+                    {"value": "b", "name": CV.i18n('views.bounces')},
+                    {"value": "br", "name": CV.i18n('views.br')},
+                    {"value": "scr", "name": CV.i18n('views.scrolling-avg')},
+                    {"value": "uvc", "name": CV.i18n('views.uvc')},
+                ];
+            },
+            topDropdown: function() {
+                var links = [];
+                if (this.externalLinks && Array.isArray(this.externalLinks) && this.externalLinks.length > 0) {
+                    for (var k = 0; k < this.externalLinks.length; k++) {
+                        links.push(this.externalLinks[k]);
+                    }
+                }
+                links.push({"icon": "", "label": CV.i18n('plugins.configs'), "value": "#/manage/configurations/views"}); //to settings
+                return links;
+            },
+            chooseSegment: function() {
+                var segments = this.$store.state.userovoViews.segments || {};
+                var sortedKeys = Object.keys(segments).sort(Intl.Collator().compare);
+                var listed = [{"value": "all", "label": jQuery.i18n.map["views.all-segments"]}];
+                for (var i = 0; i < sortedKeys.length; i++) {
+                    listed.push({"value": sortedKeys[i], "label": sortedKeys[i]});
+                }
+                return listed;
+            },
+            chooseSegmentValue: function() {
+                var segments = this.$store.state.userovoViews.segments || {};
+                var key;
+                if (this.$refs && this.$refs.selectSegmentValue && this.$refs.selectSegmentValue.unsavedValue && this.$refs.selectSegmentValue.unsavedValue.segment) {
+                    key = this.$refs.selectSegmentValue.unsavedValue.segment;
+                }
+                var listed = [{"value": "all", "label": CV.i18n('common.all')}];
+                if (!key) {
+                    return listed;
+                }
+                else {
+                    if (segments[key]) {
+                        for (var k = 0; k < segments[key].length; k++) {
+                            listed.push({"value": segments[key][k], "label": segments[key][k]});
+                        }
+                        return listed;
+                    }
+                    else {
+                        return listed;
+                    }
+                }
+            },
+            selectedProperty: {
+                set: function(value) {
+                    this.$store.dispatch('userovoViews/onSetSelectedProperty', value);
+                    this.calculateGraphSeries();
+                },
+                get: function() {
+                    return this.$store.state.userovoViews.selectedProperty;
+                }
+            },
+            isLoading: function() {
+                return this.$store.state.userovoViews.isLoading;
+            },
+            omittedSegments: function() {
+                var omittedSegmentsObj = {
+                    label: CV.i18n("events.all.omitted.segments"),
+                    options: []
+                };
+                var omittedSegments = this.$store.getters['userovoViews/getOmittedSegments'];
+                if (omittedSegments) {
+                    omittedSegmentsObj.options = omittedSegments.map(function(item) {
+                        return {
+                            "label": item,
+                            "value": item
+                        };
+                    });
+                }
+                return omittedSegmentsObj;
+            },
+            isDrillEnabled: function() {
+                return UserovoHelpers.isPluginEnabled("drill");
+            }
+        },
+        mixins: [
+            userovoVue.container.dataMixin({
+                'externalLinks': '/analytics/views/links'
+            }),
+            userovoVue.mixins.auth(FEATURE_NAME),
+            userovoVue.mixins.hasDrawers("drill-view")
+        ]
+    });
+
+    var ViewsPerSessionView = userovoVue.views.create({
+        template: CV.T("/views/templates/views-per-session.html"),
+        mixins: [userovoVue.mixins.commonFormatters],
+        data: function() {
+            return {
+                progressBarColor: "#017AFF"
+            };
+        },
+        computed: {
+            viewsPerSession: function() {
+                return this.$store.state.userovoViewsPerSession.viewsPerSession;
+            },
+            isLoading: function() {
+                return this.$store.getters['userovoViewsPerSession/isLoading'];
+            },
+            viewsPerSessionRows: function() {
+                return this.$store.state.userovoViewsPerSession.viewsPerSession.rows;
+            },
+            viewsPerSessionOptions: function() {
+                return {
+                    xAxis: {
+                        data: this.xAxisViewsPerSessionBuckets,
+                        axisLabel: {
+                            color: "#333C48"
+                        }
+                    },
+                    series: this.yAxisViewsPerSessionCountSerie
+                };
+            },
+            xAxisViewsPerSessionBuckets: function() {
+                return this.$store.state.userovoViewsPerSession.viewsPerSession.rows.map(function(tableRow) {
+                    return tableRow.viewsBuckets;
+                });
+            },
+            yAxisViewsPerSessionCountSerie: function() {
+                return this.viewsPerSession.series.map(function(viewsPerSessionSerie) {
+                    return {
+                        data: viewsPerSessionSerie.data,
+                        name: viewsPerSessionSerie.label,
+                    };
+                });
+            },
+        },
+        methods: {
+            refresh: function() {
+                this.$store.dispatch('userovoViewsPerSession/fetchAll', false);
+            },
+            dateChanged: function() {
+                this.$store.dispatch('userovoViewsPerSession/fetchAll', true);
+            },
+            sortSessionViewsBuckets: function(a, b) {
+                return a.weight - b.weight;
+            }
+        },
+        mounted: function() {
+            this.$store.dispatch('userovoViewsPerSession/fetchAll', true);
+        },
+    });
+
+    var ViewsHomeWidget = userovoVue.views.create({
+        template: CV.T("/views/templates/viewsHomeWidget.html"),
+        data: function() {
+            return {
+                dataBlocks: [],
+                isLoading: true,
+                headerData: {
+                    label: CV.i18n("views.title"),
+                    description: CV.i18n("views.title-desc"),
+                    linkTo: {"label": CV.i18n('views.go-to-views'), "href": "#/analytics/views"},
+                }
+            };
+        },
+        mounted: function() {
+            var self = this;
+            self.$store.dispatch('userovoViews/fetchTotals').then(function() {
+                self.dataBlocks = self.calculateAllData();
+                self.isLoading = false;
+            });
+        },
+        beforeCreate: function() {
+            this.module = userovoViews.getVuexModule();
+            CV.vuex.registerGlobally(this.module);
+        },
+        beforeDestroy: function() {
+            CV.vuex.unregister(this.module.name);
+            this.module = null;
+        },
+        methods: {
+            refresh: function(force) {
+                var self = this;
+                if (force) {
+                    self.isLoading = true;
+                }
+                self.$store.dispatch('userovoViews/fetchTotals').then(function() {
+                    self.dataBlocks = self.calculateAllData();
+                    self.isLoading = false;
+                });
+            },
+            calculateAllData: function() {
+                var totals = {};
+                if (this.$store && this.$store.state && this.$store.state.userovoViews) {
+                    totals = this.$store.state.userovoViews.totals || {};
+                }
+                totals.t = totals.t || 0;
+                totals.uvc = totals.uvc || 0;
+                totals.s = totals.s || 0;
+                totals.b = totals.b || 0;
+                if (totals.s) {
+                    totals.br = Math.round(totals.b / totals.s * 1000) / 10;
+                }
+                else {
+                    totals.br = 0;
+                }
+
+                return [
+                    {
+                        "name": CV.i18n('views.total_page_views.title'),
+                        "description": CV.i18n('views.total_page_views.desc'),
+                        "value": userovoCommon.formatNumber(totals.t),
+                        "percent": 0,
+                        isPercentage: false
+                    },
+                    {
+                        "name": CV.i18n('views.uvc'),
+                        "description": CV.i18n('views.unique_page_views.desc'),
+                        "value": userovoCommon.formatNumber(totals.uvc),
+                        "percent": 0,
+                        isPercentage: false
+                    },
+                    {
+                        "name": CV.i18n('views.br'),
+                        "description": CV.i18n('views.bounce_rate.desc'),
+                        "value": totals.br + "%",
+                        "percent": Math.min(totals.br, 100),
+                        isPercentage: true,
+                        "color": "#F96300"
+                    }
+                ];
+            }
+        }
+    });
+
+    userovoVue.container.registerTab("/analytics/sessions", {
+        priority: 4,
+        name: "views-per-session",
+        permission: FEATURE_NAME,
+        title: CV.i18n('views-per-session.title'),
+        route: "#/analytics/sessions/views-per-session",
+        dataTestId: "session-views-per-session",
+        component: ViewsPerSessionView,
+        vuex: [{
+            clyModel: userovoViewsPerSession
+        }]
+    });
+
+    var viewsHomeView = new userovoVue.views.BackboneWrapper({
+        component: ViewsView,
+        vuex: [{clyModel: userovoViews}]
+    });
+
+    var viewsEditView = new userovoVue.views.BackboneWrapper({
+        component: EditViewsView,
+        vuex: [{clyModel: userovoViews}]
+    });
+
+    app.viewsHomeView = viewsHomeView;
+    app.viewsEditView = viewsEditView;
+
+
+    app.route("/analytics/views", "views-home", function() {
+        var params = {};
+        this.viewsHomeView.params = params;
+        this.renderWhenReady(this.viewsHomeView);
+    });
+
+    app.route("/analytics/views/manage", "views", function() {
+        var params = {};
+        this.viewsEditView.params = params;
+        this.renderWhenReady(this.viewsEditView);
+    });
+
+
+    userovoVue.container.registerData("/home/widgets", {
+        _id: "views-dashboard-widget",
+        label: CV.i18n('views.title'),
+        permission: FEATURE_NAME,
+        enabled: {"default": true}, //object. For each type set if by default enabled
+        available: {"default": true}, //object. default - for all app types. For other as specified.
+        placeBeforeDatePicker: false,
+        width: 6,
+        order: 4,
+        component: ViewsHomeWidget
+    });
+
+    //Views type button in drill
+    app.addPageScript("/drill#", function() {
+        var drillClone;
+        var self = app.drillView;
+        var record_views = userovoGlobal.record_views;
+        if (userovoGlobal.apps && userovoGlobal.apps[userovoCommon.ACTIVE_APP_ID] && userovoGlobal.apps[userovoCommon.ACTIVE_APP_ID].plugins && userovoGlobal.apps[userovoCommon.ACTIVE_APP_ID].plugins.drill && typeof userovoGlobal.apps[userovoCommon.ACTIVE_APP_ID].plugins.drill.record_views !== "undefined") {
+            record_views = userovoGlobal.apps[userovoCommon.ACTIVE_APP_ID].plugins.drill.record_views;
+        }
+        if (record_views) {
+
+            $("#drill-types").append('<div id="drill-type-views" class="item"><div class="inner"><span class="icon views"></span><span class="text">' + jQuery.i18n.map["views.title"] + '</span></div></div>');
+            $("#drill-type-views").on("click", function() {
+                if ($(this).hasClass("active")) {
+                    return true;
+                }
+
+                $("#drill-types").find(".item").removeClass("active");
+                $(this).addClass("active");
+                $("#event-selector").hide();
+
+                $("#drill-no-event").fadeOut();
+                $("#segmentation-start").fadeOut().remove();
+
+                var currEvent = "[CLY]_view";
+
+                self.graphType = "line";
+                self.graphVal = "times";
+                self.filterObj = {};
+                self.byVal = "";
+                self.drillChartDP = {};
+                self.drillChartData = {};
+                self.activeSegmentForTable = "";
+                userovoSegmentation.reset();
+
+                $("#drill-navigation").find(".menu[data-open=table-view]").hide();
+
+                $.when(userovoSegmentation.initialize(currEvent)).then(function() {
+                    $("#drill-filter-view").replaceWith(drillClone.clone(true));
+                    self.adjustFilters();
+                    if (!self.keepQueryTillExec) {
+                        self.draw(true, false);
+                    }
+                });
+            });
+            setTimeout(function() {
+                drillClone = $("#drill-filter-view").clone(true);
+            }, 0);
+        }
+    }, FEATURE_NAME);
+
+    var GridComponent = userovoVue.views.create({
+        template: CV.T('/dashboards/templates/widgets/analytics/widget.html'),
+        mixins: [userovoVue.mixins.customDashboards.global,
+            userovoVue.mixins.commonFormatters,
+            userovoVue.mixins.zoom,
+            userovoVue.mixins.hasDrawers("annotation"),
+            userovoVue.mixins.graphNotesCommand
+        ],
+        components: {
+            "drawer": userovoGraphNotesCommon.drawer
+        },
+        computed: {
+            title: function() {
+                if (this.data.title) {
+                    return this.data.title;
+                }
+
+                return this.i18n("views.widget-type");
+            },
+            showBuckets: function() {
+                return false;
+            },
+            metricLabels: function() {
+                return [];
+            },
+            tableStructure: function() {
+                var columns = [{prop: "view", "title": CV.i18n("views.widget-type")}];
+
+                this.data = this.data || {};
+                this.data.metrics = this.data.metrics || [];
+                for (var k = 0; k < this.data.metrics.length; k++) {
+                    if (this.data.metrics[k] === "d" || this.data.metrics[k] === "scr" || this.data.metrics[k] === "br") {
+                        columns.push({"prop": this.data.metrics[k], "title": CV.i18n("views." + this.data.metrics[k])});
+                    }
+                    else {
+                        columns.push({"prop": this.data.metrics[k], "title": CV.i18n("views." + this.data.metrics[k]), "type": "number"});
+                    }
+                }
+                return columns;
+            },
+            getTableData: function() {
+                this.data = this.data || {};
+                this.data.dashData = this.data.dashData || {};
+                this.data.dashData.data = this.data.dashData.data || {};
+                this.data.dashData.data.chartData = this.data.dashData.data.chartData || [];
+
+                var tableData = [];
+                for (var z = 0; z < this.data.dashData.data.chartData.length; z++) {
+                    var ob = {"view": this.data.dashData.data.chartData[z].view};
+                    for (var k = 0; k < this.data.metrics.length; k++) {
+                        if (this.data.metrics[k] === "d") {
+                            if (this.data.dashData.data.chartData[z].t > 0) {
+                                ob[this.data.metrics[k]] = userovoCommon.formatSecond(this.data.dashData.data.chartData[z].d / this.data.dashData.data.chartData[z].t);
+                            }
+                            else {
+                                ob[this.data.metrics[k]] = 0;
+                            }
+                        }
+                        else if (this.data.metrics[k] === "scr") {
+                            if (this.data.dashData.data.chartData[k].t > 0) {
+                                var vv = parseFloat(this.data.dashData.data.chartData[z].scr) / parseFloat(this.data.dashData.data.chartData[z].t);
+                                if (vv > 100) {
+                                    vv = 100;
+                                }
+                                ob[this.data.metrics[k]] = userovoCommon.formatNumber(vv) + "%";
+                            }
+                            else {
+                                ob[this.data.metrics[k]] = 0;
+                            }
+                        }
+                        else if (this.data.metrics[k] === "br") {
+                            ob[this.data.metrics[k]] = this.data.dashData.data.chartData[z][this.data.metrics[k]] || 0;
+                            ob[this.data.metrics[k]] = userovoCommon.formatNumber(ob[this.data.metrics[k]]) + "%";
+                        }
+                        else {
+                            ob[this.data.metrics[k]] = this.data.dashData.data.chartData[z][this.data.metrics[k]];
+                        }
+                    }
+                    tableData.push(ob);
+
+                }
+                return tableData;
+            }
+        },
+        methods: {
+            refresh: function() {
+                this.refreshNotes();
+            },
+            onWidgetCommand: function(event) {
+                if (event === 'zoom') {
+                    this.triggerZoom();
+                    return;
+                }
+                else if (event === 'add' || event === 'manage' || event === 'show') {
+                    this.graphNotesHandleCommand(event);
+                    return;
+                }
+                else {
+                    return this.$emit('command', event);
+                }
+            },
+        }
+    });
+
+    var DrawerComponent = userovoVue.views.create({
+        template: "#views-drawer",
+        data: function() {
+            return {
+                useCustomTitle: false,
+                useCustomPeriod: false
+            };
+        },
+        computed: {
+            availableStatsMetric: function() {
+                var app = this.scope.editedObject.apps[0];
+                var metrics = [
+                    { label: CV.i18n("views.u"), value: "u" },
+                    { label: CV.i18n("views.n"), value: "n" },
+                    { label: CV.i18n("views.t"), value: "t" },
+                    { label: CV.i18n("views.d"), value: "d" },
+                    { label: CV.i18n("views.s"), value: "s" },
+                    { label: CV.i18n("views.e"), value: "e" },
+                    { label: CV.i18n("views.b"), value: "b" },
+                    { label: CV.i18n("views.br"), value: "br" },
+                    { label: CV.i18n("views.uvc"), value: "uvc" }
+                ];
+                if (app && userovoGlobal.apps[app] && userovoGlobal.apps[app].type === "web") {
+                    metrics.push({ label: CV.i18n("views.scr"), value: "scr" });
+                }
+                return metrics;
+            }
+        },
+        methods: {
+            onDataTypeChange: function(v) {
+                var widget = this.scope.editedObject;
+                this.$emit("reset", {widget_type: widget.widget_type, data_type: v});
+            }
+        },
+        props: {
+            scope: {
+                type: Object,
+                default: function() {
+                    return {};
+                }
+            }
+        }
+    });
+
+    userovoVue.container.registerData("/custom/dashboards/widget", {
+        type: "analytics",
+        permission: FEATURE_NAME,
+        label: CV.i18n("views.widget-type"),
+        priority: 1,
+        primary: false,
+        getter: function(widget) {
+            return widget.widget_type === "analytics" && widget.data_type === "views";
+        },
+        templates: [
+            {
+                namespace: "views",
+                mapping: {
+                    drawer: '/views/templates/widgetDrawer.html',
+                }
+            }
+        ],
+        drawer: {
+            component: DrawerComponent,
+            getEmpty: function() {
+                return {
+                    title: "",
+                    feature: FEATURE_NAME,
+                    widget_type: "analytics",
+                    data_type: "views",
+                    app_count: 'single',
+                    metrics: [],
+                    apps: [],
+                    custom_period: null,
+                    visualization: "table",
+                    isPluginWidget: true
+                };
+            },
+            beforeLoadFn: function(/*doc, isEdited*/) {
+            },
+            beforeSaveFn: function(/*doc*/) {
+
+            }
+        },
+        grid: {
+            component: GridComponent
+        }
+
+    });
+
+    jQuery.fn.dataTableExt.oSort['view-frequency-asc'] = function(x, y) {
+        x = userovoViews.getFrequencyIndex(x);
+        y = userovoViews.getFrequencyIndex(y);
+
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    };
+
+    jQuery.fn.dataTableExt.oSort['view-frequency-desc'] = function(x, y) {
+        x = userovoViews.getFrequencyIndex(x);
+        y = userovoViews.getFrequencyIndex(y);
+
+        return ((x < y) ? 1 : ((x > y) ? -1 : 0));
+    };
+
+    app.addAppSwitchCallback(function(appId) {
+        if (app._isFirstLoad !== true && userovoAuth.validateRead(FEATURE_NAME) && UserovoHelpers.isPluginEnabled(FEATURE_NAME)) {
+            userovoViews.loadList(appId);
+        }
+    });
+    app.addSubMenu("analytics", {code: "analytics-views", permission: FEATURE_NAME, url: "#/analytics/views", text: "views.title", priority: 25});
+
+    //check if configuration view exists
+    if (app.configurationsView) {
+        app.configurationsView.registerLabel("views", "views.title");
+        app.configurationsView.registerLabel("views.view_limit", "views.view-limit");
+    }
+})();

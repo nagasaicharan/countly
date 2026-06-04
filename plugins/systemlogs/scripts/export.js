@@ -4,8 +4,8 @@ var localize = require('../../../api/utils/localization.js');
 var myArgs = process.argv.slice(2);
 
 if (!myArgs.length) {
-    console.log("Usage: countly systemlogs export {days} {format}");
-    console.log("Example: countly systemlogs export 30 json");
+    console.log("Usage: userovo systemlogs export {days} {format}");
+    console.log("Example: userovo systemlogs export 30 json");
 }
 else {
     var days = parseInt(myArgs[0], 10);
@@ -41,7 +41,7 @@ else {
                         output.push(moment.unix(doc.ts).format("YYYY/MM/DD HH:mm:ss"));
                         output.push(doc.user_id + (doc.u ? " (" + doc.u + ")" : ""));
                         output.push(doc.ip);
-                        output.push(doc.app_id || plugins.getConfig("api").domain || process.env.COUNTLY_CONFIG_HOSTNAME || "localhost");
+                        output.push(doc.app_id || plugins.getConfig("api").domain || process.env.USEROVO_CONFIG_HOSTNAME || "localhost");
                         if (loginActions.indexOf(doc.a) !== -1) {
                             console.log("Time stamp | User ID | Login device IP or Hostname | Application/Service/Server Name | Result");
                             output.push(properties["systemlogs.action." + doc.a] || doc.a);

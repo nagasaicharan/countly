@@ -2,7 +2,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 usage (){
     echo "";
-    echo "countly remove_user <username>";
+    echo "userovo remove_user <username>";
 }
 
 if [ -z "$1" ] && [ -z "$2" ]

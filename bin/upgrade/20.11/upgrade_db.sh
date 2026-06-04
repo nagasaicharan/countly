@@ -2,7 +2,7 @@
 
 VER="20.11"
 
-CONTINUE="$(countly check before upgrade db "$VER")"
+CONTINUE="$(userovo check before upgrade db "$VER")"
 
 if [ "$CONTINUE" != "1" ] && [ "$1" != "combined" ]
 then
@@ -21,26 +21,26 @@ then
     CUR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
     
     #default setting for meta now
-    countly config "drill.record_meta" "false"
+    userovo config "drill.record_meta" "false"
 
     if [ "$1" != "combined" ]; then
         #upgrade plugins
-        countly plugin upgrade star-rating
-        countly plugin upgrade users
-        countly plugin upgrade consolidate
-        countly plugin upgrade two-factor-auth
-        countly plugin upgrade web
-        countly plugin upgrade active_directory
-        countly plugin upgrade crash_symbolication
-        countly plugin upgrade concurrent_users
+        userovo plugin upgrade star-rating
+        userovo plugin upgrade users
+        userovo plugin upgrade consolidate
+        userovo plugin upgrade two-factor-auth
+        userovo plugin upgrade web
+        userovo plugin upgrade active_directory
+        userovo plugin upgrade crash_symbolication
+        userovo plugin upgrade concurrent_users
         
         #enable new plugins
-        countly plugin enable activity-map
-        countly plugin enable config-transfer
-        countly plugin enable consolidate
-        countly plugin enable data-manager
-        countly plugin enable hooks
-        countly plugin enable surveys
+        userovo plugin enable activity-map
+        userovo plugin enable config-transfer
+        userovo plugin enable consolidate
+        userovo plugin enable data-manager
+        userovo plugin enable hooks
+        userovo plugin enable surveys
     fi
 
     #run upgrade scripts
@@ -52,11 +52,11 @@ then
     nodejs "$DIR/scripts/add_indexes.js"
     
     if [ "$1" != "combined" ]; then
-        countly upgrade;
+        userovo upgrade;
     fi
 
     #call after check
-    countly check after upgrade db "$VER"
+    userovo check after upgrade db "$VER"
 elif [ "$CONTINUE" == "0" ]
 then
     echo "Database is already upgraded to $VER"

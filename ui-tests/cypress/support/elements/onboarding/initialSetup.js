@@ -1,6 +1,6 @@
 export default {
     //Common elements
-    LOGO: 'countly-logo',
+    LOGO: 'userovo-logo',
     PAGE_TITLE: 'initial-setup-title',
     SELECT_APP_TYPE_LABEL: 'select-application-type-form-header-select-your-application-type',
     APP_TYPE_MOBILE_RADIO_BUTTON: 'initial-setup-mobile-el-radio-wrapper',

@@ -106,8 +106,8 @@ function queryToName(queryString) {
 };
 
 //creates missing drill query for drill reports
-function upgradeDrillReport(widget, report_id, countlyDb, countlyDrill, done) {
-    countlyDb.collection("long_tasks").findOne({_id: report_id}, function(err, report){
+function upgradeDrillReport(widget, report_id, userovoDb, userovoDrill, done) {
+    userovoDb.collection("long_tasks").findOne({_id: report_id}, function(err, report){
         if (err) {
             console.log("Error", err);
             process.exit(1);
@@ -135,7 +135,7 @@ function upgradeDrillReport(widget, report_id, countlyDb, countlyDrill, done) {
             by_val: byVal || []
         });
         var eventUnescaped = _.unescape(report.meta.event);
-        countlyDrill.collection("drill_bookmarks").insertOne({
+        userovoDrill.collection("drill_bookmarks").insertOne({
             "app_id": report.app_id,
             "event_key": report.meta.event,
             "name": report.report_name,
@@ -150,7 +150,7 @@ function upgradeDrillReport(widget, report_id, countlyDb, countlyDrill, done) {
             "event_app_id": crypto.createHash('sha1').update(eventUnescaped + report.app_id).digest('hex')
         }, {ignore_errors: [11000]}, function(insertError, insertionRes) {
             console.log("Inserting drill query", insertionRes && insertionRes.result);
-            countlyDrill.collection("drill_bookmarks").findOne({sign: sign}, function(err, res){
+            userovoDrill.collection("drill_bookmarks").findOne({sign: sign}, function(err, res){
                 var queryConfig = {
                     "_id": res._id + "",
                     "period": report.period_desc || true
@@ -159,13 +159,13 @@ function upgradeDrillReport(widget, report_id, countlyDb, countlyDrill, done) {
                     unorderedArrays: true,
                     unorderedObjects: true
                 });
-                countlyDb.collection("long_tasks").updateOne({_id: report._id}, {$set: {"linked_to": {
+                userovoDb.collection("long_tasks").updateOne({_id: report._id}, {$set: {"linked_to": {
                     "_issuer": "wqm:drill",
                     "_sign": queryConfigSign,
                     "_id": res._id + "",
                     "period": report.period_desc || true
                 }}}, function(){
-                     countlyDb.collection("widgets").updateOne({_id: widget._id}, {$addToSet: {"drill_query": queryConfig}}, function(){
+                     userovoDb.collection("widgets").updateOne({_id: widget._id}, {$addToSet: {"drill_query": queryConfig}}, function(){
                         done();
                     });
                 });
@@ -187,8 +187,8 @@ function getFormulaSignature(formula) {
     return crypto.createHash('md5').update(str).digest('hex');
 }
 
-function upgradeFormulaReport(widget, report_id, countlyDb, countlyDrill, done) {
-    countlyDb.collection("long_tasks").findOne({_id: report_id}, function(err, report){
+function upgradeFormulaReport(widget, report_id, userovoDb, userovoDrill, done) {
+    userovoDb.collection("long_tasks").findOne({_id: report_id}, function(err, report){
         if (err) {
             console.log("Error", err);
             process.exit(1);
@@ -219,7 +219,7 @@ function upgradeFormulaReport(widget, report_id, countlyDb, countlyDrill, done) 
                 parsed = parsing.parseBuilderOutput(report.request.json.formula);
             }
             var formula_hash = getFormulaSignature(report.request.json.formula);
-            countlyDb.collection("calculated_metrics").insertOne({
+            userovoDb.collection("calculated_metrics").insertOne({
                 "app": report.app_id,
                 "title": report.report_name + "(" + report._id + ")",
                 "key": report._id,
@@ -233,7 +233,7 @@ function upgradeFormulaReport(widget, report_id, countlyDb, countlyDrill, done) 
                 "owner_id": report.creator
             }, {ignore_errors: [11000]}, function(insertError, insertionRes) {
                 console.log("Inserting formula", insertionRes && insertionRes.result);
-                countlyDb.collection("calculated_metrics").findOne({key: report._id, "app": report.app_id}, function(err, res){
+                userovoDb.collection("calculated_metrics").findOne({key: report._id, "app": report.app_id}, function(err, res){
                     if (res && res._id) {
                         report.request.json.metric_id = res._id;
                         report.request.json.mode = "saved";
@@ -247,13 +247,13 @@ function upgradeFormulaReport(widget, report_id, countlyDb, countlyDrill, done) 
                             unorderedArrays: true,
                             unorderedObjects: true
                         });
-                        countlyDb.collection("long_tasks").updateOne({_id: report._id}, {$set: {"linked_to": {
+                        userovoDb.collection("long_tasks").updateOne({_id: report._id}, {$set: {"linked_to": {
                             "_issuer": "wqm:formulas",
                             "_sign": queryConfigSign,
                             "_id": res._id + "",
                             "period": report.request.json.period
                         }, request: JSON.stringify(report.request)}}, function(){
-                            countlyDb.collection("widgets").updateOne({_id: widget._id}, {$addToSet: {"cmetric_refs": queryConfig}}, function(){
+                            userovoDb.collection("widgets").updateOne({_id: widget._id}, {$addToSet: {"cmetric_refs": queryConfig}}, function(){
                                 done();
                             });
                         });
@@ -272,9 +272,9 @@ function upgradeFormulaReport(widget, report_id, countlyDb, countlyDrill, done) 
     });
 }
 
-pluginManager.dbConnection().then((countlyDb) => {
-    pluginManager.dbConnection("countly_drill").then((countlyDrill) => {
-        countlyDb.collection('widgets').find({}).toArray(function(err, widgets) {
+pluginManager.dbConnection().then((userovoDb) => {
+    pluginManager.dbConnection("userovo_drill").then((userovoDrill) => {
+        userovoDb.collection('widgets').find({}).toArray(function(err, widgets) {
             if (err) {
                 console.error("Error upgrading", err);
                 process.exit(1);
@@ -284,13 +284,13 @@ pluginManager.dbConnection().then((countlyDb) => {
                 if (widget.drill_report && widget.drill_report.length && !widget.drill_query) {
                     console.log("This is a drill widget");
                     asyncjs.eachSeries(widget.drill_report, function(report_id, callback){
-                        upgradeDrillReport(widget, report_id, countlyDb, countlyDrill, callback);
+                        upgradeDrillReport(widget, report_id, userovoDb, userovoDrill, callback);
                     }, done);
                 }
                 else if (widget.cmetrics && widget.cmetrics.length && !widget.cmetric_refs) {
                     console.log("This is a formula widget");
                     asyncjs.eachSeries(widget.cmetrics, function(report_id, callback){
-                        upgradeFormulaReport(widget, report_id, countlyDb, countlyDrill, callback);
+                        upgradeFormulaReport(widget, report_id, userovoDb, userovoDrill, callback);
                     }, done);
                 }
                 else {
@@ -300,8 +300,8 @@ pluginManager.dbConnection().then((countlyDb) => {
             }
             asyncjs.eachSeries(widgets, upgrade, function() {
                 console.log("Widgets and reports data upgrade finished");
-                countlyDb.close();
-                countlyDrill.close();
+                userovoDb.close();
+                userovoDrill.close();
             });
         });
     });

@@ -40,23 +40,23 @@ function generateUpdates(crashgroup, maxCustomFieldKeys = DEFAULT_MAX_CUSTOM_FIE
 
 /**
 * Cleanup custom field from crashgroup documents
-* @param {Object} countlyDb - db connection object
+* @param {Object} userovoDb - db connection object
 * @param {number} maxCustomFieldKeys - how many unique custom field keys should be kept
 * @param {number} BATCH_SIZE - bulk write batch size
 */
 async function cleanupCustomField(
-    countlyDb,
+    userovoDb,
     maxCustomFieldKeys = DEFAULT_MAX_CUSTOM_FIELD_KEYS,
     BATCH_SIZE = 20
 ) {
-    const apps = await countlyDb.collection('apps').find({}).project({_id: 1, name: 1}).toArray();
+    const apps = await userovoDb.collection('apps').find({}).project({_id: 1, name: 1}).toArray();
 
     for (let idx = 0; idx < apps.length; idx += 1) {
         const app = apps[idx];
         console.log(`Updating crashgroup for ${app.name}`);
 
         const crashgroupCollection = `app_crashgroups${app._id}`;
-        const crashgroupsCursor = await countlyDb.collection(crashgroupCollection)
+        const crashgroupsCursor = await userovoDb.collection(crashgroupCollection)
             .aggregate([
                 {
                     $project: {
@@ -86,7 +86,7 @@ async function cleanupCustomField(
 
             if (updates.length && updates.length === BATCH_SIZE) {
                 try {
-                    await countlyDb.collection(crashgroupCollection).bulkWrite(updates, { ordered: false });
+                    await userovoDb.collection(crashgroupCollection).bulkWrite(updates, { ordered: false });
                 }
                 catch (err) {
                     console.error(`Failed updating collection ${crashgroupCollection}`, err);
@@ -99,7 +99,7 @@ async function cleanupCustomField(
 
         if (updates.length && updates.length > 0) {
             try {
-                await countlyDb.collection(crashgroupCollection).bulkWrite(updates, { ordered: false });
+                await userovoDb.collection(crashgroupCollection).bulkWrite(updates, { ordered: false });
             }
             catch (err) {
                 console.error(`Failed updating collection ${crashgroupCollection}`, err);

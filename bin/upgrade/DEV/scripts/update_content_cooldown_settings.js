@@ -7,14 +7,14 @@ const pluginManager = require('../../../../plugins/pluginManager.js');
 
 console.log("=== Migrating 'content' cooldown to 'journeys' in apps and plugins collections ===");
 
-pluginManager.dbConnection().then(async(countlyDb) => {
+pluginManager.dbConnection().then(async(userovoDb) => {
     try {
         /********************************************/
         /* 1) in the APPS collection content->journey_engine, APP SETTING */
         /********************************************/
         console.log("Starting migration in apps collection...");
 
-        const apps = await countlyDb.collection("apps").find({"plugins.content": { $exists: true }}).toArray();
+        const apps = await userovoDb.collection("apps").find({"plugins.content": { $exists: true }}).toArray();
         if (!apps || apps.length === 0) {
             console.log("No apps require content->journeys migration");
         } 
@@ -24,7 +24,7 @@ pluginManager.dbConnection().then(async(countlyDb) => {
                 appDoc.plugins.journey_engine = appDoc.plugins.content;
                 delete appDoc.plugins.content;
 
-                await countlyDb.collection("apps").updateOne(
+                await userovoDb.collection("apps").updateOne(
                     { _id: appDoc._id }, 
                     { $set: { plugins: appDoc.plugins }}
                 );
@@ -37,7 +37,7 @@ pluginManager.dbConnection().then(async(countlyDb) => {
         /********************************************/
         console.log("Updating '_id: plugins' document in plugins collection...");
 
-        const pluginsDoc = await countlyDb.collection("plugins").findOne({ _id: "plugins" });
+        const pluginsDoc = await userovoDb.collection("plugins").findOne({ _id: "plugins" });
         if (!pluginsDoc) {
             console.log("No document found in plugins collection with _id: plugins");
         } 
@@ -69,7 +69,7 @@ pluginManager.dbConnection().then(async(countlyDb) => {
 
             // if any changes were made, update the document
             if (needUpdate) {
-                await countlyDb.collection("plugins").updateOne(
+                await userovoDb.collection("plugins").updateOne(
                     { _id: "plugins" }, 
                     { $set: pluginsDoc }
                 );
@@ -84,7 +84,7 @@ pluginManager.dbConnection().then(async(countlyDb) => {
         console.error("Error during cooldown setting migration:", err);
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
         console.log("Cooldown migration script finished, DB connection closed.");
     }
 });

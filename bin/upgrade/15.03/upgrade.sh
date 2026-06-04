@@ -3,7 +3,7 @@
 set -e
 
 if [[ $EUID -ne 0 ]]; then
-   echo "Please execute Countly installation script with a superuser..." 1>&2
+   echo "Please execute Userovo installation script with a superuser..." 1>&2
    exit 1
 fi
 
@@ -19,7 +19,7 @@ echo "
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 #add mongodb repo
-echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" > /etc/apt/sources.list.d/mongodb-10gen-countly.list
+echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" > /etc/apt/sources.list.d/mongodb-10gen-userovo.list
 apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 
 #update once more after adding new repos
@@ -50,18 +50,18 @@ cp "$DIR/../../config/nginx.server.conf" /etc/nginx/sites-enabled/default
 cp "$DIR/../../config/nginx.conf" /etc/nginx/nginx.conf
 /etc/init.d/nginx restart
 
-cp -f "$DIR/../../../frontend/express/public/javascripts/countly/countly.config.sample.js" "$DIR/../../../frontend/express/public/javascripts/countly/countly.config.js"
+cp -f "$DIR/../../../frontend/express/public/javascripts/userovo/userovo.config.sample.js" "$DIR/../../../frontend/express/public/javascripts/userovo/userovo.config.js"
 
 #kill existing supervisor process
 pkill -SIGTERM supervisord
 
 #create supervisor upstart script
-(cat "$DIR/../../config/countly-supervisor.conf" ; echo "exec /usr/bin/supervisord --nodaemon --configuration $DIR/../../config/supervisord.conf") > /etc/init/countly-supervisor.conf
+(cat "$DIR/../../config/userovo-supervisor.conf" ; echo "exec /usr/bin/supervisord --nodaemon --configuration $DIR/../../config/supervisord.conf") > /etc/init/userovo-supervisor.conf
 
 #respawning mongod on crash
 echo "respawn" >> /etc/init/mongod.conf
 
-stop countly-supervisor
+stop userovo-supervisor
 
 #create api configuration file from sample
 cp -f "$DIR/../../../api/config.sample.js" "$DIR/../../../api/config.js"
@@ -74,10 +74,10 @@ if [ ! -f "$DIR/../../../plugins/plugins.json" ]; then
 fi
 
 #compile scripts for production
-countly task dist-all
+userovo task dist-all
 
 #install plugins
-bash "$DIR/../../scripts/countly.install.plugins.sh"
+bash "$DIR/../../scripts/userovo.install.plugins.sh"
 
-#finally start countly api and dashboard
-start countly-supervisor
+#finally start userovo api and dashboard
+start userovo-supervisor

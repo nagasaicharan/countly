@@ -4,8 +4,8 @@
 # -------------------------- IGNORE IF YOU HAVE ALREADY SET UP KUBECTL ------------------------------
 # ---------------------------------------------------------------------------------------------------
 # Kubernentes setup
-export PROJECT_NAME=countly-playground
-export CLUSTER_NAME=countly
+export PROJECT_NAME=userovo-playground
+export CLUSTER_NAME=userovo
 export ZONE_NAME=europe-west3-b
 export GCE_USER=YOUR@EMAIL.ADDRESS
 
@@ -35,8 +35,8 @@ kubectl --namespace kube-system patch deploy tiller-deploy -p '{"spec":{"templat
 
 
 # Create a namespace
-kubectl create ns countly
-kubectl config set-context --current --namespace=countly
+kubectl create ns userovo
+kubectl config set-context --current --namespace=userovo
 
 # Install MongoDB
 kubectl apply -f mongo/storage-class.yaml
@@ -46,19 +46,19 @@ helm install --name mongo -f mongo/values.yaml stable/mongodb-replicaset
 kubectl get po
 
 
-# Install Countly deployments & services
-kubectl apply -f countly-frontend.yaml
-kubectl apply -f countly-api.yaml
+# Install Userovo deployments & services
+kubectl apply -f userovo-frontend.yaml
+kubectl apply -f userovo-api.yaml
 
-# Install Countly ingress
-gcloud compute addresses create countly-static-ip --global
-kubectl apply -f countly-ingress-gce.yaml
+# Install Userovo ingress
+gcloud compute addresses create userovo-static-ip --global
+kubectl apply -f userovo-ingress-gce.yaml
 # Alternatively install ingress without static address created above
-#kubectl apply -f countly-ingress.yaml
+#kubectl apply -f userovo-ingress.yaml
 
-## Wait ~ 3 minutes until all Countly nodes spin up
+## Wait ~ 3 minutes until all Userovo nodes spin up
 kubectl get po
 
-## Wait ~ 5-10 minutes until Ingress sets up and open static Countly IP address
+## Wait ~ 5-10 minutes until Ingress sets up and open static Userovo IP address
 # Check Ingress status at GCE console in the meantime, then wait 10 more minutes
 kubectl get ing

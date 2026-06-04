@@ -4,14 +4,14 @@ const pluginManager = require('../../../../plugins/pluginManager.js');
 
 console.log("Deleting old timesOfDay collections...");
 
-pluginManager.dbConnection().then(async(countlyDb) => {
+pluginManager.dbConnection().then(async(userovoDb) => {
     try {
-        let allCollections = await countlyDb.listCollections().toArray();
+        let allCollections = await userovoDb.listCollections().toArray();
         let collectionNames = allCollections.map(o => o.name);
         const consentHistoryCollections = (collectionNames.filter(x => x.startsWith('timesofday'))).filter(x => !x.endsWith('timesofday'));
         try {
             for (const collectionName of consentHistoryCollections) {
-                await countlyDb.collection(collectionName).drop();
+                await userovoDb.collection(collectionName).drop();
             }
             console.log('Finished removing timesofdayAPPID collections.');
         }
@@ -23,6 +23,6 @@ pluginManager.dbConnection().then(async(countlyDb) => {
         console.log(`Error removing timesofdayAPPID collections: ${error}`);
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
     }
 });

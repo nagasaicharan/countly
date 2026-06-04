@@ -1,6 +1,6 @@
-# Countly Hooks Plugin
+# Userovo Hooks Plugin
 
-The Hooks plugin provides powerful automation for integrating Countly data with external systems. This plugin can trigger external HTTP endpoints based on internal events and incoming data, and send automated email notifications for events like user profile updates or users entering a cohort. Hooks offers a new way to feed external systems with Countly data, enabling real-time interactions and automating workflows.
+The Hooks plugin provides powerful automation for integrating Userovo data with external systems. This plugin can trigger external HTTP endpoints based on internal events and incoming data, and send automated email notifications for events like user profile updates or users entering a cohort. Hooks offers a new way to feed external systems with Userovo data, enabling real-time interactions and automating workflows.
 
 ## File Structure
 
@@ -27,9 +27,9 @@ hooks/                                      # Main hooks plugin directory
 ├── frontend/                               # Frontend resources
 │   ├── public/                             # Publicly accessible files
 │   │   ├── javascripts/                    # JavaScript for frontend logic
-│   │   │   ├── countly.hooks.effects.js    # Effect logic for frontend hooks
-│   │   │   ├── countly.models.js           # Model definitions for hooks
-│   │   │   └── countly.views.js            # View logic for rendering hooks
+│   │   │   ├── userovo.hooks.effects.js    # Effect logic for frontend hooks
+│   │   │   ├── userovo.models.js           # Model definitions for hooks
+│   │   │   └── userovo.views.js            # View logic for rendering hooks
 │   │   ├── localization/                   # Localization files for translations
 │   │   ├── stylesheets/                    # CSS and SCSS for styling hooks UI
 │   │   │   ├── vue-main.css                # Compiled CSS for UI
@@ -69,7 +69,7 @@ First, ensure that Hooks is enabled. In the Sidebar, navigate to Management > Fe
 
 ## Creating a New Hook
 
-To create a new Hook in the Countly Hooks Plugin, follow these steps:
+To create a new Hook in the Userovo Hooks Plugin, follow these steps:
 
 ### Step 1: Start a New Hook
 

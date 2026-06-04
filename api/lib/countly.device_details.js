@@ -1,11 +1,11 @@
 var countlyModel = require('./countly.model.js');
-var countlyCommon = require('./countly.common.js');
-var countlyOsMapping = require('../../frontend/express/public/javascripts/countly/countly.device.osmapping.js');
+var userovoCommon = require('./userovo.common.js');
+var userovoOsMapping = require('../../frontend/express/public/javascripts/userovo/userovo.device.osmapping.js');
 
 /**
 * This module defines default model to handle device_details data
-* @module "api/lib/countly.device_details"
-* @extends module:api/lib/countly.model~countlyMetric
+* @module "api/lib/userovo.device_details"
+* @extends module:api/lib/userovo.model~userovoMetric
 */
 
 /**
@@ -13,35 +13,35 @@ var countlyOsMapping = require('../../frontend/express/public/javascripts/countl
 * @returns {object} new model
 */
 function create() {
-    /** @lends module:api/lib/countly.device_details */
-    var countlyDeviceDetails = countlyModel.create(function(rangeArr) {
+    /** @lends module:api/lib/userovo.device_details */
+    var userovoDeviceDetails = countlyModel.create(function(rangeArr) {
         return rangeArr.replace(/:/g, ".");
     });
 
     /**
      * Function to fix data based on segement for Bars
      * @param  {String} segment - name of the segment/metric to get data for, by default will use default _name provided on initialization
-     * @param  {Object} rangeData - countly standard metric data object
+     * @param  {Object} rangeData - userovo standard metric data object
      * @returns {Object} - metric data object
      */
-    countlyDeviceDetails.fixBarSegmentData = function(segment, rangeData) {
+    userovoDeviceDetails.fixBarSegmentData = function(segment, rangeData) {
         var i;
 
         if (segment === "os") {
             var chartData = rangeData.chartData;
             for (i = 0; i < chartData.length; i++) {
-                if (countlyOsMapping[chartData[i].range.toLowerCase()]) {
-                    chartData[i].os = countlyOsMapping[chartData[i].range.toLowerCase()].name;
+                if (userovoOsMapping[chartData[i].range.toLowerCase()]) {
+                    chartData[i].os = userovoOsMapping[chartData[i].range.toLowerCase()].name;
                 }
             }
 
-            chartData = countlyCommon.mergeMetricsByName(chartData, "os");
+            chartData = userovoCommon.mergeMetricsByName(chartData, "os");
             rangeData.chartData = chartData;
         }
 
         return rangeData;
     };
 
-    return countlyDeviceDetails;
+    return userovoDeviceDetails;
 }
 module.exports = create;

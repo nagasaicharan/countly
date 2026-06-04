@@ -3,15 +3,15 @@ var pluginManager = require('../../../../plugins/pluginManager.js'),
     crypto = require('crypto'),
     Promise = require("bluebird");
 
-pluginManager.dbConnection().then((countlyDb) => {
-    countlyDb.collection('long_tasks').update({autoRefresh: true,type:"formulas", taskgtoup:{$exists:false},subtask:{$exists:false}},{$set:{"period_desc":"732days",taskgroup:true}},{multi:true},function (err,res){
+pluginManager.dbConnection().then((userovoDb) => {
+    userovoDb.collection('long_tasks').update({autoRefresh: true,type:"formulas", taskgtoup:{$exists:false},subtask:{$exists:false}},{$set:{"period_desc":"732days",taskgroup:true}},{multi:true},function (err,res){
         if(err) {
             console.log(err);
         }
         else {
             console.log(res.result);
         }
-        countlyDb.collection('long_tasks').find({autoRefresh: true,type:"drill"}).toArray(function(err, tasks) {
+        userovoDb.collection('long_tasks').find({autoRefresh: true,type:"drill"}).toArray(function(err, tasks) {
             Promise.each(tasks, function(task) {
                 return new Promise(function(resolve, reject) {
                     if(!task.taskgroup && ! task.subtask){
@@ -22,7 +22,7 @@ pluginManager.dbConnection().then((countlyDb) => {
                             request.json.period_desc = "732days";
                             request.json.bucket = "";
                             request.json.method = "createReport";
-                            countlyDb.collection("long_tasks").update({_id: task._id}, {
+                            userovoDb.collection("long_tasks").update({_id: task._id}, {
                                 $set: {
                                     subtasks:{},
                                     data: {},
@@ -48,7 +48,7 @@ pluginManager.dbConnection().then((countlyDb) => {
                 }); 
             }).then(function() {
                 console.log("Finished upgrading reports");
-                countlyDb.close();
+                userovoDb.close();
             });
         });
     });

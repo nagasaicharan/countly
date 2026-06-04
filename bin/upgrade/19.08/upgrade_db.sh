@@ -7,19 +7,19 @@ CUR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [ "$1" != "combined" ]; then
     #upgrade plugins
-    countly plugin upgrade crashes
-    countly plugin upgrade push
-    countly plugin upgrade systemlogs
-    countly plugin disable live
-    countly plugin enable concurrent_users
-    countly plugin enable formulas
-    countly plugin enable ab-testing
+    userovo plugin upgrade crashes
+    userovo plugin upgrade push
+    userovo plugin upgrade systemlogs
+    userovo plugin disable live
+    userovo plugin enable concurrent_users
+    userovo plugin enable formulas
+    userovo plugin enable ab-testing
     #replace totp with two-factor-aut
-    STATE=$(countly plugin status  totp);
+    STATE=$(userovo plugin status  totp);
     if [ "$STATE" == "enabled" ] 
     then
-        countly plugin disable  totp ;
-        countly plugin enable two-factor-auth ;
+        userovo plugin disable  totp ;
+        userovo plugin enable two-factor-auth ;
     fi
 fi
 

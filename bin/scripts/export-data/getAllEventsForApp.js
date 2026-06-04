@@ -1,6 +1,6 @@
 /**
  * Outputs list of drill collection names for specific app
- * Server: countly
+ * Server: userovo
  * Path: bin/scripts/export-data
  * Command: node getallEventsForApp.js
  */
@@ -12,7 +12,7 @@ var plugins = require("../../../plugins/pluginManager.js");
 var crypto = require("crypto");
 var internalDrillEvents = ["[CLY]_session", "[CLY]_crash", "[CLY]_view", "[CLY]_action", "[CLY]_push_action", "[CLY]_push_sent", "[CLY]_star_rating", "[CLY]_nps", "[CLY]_survey", "[CLY]_apm_network", "[CLY]_apm_device", "[CLY]_consent"];
 var result = [];
-plugins.dbConnection("countly").then(function(db) {
+plugins.dbConnection("userovo").then(function(db) {
     db.collection("events").findOne({_id: db.ObjectID(APP_ID)}, {"list": true}, function(err, event) {
         if (event && event.list) {
             for (let i = 0; i < event.list.length; i++) {

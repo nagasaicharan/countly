@@ -1,19 +1,19 @@
 {
-  "name": "countly-desktop",
+  "name": "userovo-desktop",
   "title": "Desktop Apps",
   "version": "1.0.0",
-  "description": "Plugin for adding desktop app types to Countly",
+  "description": "Plugin for adding desktop app types to Userovo",
   "author": "Count.ly",
   "homepage": "https://count.ly/plugins/desktop-analytics",
   "repository": {
     "type": "git",
-    "url": "http://github.com/Countly/countly-server.git"
+    "url": "http://github.com/Userovo/userovo-server.git"
   },
   "bugs": {
-    "url": "http://github.com/Countly/countly-server/issues"
+    "url": "http://github.com/Userovo/userovo-server/issues"
   },
   "keywords": [
-    "countly",
+    "userovo",
     "analytics",
     "plugins",
     "desktop"

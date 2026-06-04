@@ -4,7 +4,7 @@ echo "Running filesystem modifications"
 
 VER="25.03"
 
-CONTINUE="$(countly check before upgrade fs "$VER")"
+CONTINUE="$(userovo check before upgrade fs "$VER")"
 
 if [ "$CONTINUE" != "1" ] && [ "$1" != "combined" ]
 then
@@ -23,24 +23,24 @@ then
     #enable command line
     bash "$DIR/scripts/detect.init.sh"
     
-    countly plugin enable content;
-    countly plugin enable journey_engine;
+    userovo plugin enable content;
+    userovo plugin enable journey_engine;
 
     #upgrade plugins
     nodejs "$DIR/scripts/install_plugins.js"
     
     #get web sdk
-    countly update sdk-web
+    userovo update sdk-web
    
     
     if [ "$1" != "combined" ]; then
-        countly upgrade;
+        userovo upgrade;
     else
-        countly task dist-all;
+        userovo task dist-all;
     fi
 
     #call after check
-    countly check after upgrade fs "$VER"
+    userovo check after upgrade fs "$VER"
 elif [ "$CONTINUE" == "0" ]
 then
     echo "Filesystem is already upgraded to $VER"

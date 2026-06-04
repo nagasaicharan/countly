@@ -4,10 +4,10 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
 
 if [ "$1" != "combined" ]; then
     #upgrade existing plugins
-    countly plugin upgrade push
-    countly plugin upgrade live
+    userovo plugin upgrade push
+    userovo plugin upgrade live
 
-    countly plugin enable times-of-day
+    userovo plugin enable times-of-day
 fi
 
 nodejs "$DIR/upgrade/18.01/scripts/removeUnusedData.js"

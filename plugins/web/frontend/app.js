@@ -1,7 +1,7 @@
 var exported = {},
     plugins = require("../../pluginManager"),
-    request = require("countly-request")(plugins.getConfig("security")),
-    countlyConfig = require("../../../frontend/express/config");
+    request = require("userovo-request")(plugins.getConfig("security")),
+    userovoConfig = require("../../../frontend/express/config");
 
 (function(plugin) {
     plugin.init = function(app) {
@@ -17,9 +17,9 @@ var exported = {},
                 }
             });
         }
-        app.get(countlyConfig.path + '/pixel.png', function(req, res) {
+        app.get(userovoConfig.path + '/pixel.png', function(req, res) {
             if (req.query.app_key) {
-                var options = {uri: (process.env.COUNTLY_CONFIG_PROTOCOL || "http") + "://" + (process.env.COUNTLY_CONFIG_HOSTNAME || "localhost") + (countlyConfig.path || "") + "/i", method: "POST", timeout: 4E3, json: {}, strictSSL: false};
+                var options = {uri: (process.env.USEROVO_CONFIG_PROTOCOL || "http") + "://" + (process.env.USEROVO_CONFIG_HOSTNAME || "localhost") + (userovoConfig.path || "") + "/i", method: "POST", timeout: 4E3, json: {}, strictSSL: false};
                 if (req && req.headers && req.headers['user-agent']) {
                     options.headers = {'user-agent': req.headers['user-agent']};
                 }

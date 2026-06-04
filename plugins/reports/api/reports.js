@@ -5,20 +5,20 @@ var reportsInstance = {},
     fs = require('fs'),
     path = require('path'),
     plugins = require("../../pluginManager"),
-    request = require('countly-request')(plugins.getConfig("security")),
+    request = require('userovo-request')(plugins.getConfig("security")),
     crypto = require('crypto'),
     mail = require("../../../api/parts/mgmt/mail"),
     fetch = require("../../../api/parts/data/fetch"),
-    countlyCommon = require('../../../api/lib/countly.common.js'),
+    userovoCommon = require('../../../api/lib/userovo.common.js'),
     localize = require('../../../api/utils/localization.js'),
     common = require('../../../api/utils/common.js'),
     log = require('../../../api/utils/log')('reports:reports'),
     versionInfo = require('../../../frontend/express/version.info'),
-    countlyConfig = require('../../../frontend/express/config.js'),
-    countlyApiConfig = require('./../../../api/config', 'dont-enclose'),
+    userovoConfig = require('../../../frontend/express/config.js'),
+    userovoApiConfig = require('./../../../api/config', 'dont-enclose'),
     pdf = require('../../../api/utils/pdf');
 
-countlyConfig.passwordSecret || "";
+userovoConfig.passwordSecret || "";
 
 /**
  * Generates a cryptographically secure random string of the given length.
@@ -30,11 +30,11 @@ function generateRandomString(length) {
 }
 
 plugins.setConfigs("reports", {
-    secretKey: countlyApiConfig?.encryption?.reports_key || generateRandomString(32),
+    secretKey: userovoApiConfig?.encryption?.reports_key || generateRandomString(32),
 });
 
 versionInfo.page = (!versionInfo.title) ? "https://count.ly" : null;
-versionInfo.title = versionInfo.title || "Countly";
+versionInfo.title = versionInfo.title || "Userovo";
 var metrics = {
     "analytics": {
         "total_sessions": true,
@@ -137,12 +137,12 @@ var metricProps = {
             });
         }
         /**
-         * process to get news from countly offical site
+         * process to get news from userovo offical site
          * @param {func} cb - callback function
          */
         function processUniverse(cb) {
             if (!plugins.getConfig("api").offline_mode) {
-                if (versionInfo.title.indexOf("Countly") > -1) {
+                if (versionInfo.title.indexOf("Userovo") > -1) {
                     var options = {
                         uri: 'http://count.ly/email-news.txt',
                         method: 'GET',
@@ -441,8 +441,8 @@ var metricProps = {
                         var total = 0;
                         for (var i = 0; i < apps.length; i++) {
                             if (apps[i] && apps[i].results) {
-                                countlyCommon.setPeriod(report.period);
-                                countlyCommon.setTimezone(apps[i].timezone);
+                                userovoCommon.setPeriod(report.period);
+                                userovoCommon.setTimezone(apps[i].timezone);
                                 for (var j in apps[i].results) {
                                     if (j === "users") {
                                         apps[i].results[j] = getSessionData(
@@ -692,11 +692,11 @@ var metricProps = {
                         let emailFiller = Object.assign({}, message.data);
                         //use localhost for pdf generation instead of domain
                         //it prevents the issue when one server has local files and loadbalancer sends the request to another server
-                        emailFiller.localhost = (process.env.COUNTLY_CONFIG_PROTOCOL || "http") + "://" + countlyConfig.web.host + ':' + countlyConfig.web.port + countlyConfig.path;
+                        emailFiller.localhost = (process.env.USEROVO_CONFIG_PROTOCOL || "http") + "://" + userovoConfig.web.host + ':' + userovoConfig.web.port + userovoConfig.path;
                         htmlForPdf = ejs.render(message.template, emailFiller);
                     }
                     pdf.renderPDF(htmlForPdf, function() {
-                        msg.attachments = [{filename: "Countly_Report.pdf", path: filePath}];
+                        msg.attachments = [{filename: "Userovo_Report.pdf", path: filePath}];
 
                         /**
                          * callback function after sending email to delete pdf file
@@ -784,7 +784,7 @@ var metricProps = {
     */
     function getSessionData(_sessionDb, totalUserOverrideObj, previousTotalUserOverrideObj) {
         //Update the current period object in case selected date is changed
-        _periodObj = countlyCommon.periodObj;
+        _periodObj = userovoCommon.periodObj;
 
         var dataArr = {},
             tmp_x,
@@ -810,7 +810,7 @@ var metricProps = {
             isEstimate = true;
 
             for (let i = 0; i < (_periodObj.uniquePeriodArr.length); i++) {
-                tmp_x = countlyCommon.getDescendantProp(_sessionDb, _periodObj.uniquePeriodArr[i]);
+                tmp_x = userovoCommon.getDescendantProp(_sessionDb, _periodObj.uniquePeriodArr[i]);
                 tmp_x = clearSessionObject(tmp_x);
                 currentUnique += tmp_x.u;
                 currentPayingTotal += tmp_x.p;
@@ -823,7 +823,7 @@ var metricProps = {
                 tmpCurrentMsgEnabled = 0;
 
             for (let i = 0; i < (_periodObj.uniquePeriodCheckArr.length); i++) {
-                tmpUniqObj = countlyCommon.getDescendantProp(_sessionDb, _periodObj.uniquePeriodCheckArr[i]);
+                tmpUniqObj = userovoCommon.getDescendantProp(_sessionDb, _periodObj.uniquePeriodCheckArr[i]);
                 tmpUniqObj = clearSessionObject(tmpUniqObj);
                 tmpCurrentUniq += tmpUniqObj.u;
                 tmpCurrentPaying += tmpUniqObj.p;
@@ -845,7 +845,7 @@ var metricProps = {
             }
 
             for (let i = 0; i < (_periodObj.previousUniquePeriodArr.length); i++) {
-                tmp_y = countlyCommon.getDescendantProp(_sessionDb, _periodObj.previousUniquePeriodArr[i]);
+                tmp_y = userovoCommon.getDescendantProp(_sessionDb, _periodObj.previousUniquePeriodArr[i]);
                 tmp_y = clearSessionObject(tmp_y);
                 previousUnique += tmp_y.u;
                 previousPayingTotal += tmp_y.p;
@@ -857,7 +857,7 @@ var metricProps = {
                 tmpPreviousPaying = 0;
 
             for (let i = 0; i < (_periodObj.previousUniquePeriodCheckArr.length); i++) {
-                tmpUniqObj2 = countlyCommon.getDescendantProp(_sessionDb, _periodObj.previousUniquePeriodCheckArr[i]);
+                tmpUniqObj2 = userovoCommon.getDescendantProp(_sessionDb, _periodObj.previousUniquePeriodCheckArr[i]);
                 tmpUniqObj2 = clearSessionObject(tmpUniqObj2);
                 tmpPreviousUniq += tmpUniqObj2.u;
                 tmpPreviousPaying += tmpUniqObj2.p;
@@ -876,8 +876,8 @@ var metricProps = {
             }
 
             for (let i = 0; i < (_periodObj.currentPeriodArr.length); i++) {
-                tmp_x = countlyCommon.getDescendantProp(_sessionDb, _periodObj.currentPeriodArr[i]);
-                tmp_y = countlyCommon.getDescendantProp(_sessionDb, _periodObj.previousPeriodArr[i]);
+                tmp_x = userovoCommon.getDescendantProp(_sessionDb, _periodObj.currentPeriodArr[i]);
+                tmp_y = userovoCommon.getDescendantProp(_sessionDb, _periodObj.previousPeriodArr[i]);
                 tmp_x = clearSessionObject(tmp_x);
                 tmp_y = clearSessionObject(tmp_y);
 
@@ -892,8 +892,8 @@ var metricProps = {
             }
         }
         else {
-            tmp_x = countlyCommon.getDescendantProp(_sessionDb, _periodObj.activePeriod);
-            tmp_y = countlyCommon.getDescendantProp(_sessionDb, _periodObj.previousPeriod);
+            tmp_x = userovoCommon.getDescendantProp(_sessionDb, _periodObj.activePeriod);
+            tmp_y = userovoCommon.getDescendantProp(_sessionDb, _periodObj.previousPeriod);
             tmp_x = clearSessionObject(tmp_x);
             tmp_y = clearSessionObject(tmp_y);
 
@@ -935,16 +935,16 @@ var metricProps = {
             durationPerUser = (currentTotal === 0) ? 0 : (sessionDuration / currentTotal),
             previousEventsPerUser = (previousUnique === 0) ? 0 : previousEvents / previousUnique,
             eventsPerUser = (currentUnique === 0) ? 0 : (currentEvents / currentUnique),
-            changeTotal = countlyCommon.getPercentChange(previousTotal, currentTotal),
-            changeDuration = countlyCommon.getPercentChange(previousDuration, currentDuration),
-            changeDurationPerUser = countlyCommon.getPercentChange(previousDurationPerUser, durationPerUser),
-            changeNew = countlyCommon.getPercentChange(previousNew, currentNew),
-            changeUnique = countlyCommon.getPercentChange(previousUnique, currentUnique),
-            changeReturning = countlyCommon.getPercentChange((previousUnique - previousNew), (currentUnique - currentNew)),
-            changeEvents = countlyCommon.getPercentChange(previousEvents, currentEvents),
-            changeEventsPerUser = countlyCommon.getPercentChange(previousEventsPerUser, eventsPerUser),
-            changePaying = countlyCommon.getPercentChange(previousPayingTotal, currentPayingTotal),
-            changeMsgEnabled = countlyCommon.getPercentChange(previousMsgEnabledTotal, currentMsgEnabledTotal);
+            changeTotal = userovoCommon.getPercentChange(previousTotal, currentTotal),
+            changeDuration = userovoCommon.getPercentChange(previousDuration, currentDuration),
+            changeDurationPerUser = userovoCommon.getPercentChange(previousDurationPerUser, durationPerUser),
+            changeNew = userovoCommon.getPercentChange(previousNew, currentNew),
+            changeUnique = userovoCommon.getPercentChange(previousUnique, currentUnique),
+            changeReturning = userovoCommon.getPercentChange((previousUnique - previousNew), (currentUnique - currentNew)),
+            changeEvents = userovoCommon.getPercentChange(previousEvents, currentEvents),
+            changeEventsPerUser = userovoCommon.getPercentChange(previousEventsPerUser, eventsPerUser),
+            changePaying = userovoCommon.getPercentChange(previousPayingTotal, currentPayingTotal),
+            changeMsgEnabled = userovoCommon.getPercentChange(previousMsgEnabledTotal, currentMsgEnabledTotal);
 
         var timeSpentString = (sessionDuration.toFixed(1)) + " min";
 
@@ -958,7 +958,7 @@ var metricProps = {
             timeSpentString = (sessionDuration / 60).toFixed(1) + " hours";
         }
 
-        //var timeSpentString = countlyCommon.timeString(sessionDuration);
+        //var timeSpentString = userovoCommon.timeString(sessionDuration);
 
         dataArr =
         {
@@ -1004,7 +1004,7 @@ var metricProps = {
                 "trend": changeDuration.trend
             },
             "avg_time": {
-                "total": countlyCommon.timeString(durationPerUser),
+                "total": userovoCommon.timeString(durationPerUser),
                 "change": changeDurationPerUser.percent,
                 "trend": changeDurationPerUser.trend
             },
@@ -1031,7 +1031,7 @@ var metricProps = {
     function getCrashData(_crashTimeline) {
 
         //Update the current period object in case selected date is changed
-        _periodObj = countlyCommon.periodObj;
+        _periodObj = userovoCommon.periodObj;
 
         var dataArr = {},
             tmp_x,
@@ -1050,7 +1050,7 @@ var metricProps = {
         if (_periodObj.isSpecialPeriod) {
 
             for (let i = 0; i < (_periodObj.currentPeriodArr.length); i++) {
-                tmp_x = countlyCommon.getDescendantProp(_crashTimeline, _periodObj.currentPeriodArr[i]);
+                tmp_x = userovoCommon.getDescendantProp(_crashTimeline, _periodObj.currentPeriodArr[i]);
                 tmp_x = clearCrashObject(tmp_x);
                 if ((tmp_x.cruf !== undefined) && (tmp_x.crunf !== undefined)) {
                     currentUnique += tmp_x.cruf + tmp_x.crunf;
@@ -1062,7 +1062,7 @@ var metricProps = {
             }
 
             for (let i = 0; i < (_periodObj.previousPeriodArr.length); i++) {
-                tmp_y = countlyCommon.getDescendantProp(_crashTimeline, _periodObj.previousPeriodArr[i]);
+                tmp_y = userovoCommon.getDescendantProp(_crashTimeline, _periodObj.previousPeriodArr[i]);
                 tmp_y = clearCrashObject(tmp_y);
                 if ((tmp_y.cruf !== undefined) && (tmp_y.crunf !== undefined)) {
                     previousUnique += tmp_y.cruf + tmp_y.crunf;
@@ -1074,8 +1074,8 @@ var metricProps = {
             }
         }
         else {
-            tmp_x = countlyCommon.getDescendantProp(_crashTimeline, _periodObj.activePeriod);
-            tmp_y = countlyCommon.getDescendantProp(_crashTimeline, _periodObj.previousPeriod);
+            tmp_x = userovoCommon.getDescendantProp(_crashTimeline, _periodObj.activePeriod);
+            tmp_y = userovoCommon.getDescendantProp(_crashTimeline, _periodObj.previousPeriod);
             tmp_x = clearCrashObject(tmp_x);
             tmp_y = clearCrashObject(tmp_y);
 
@@ -1091,11 +1091,11 @@ var metricProps = {
             previousResolved = tmp_y.crru;
         }
 
-        var changeTotal = countlyCommon.getPercentChange(previousTotal, currentTotal),
-            changeNonfatal = countlyCommon.getPercentChange(previousNonfatal, currentNonfatal),
-            changeUnique = countlyCommon.getPercentChange(previousUnique, currentUnique),
-            changeFatal = countlyCommon.getPercentChange(previousFatal, currentFatal),
-            changeResolved = countlyCommon.getPercentChange(previousResolved, currentResolved);
+        var changeTotal = userovoCommon.getPercentChange(previousTotal, currentTotal),
+            changeNonfatal = userovoCommon.getPercentChange(previousNonfatal, currentNonfatal),
+            changeUnique = userovoCommon.getPercentChange(previousUnique, currentUnique),
+            changeFatal = userovoCommon.getPercentChange(previousFatal, currentFatal),
+            changeResolved = userovoCommon.getPercentChange(previousResolved, currentResolved);
 
         dataArr =
         {
@@ -1143,7 +1143,7 @@ var metricProps = {
     * @return {number}  - return event calc data
     */
     function getEventData(eventDb) {
-        _periodObj = countlyCommon.periodObj;
+        _periodObj = userovoCommon.periodObj;
 
         if (!eventDb) {
             return {
@@ -1168,7 +1168,7 @@ var metricProps = {
             previousTotal = eventCount(eventDb, _periodObj.previousPeriod);
         }
 
-        var changeTotal = countlyCommon.getPercentChange(previousTotal, currentTotal);
+        var changeTotal = userovoCommon.getPercentChange(previousTotal, currentTotal);
 
         return {
             "total": currentTotal,
@@ -1183,7 +1183,7 @@ var metricProps = {
     * @return {object}  - return revenu data chart object
     */
     function getRevenueData(eventDb) {
-        _periodObj = countlyCommon.periodObj;
+        _periodObj = userovoCommon.periodObj;
 
         if (!eventDb) {
             return {
@@ -1211,25 +1211,25 @@ var metricProps = {
 
         if (_periodObj.isSpecialPeriod) {
             for (var i = 0; i < (_periodObj.currentPeriodArr.length); i++) {
-                let tmpObj = countlyCommon.getDescendantProp(eventDb, _periodObj.currentPeriodArr[i]);
+                let tmpObj = userovoCommon.getDescendantProp(eventDb, _periodObj.currentPeriodArr[i]);
                 total.c += (tmpObj && tmpObj.c) ? tmpObj.c : 0;
                 total.s += (tmpObj && tmpObj.s) ? tmpObj.s : 0;
-                let tmpObj2 = countlyCommon.getDescendantProp(eventDb, _periodObj.previousPeriodArr[i]);
+                let tmpObj2 = userovoCommon.getDescendantProp(eventDb, _periodObj.previousPeriodArr[i]);
                 total.pc += (tmpObj2 && tmpObj2.c) ? tmpObj2.c : 0;
                 total.ps += (tmpObj2 && tmpObj2.s) ? tmpObj2.s : 0;
             }
         }
         else {
-            let tmpObj = countlyCommon.getDescendantProp(eventDb, _periodObj.activePeriod);
+            let tmpObj = userovoCommon.getDescendantProp(eventDb, _periodObj.activePeriod);
             total.c = (tmpObj && tmpObj.c) ? tmpObj.c : 0;
             total.s = (tmpObj && tmpObj.s) ? tmpObj.s : 0;
-            let tmpObj2 = countlyCommon.getDescendantProp(eventDb, _periodObj.previousPeriod);
+            let tmpObj2 = userovoCommon.getDescendantProp(eventDb, _periodObj.previousPeriod);
             total.pc = (tmpObj2 && tmpObj2.c) ? tmpObj2.c : 0;
             total.ps = (tmpObj2 && tmpObj2.s) ? tmpObj2.s : 0;
         }
 
-        var changeTotalCount = countlyCommon.getPercentChange(total.pc, total.c);
-        var changeTotalSum = countlyCommon.getPercentChange(total.ps, total.s);
+        var changeTotalCount = userovoCommon.getPercentChange(total.pc, total.c);
+        var changeTotalSum = userovoCommon.getPercentChange(total.ps, total.s);
 
         return {
             c: {
@@ -1248,11 +1248,11 @@ var metricProps = {
     /**
     * get event count
     * @param {object} eventDb -  event data
-    * @param {string/array}  period -  period defined by countly
+    * @param {string/array}  period -  period defined by userovo
     * @return {number}  - return event count
     */
     function eventCount(eventDb, period) {
-        var tmpObj = countlyCommon.getDescendantProp(eventDb, period);
+        var tmpObj = userovoCommon.getDescendantProp(eventDb, period);
         return (tmpObj && tmpObj.c) ? tmpObj.c : 0;
     }
 

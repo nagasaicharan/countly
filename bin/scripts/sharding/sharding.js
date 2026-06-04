@@ -1,5 +1,5 @@
 /*
-*  Sharding Countly collections when DB requires authentication, provide it to authDB.auth command in the code
+*  Sharding Userovo collections when DB requires authentication, provide it to authDB.auth command in the code
 *  Server: mongodb
 *  Path: any
 *  Command: mongosh -u uname -p 'password' --authenticationDatabase admin sharding.js
@@ -7,10 +7,10 @@
 
 /* global db, print, printjson */
 
-// Set countly_drill database name
-const COUNTLY_DRILL = 'countly_drill';
-// Set countly database name
-const COUNTLY = 'countly';
+// Set userovo_drill database name
+const USEROVO_DRILL = 'userovo_drill';
+// Set userovo database name
+const USEROVO = 'userovo';
 // Set the threshold for sharding collections
 const COUNT_TO_SHARD = 100000;
 
@@ -18,7 +18,7 @@ var EXCEPTIONS = [
     /^system\./,
 ];
 
-var COUNTLY_TO_SHARD = [
+var USEROVO_TO_SHARD = [
     "drill_events",
     "app_users",
     "app_crashes",
@@ -31,8 +31,8 @@ var COUNTLY_TO_SHARD = [
     "feedback",
 ];
 
-var cly = db.getSiblingDB(COUNTLY),
-    drill = db.getSiblingDB(COUNTLY_DRILL);
+var cly = db.getSiblingDB(USEROVO),
+    drill = db.getSiblingDB(USEROVO_DRILL);
 
 var clyCollections = cly.getCollectionNames(), collections = clyCollections.concat(drill.getCollectionNames()), check = [];
 
@@ -57,11 +57,11 @@ printjson(check);
 check.forEach(function(c) {
     var exceptional = true;
     var db = clyCollections.indexOf(c) === -1 ? drill : cly,
-        dbName = clyCollections.indexOf(c) === -1 ? COUNTLY_DRILL : COUNTLY,
+        dbName = clyCollections.indexOf(c) === -1 ? USEROVO_DRILL : USEROVO,
         //count = db[c].count(), -- This is deprecated in mongo version >6
         count = db[c].countDocuments({});
     var capped = db[c].stats()['capped'];
-    COUNTLY_TO_SHARD.some((e) => {
+    USEROVO_TO_SHARD.some((e) => {
         if (c.indexOf(e) == 0) {
             exceptional = false;
             return false;

@@ -1,8 +1,8 @@
 /*
- *  Generates a list of crashgroup ids that is older than the specified timestamp for each Countly app
+ *  Generates a list of crashgroup ids that is older than the specified timestamp for each Userovo app
  *  If DRY_RUN is false, will also delete those crashgroups and their related documents
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/data-cleanup
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/data-cleanup
  *  Command: node remove_old_crashes_sync.js
  */
 
@@ -43,8 +43,8 @@ function checkThreshold(count) {
 
 Promise.all(
     [
-        pluginManager.dbConnection("countly"),
-        pluginManager.dbConnection("countly_drill")
+        pluginManager.dbConnection("userovo"),
+        pluginManager.dbConnection("userovo_drill")
     ])
     .spread(async function(db, drillDb) {
         try {

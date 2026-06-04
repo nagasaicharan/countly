@@ -1,6 +1,6 @@
-# AI Pull Request Review Guidelines for Countly Server
+# AI Pull Request Review Guidelines for Userovo Server
 
-These guidelines are for AI-based review bots (e.g., GitHub Copilot) to ensure all pull requests (PRs) to Countly Server meet project standards for quality, security, and maintainability.
+These guidelines are for AI-based review bots (e.g., GitHub Copilot) to ensure all pull requests (PRs) to Userovo Server meet project standards for quality, security, and maintainability.
 
 ---
 
@@ -19,7 +19,7 @@ These guidelines are for AI-based review bots (e.g., GitHub Copilot) to ensure a
 ## 3. Frontend (Vue.js)
 - **Component Naming:** Use PascalCase for JS, kebab-case for templates.
 - **Props/Events:** Use props down, events up. Do not modify parent state directly.
-- **Security:** Never use `v-html` with user input. Use `countlyCommon.encodeHtml()` for manual sanitization.
+- **Security:** Never use `v-html` with user input. Use `userovoCommon.encodeHtml()` for manual sanitization.
 - **Testing:** All interactive elements must have `data-test-id` attributes for UI testing.
 - **Computed Properties:** Prefer computed properties over watchers for derived state.
 
@@ -46,7 +46,7 @@ These guidelines are for AI-based review bots (e.g., GitHub Copilot) to ensure a
 ## 8. Pull Request Hygiene
 - **No Secrets:** PRs must not include credentials, secrets, or sensitive data.
 - **Changelogs:** Update `CHANGELOG.md` for user-facing changes.
-- **License:** All code must comply with AGPL-3.0 and Countly's Section 7 modifications.
+- **License:** All code must comply with AGPL-3.0 and Userovo's Section 7 modifications.
 
 ---
 

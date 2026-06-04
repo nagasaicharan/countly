@@ -2,12 +2,12 @@ var pluginManager = require('../../../../plugins/pluginManager.js'),
     async = require('async'),
     crypto = require('crypto');
 
-Promise.all([pluginManager.dbConnection("countly"),pluginManager.dbConnection("countly_drill")]).then(function([countlyDB,countlyDrillDB]){
-    countlyDb.collection('apps').find({}).toArray(function(errAppFind, apps) {
+Promise.all([pluginManager.dbConnection("userovo"),pluginManager.dbConnection("userovo_drill")]).then(function([userovoDB,userovoDrillDB]){
+    userovoDb.collection('apps').find({}).toArray(function(errAppFind, apps) {
         if (!apps || errAppFind) {
             console.log('No apps to fix');
-            countlyDb.close();
-            countlyDrillDB.close();
+            userovoDb.close();
+            userovoDrillDB.close();
             return;
         }
     
@@ -19,12 +19,12 @@ Promise.all([pluginManager.dbConnection("countly"),pluginManager.dbConnection("c
         */
         function fixBrokenDeviceIDs(app, done) {
             // find all broken app_user record containts sdk_name
-            countlyDb.collection('app_users' + app._id).find({did: /.*sdk_name=javascript_feedback_popup/}).toArray(function(errBrokenUserFind, users) {
+            userovoDb.collection('app_users' + app._id).find({did: /.*sdk_name=javascript_feedback_popup/}).toArray(function(errBrokenUserFind, users) {
                 if (!errBrokenUserFind) {
                     async.forEach(users, function(brokenUser, doneUser) {
                         let fixed_device_id = brokenUser.did.substr(0, brokenUser.did.length - 34);
                         // check is there correct app_user for this fixed_device_id
-                        countlyDb.collection('app_users' + app._id).findOne({did: fixed_device_id}, function(errFindCorrectUser, correctUser) {
+                        userovoDb.collection('app_users' + app._id).findOne({did: fixed_device_id}, function(errFindCorrectUser, correctUser) {
                             if (!errFindCorrectUser) {
                                 // if there is correct app_user for fixed_device_id, use that values, otherwise use brokenUser uid and fixed did
                                 var correctReference = (correctUser) ? correctUser : {
@@ -32,7 +32,7 @@ Promise.all([pluginManager.dbConnection("countly"),pluginManager.dbConnection("c
                                     uid: brokenUser.uid
                                 };
                                 // map correct uid and did values to drill events records
-                                countlyDrillDB.collection("drill_events" + crypto.createHash('sha1').update("[CLY]_star_rating" + app._id).digest('hex'))
+                                userovoDrillDB.collection("drill_events" + crypto.createHash('sha1').update("[CLY]_star_rating" + app._id).digest('hex'))
                                     .updateMany({did: brokenUser.did}, {
                                         $set: {
                                             did: correctReference.did,
@@ -42,7 +42,7 @@ Promise.all([pluginManager.dbConnection("countly"),pluginManager.dbConnection("c
                                         if (!errUpdateDrill) {
                                             console.log("Drill event fixed for " + app.name);
                                             // map correct uid and did values to broken feedback records
-                                            countlyDb.collection("feedback" + app._id)
+                                            userovoDb.collection("feedback" + app._id)
                                                 .updateMany({device_id: brokenUser.did}, {
                                                     $set: {
                                                         device_id: correctReference.did,
@@ -52,7 +52,7 @@ Promise.all([pluginManager.dbConnection("countly"),pluginManager.dbConnection("c
                                                     if (!errUpdateFeedback) {
                                                         console.log("Feedback fixed for " + app.name);
                                                         // if there is correct user for this fixed device_id, remove broken app_user record.
-                                                        countlyDb.collection('app_users' + app._id).remove({_id: brokenUser._id}, function(errRemoveAppUser) {
+                                                        userovoDb.collection('app_users' + app._id).remove({_id: brokenUser._id}, function(errRemoveAppUser) {
                                                             if (errRemoveAppUser) {
                                                                 console.log(errRemoveAppUser);
                                                                 doneUser();
@@ -63,7 +63,7 @@ Promise.all([pluginManager.dbConnection("countly"),pluginManager.dbConnection("c
                                                                         .update(app.key + fixed_device_id + "")
                                                                         .digest('hex');
                                                                     brokenUser.did = fixed_device_id;
-                                                                    countlyDb.collection('app_users' + app._id).insert(brokenUser, function(err) {
+                                                                    userovoDb.collection('app_users' + app._id).insert(brokenUser, function(err) {
                                                                         if (err) {
                                                                             console.log(err);
                                                                         }
@@ -100,8 +100,8 @@ Promise.all([pluginManager.dbConnection("countly"),pluginManager.dbConnection("c
             });
         }
         async.forEach(apps, fixBrokenDeviceIDs, function() {
-            countlyDb.close();
-            countlyDrillDB.close();
+            userovoDb.close();
+            userovoDrillDB.close();
         });
     });
 });

@@ -14,7 +14,7 @@
   {
     "image": "3-Hooks.png",
     "title": "Hooks",
-    "text": "Trigger external HTTP endpoints & receive emails based on incoming data and internal events such as a user entering a cohort or a user profile getting updated. A brand new way to use the power of Countly data to feed external systems.",
+    "text": "Trigger external HTTP endpoints & receive emails based on incoming data and internal events such as a user entering a cohort or a user profile getting updated. A brand new way to use the power of Userovo data to feed external systems.",
     "showIn": "EE"
   },
   {
@@ -50,7 +50,7 @@
   {
     "image": "9-Optimized-Core.png",
     "title": "Optimized Core",
-    "text": "An improved data ingestion system, that has optimized data inserts and updates giving you up to 10x data write performance compared to previous Countly versions.",
+    "text": "An improved data ingestion system, that has optimized data inserts and updates giving you up to 10x data write performance compared to previous Userovo versions.",
     "showIn": "All"
   },
   {
@@ -74,7 +74,7 @@
   {
     "image": "13-Device-Types.png",
     "title": "Device Types",
-    "text": "Device type reporting is now available in Analytics → Device Types. Device type metric is also available as a property in filtering throughout the Countly UI so that you can filter data such as display all sessions from mobile or custom event X from web + desktop.",
+    "text": "Device type reporting is now available in Analytics → Device Types. Device type metric is also available as a property in filtering throughout the Userovo UI so that you can filter data such as display all sessions from mobile or custom event X from web + desktop.",
     "showIn": "All"
   },
   {

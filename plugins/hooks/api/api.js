@@ -398,7 +398,7 @@ async function validateEffects(effects) {
 /**
  * build mongodb query for app level permission control
  * @param {objext} query - init mongodb query object
- * @param {object} params - countly params from requested upstream
+ * @param {object} params - userovo params from requested upstream
  * @returns  {object} newQuery - new query object
  */
 function getVisibilityQuery(query, params) {

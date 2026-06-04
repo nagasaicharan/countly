@@ -12,7 +12,7 @@ const verifyStaticElementsOfDataPopulatorPage = () => {
         labelElement: populateWithTemplatePageElements.DATA_POPULATOR_PAGE_TITLE,
         labelText: "Data Populator",
         tooltipElement: populateWithTemplatePageElements.DATA_POPULATOR_PAGE_TITLE_TOOLTIP,
-        tooltipText: "Populate a Countly app with random data (typically for testing or demonstration)"
+        tooltipText: "Populate a Userovo app with random data (typically for testing or demonstration)"
     });
 
     cy.verifyElement({

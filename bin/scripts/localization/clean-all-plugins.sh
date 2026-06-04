@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script to clean unused localization keys from all Countly plugins
+# Script to clean unused localization keys from all Userovo plugins
 # This script iterates through each plugin in the plugins directory
 # and runs the clean-localization.sh script on each one
 
@@ -9,12 +9,12 @@ set +e
 
 # Correct path detection
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-COUNTLY_ROOT="$(cd "$SCRIPT_DIR/../../.." &> /dev/null && pwd )" # Go up three levels from bin/scripts/localization to countly root
-PLUGINS_DIR="$COUNTLY_ROOT/plugins"
+USEROVO_ROOT="$(cd "$SCRIPT_DIR/../../.." &> /dev/null && pwd )" # Go up three levels from bin/scripts/localization to userovo root
+PLUGINS_DIR="$USEROVO_ROOT/plugins"
 CLEAN_SCRIPT="$SCRIPT_DIR/clean-localization.sh"
 
 # Print paths for debugging
-echo "COUNTLY_ROOT: $COUNTLY_ROOT"
+echo "USEROVO_ROOT: $USEROVO_ROOT"
 echo "PLUGINS_DIR: $PLUGINS_DIR"
 
 # Default values

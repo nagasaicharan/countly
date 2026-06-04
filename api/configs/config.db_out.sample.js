@@ -1,7 +1,7 @@
-var countlyConfig = {
+var userovoConfig = {
     mongodb: {
         host: "localhost",
-        db: "countly_out",
+        db: "userovo_out",
         port: 27017,
         max_pool_size: 500,
         //username: test,
@@ -24,7 +24,7 @@ var countlyConfig = {
             '192.168.3.2:27017'
         ],
 		replicaName: "test",
-        db: "countly_out",
+        db: "userovo_out",
 		username: test,
 		password: test,
         max_pool_size: 1000,
@@ -40,8 +40,8 @@ var countlyConfig = {
     */
     /*  or define as a url
 	//mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]
-	mongodb: "mongodb://localhost:27017/countly_out",
+	mongodb: "mongodb://localhost:27017/userovo_out",
     */
 };
 
-module.exports = countlyConfig;
+module.exports = userovoConfig;

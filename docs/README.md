@@ -1,5 +1,5 @@
 
-# Countly Server Documentation Index
+# Userovo Server Documentation Index
 
 This README provides a table of contents for all markdown documentation files in the repository, including those in the root, docs, .github, plugins, bin, and other folders.
 
@@ -9,7 +9,7 @@ This README provides a table of contents for all markdown documentation files in
 - [README.md](../README.md): Project overview, installation, and quick links.
 - [CODING_GUIDELINES.md](../CODING_GUIDELINES.md): General coding standards and best practices.
 - [CHANGELOG.md](../CHANGELOG.md): Summary of user-facing changes and releases.
-- [CONTRIBUTING.md](../CONTRIBUTING.md): How to contribute to Countly Server.
+- [CONTRIBUTING.md](../CONTRIBUTING.md): How to contribute to Userovo Server.
 - [SECURITY.md](../SECURITY.md): (Legacy) Security guidelines.
 - [CLAUDE.md](../CLAUDE.md): Claude-specific notes.
 

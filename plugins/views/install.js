@@ -1,8 +1,8 @@
 var async = require('async'),
     pluginManager = require('../pluginManager.js');
 console.log("Installing views plugin");
-pluginManager.dbConnection().then((countlyDb) => {
-    countlyDb.collection('apps').find({}).toArray(function(err, apps) {
+pluginManager.dbConnection().then((userovoDb) => {
+    userovoDb.collection('apps').find({}).toArray(function(err, apps) {
         if (!apps || err) {
             return;
         }
@@ -15,11 +15,11 @@ pluginManager.dbConnection().then((countlyDb) => {
                     done();
                 }
             }
-            countlyDb.collection('app_viewsmeta' + app._id).ensureIndex({"view": 1}, {'unique': 1}, cb);
+            userovoDb.collection('app_viewsmeta' + app._id).ensureIndex({"view": 1}, {'unique': 1}, cb);
         }
         async.forEach(apps, upgrade, function() {
             console.log("Views plugin installation finished");
-            countlyDb.close();
+            userovoDb.close();
         });
     });
 });

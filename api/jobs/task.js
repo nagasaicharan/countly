@@ -12,7 +12,7 @@ common.processRequest = processRequest;
 
 
 /**
- *  Task Monitor Job extend from Countly Job
+ *  Task Monitor Job extend from Userovo Job
  */
 class MonitorJob extends job.Job {
     /**

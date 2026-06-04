@@ -124,12 +124,12 @@ sudo bash "$DIR/scripts/detect.init.sh"
 #configure and start nginx
 #configure and start nginx
 if [ -f /etc/nginx/sites-available/default ]; then
-    countly save /etc/nginx/sites-available/default "$DIR/config/nginx"
+    userovo save /etc/nginx/sites-available/default "$DIR/config/nginx"
 elif [ -f /etc/nginx/conf.d/default.conf ]; then
-    countly save /etc/nginx/conf.d/default.conf "$DIR/config/nginx"
+    userovo save /etc/nginx/conf.d/default.conf "$DIR/config/nginx"
 fi
 
-countly save /etc/nginx/nginx.conf "$DIR/config/nginx"
+userovo save /etc/nginx/nginx.conf "$DIR/config/nginx"
 sudo cp "$DIR/config/nginx.server.conf" /etc/nginx/conf.d/default.conf
 sudo cp "$DIR/config/nginx.conf" /etc/nginx/nginx.conf
 
@@ -137,7 +137,7 @@ if [ "$INSIDE_DOCKER" != "1" ]; then
     sudo /etc/init.d/nginx restart
 fi
 
-cp -n "$DIR/../frontend/express/public/javascripts/countly/countly.config.sample.js" "$DIR/../frontend/express/public/javascripts/countly/countly.config.js"
+cp -n "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.sample.js" "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.js"
 
 #create api configuration file from sample
 cp -n "$DIR/../api/config.sample.js" "$DIR/../api/config.js"
@@ -154,23 +154,23 @@ if [ ! -f "/etc/timezone" ]; then
 fi
 
 #install plugins
-bash "$DIR/scripts/countly.install.plugins.sh"
+bash "$DIR/scripts/userovo.install.plugins.sh"
 
 #load city data into database
 nodejs "$DIR/scripts/loadCitiesInDb.js"
 
 #get web sdk
-sudo countly update sdk-web
+sudo userovo update sdk-web
 
 #compile scripts for production
-#sudo countly task dist-all
+#sudo userovo task dist-all
 
 # after install call
-sudo countly check after install
+sudo userovo check after install
 
-#finally start countly api and dashboard
+#finally start userovo api and dashboard
 if [ "$INSIDE_DOCKER" != "1" ]; then
-    sudo countly start
+    sudo userovo start
 fi
 
 if [ "$INSIDE_DOCKER" == "1" ]; then

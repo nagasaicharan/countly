@@ -745,7 +745,7 @@ class APN extends Base {
                                         error(ERROR.DATA_TOKEN_INVALID, json.reason).addAffected(p._id, one);
                                     }
                                     else {
-                                        error(ERROR.DATA_COUNTLY, json.reason).addAffected(p._id, one);
+                                        error(ERROR.DATA_USEROVO, json.reason).addAffected(p._id, one);
                                     }
                                 }
                                 else {

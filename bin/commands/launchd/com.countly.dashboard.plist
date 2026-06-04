@@ -9,19 +9,19 @@
 	<key>ProgramArguments</key>
 	<array>
 		<string>/usr/local/bin/node</string>
-		<string>/usr/local/countly/frontend/express/app.js</string>
+		<string>/usr/local/userovo/frontend/express/app.js</string>
 	</array>
 	<key>Label</key>
-	<string>com.countly.dashboard</string>
+	<string>com.userovo.dashboard</string>
 	<key>KeepAlive</key>
 	<true/>
 	<key>Disabled</key>
 	<false/>
 	<key>WorkingDirectory</key>
-	<string>/usr/local/countly/bin/config/</string>
+	<string>/usr/local/userovo/bin/config/</string>
 	<key>StandardOutPath</key>
-	<string>/usr/local/countly/log/countly-dashboard.log</string>
+	<string>/usr/local/userovo/log/userovo-dashboard.log</string>
 	<key>StandardErrorPath</key>
-	<string>/usr/local/countly/log/countly-dashboard.err</string>
+	<string>/usr/local/userovo/log/userovo-dashboard.err</string>
 </dict>
 </plist>

@@ -1,11 +1,11 @@
 const common = require('../../../api/utils/common'),
-    countlyCommon = require('../../../api/lib/countly.common.js'),
+    userovoCommon = require('../../../api/lib/userovo.common.js'),
     log = common.log('push:api:drill');
 
 module.exports.drillAddPushEvents = ({uid, params, events, event}) => {
     return new Promise((res, rej) => {
         if (event === '[CLY]_push_sent') {
-            common.db.collection(`push_${params.app_id}`).findOne({_id: uid, msgs: {$elemMatch: {'1': countlyCommon.getTimestampRangeQuery(params)}}}, (err, pu) => {
+            common.db.collection(`push_${params.app_id}`).findOne({_id: uid, msgs: {$elemMatch: {'1': userovoCommon.getTimestampRangeQuery(params)}}}, (err, pu) => {
                 if (err) {
                     rej(err);
                 }

@@ -1,5 +1,5 @@
 {
-  "name": "countly-server",
+  "name": "userovo-server",
   "version": "25.03.0",
   "description": "innovative, real-time, open source mobile analytics application",
   "keywords": [
@@ -7,16 +7,16 @@
     "mobile",
     "data",
     "analysis",
-    "countly"
+    "userovo"
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/countly/countly-server.git"
+    "url": "git://github.com/userovo/userovo-server.git"
   },
   "scripts": {
     "test": "grunt --verbose",
     "prepare": "husky",
-    "postinstall": "mkdir -p frontend/express/public/sdk/web && cp -rf node_modules/countly-sdk-web/lib/* frontend/express/public/sdk/web/"
+    "postinstall": "echo 'userovo-sdk-web not present, skipping copy'"
   },
   "lint-staged": {
     "*.{js,vue}": [
@@ -53,14 +53,15 @@
     "cookie-parser": "1.4.7",
     "countly-request": "file:api/utils/countly-request",
     "countly-root": "file:api/utils/countly-root",
-    "countly-sdk-nodejs": "*",
-    "countly-sdk-web": "*",
+
+
     "csurf": "^1.11.0",
     "csvtojson": "2.0.14",
     "ejs": "5.0.2",
     "errorhandler": "1.5.2",
     "express": "4.22.2",
     "express-rate-limit": "8.5.2",
+    "express-recaptcha": "^5.1.0",
     "express-session": "1.19.0",
     "form-data": "^4.0.0",
     "formidable": "2.1.3",
@@ -90,9 +91,12 @@
     "mongodb": "6.20.0",
     "mongodb-connection-string-url": "^7.0.1",
     "nginx-conf": "2.1.0",
+    "node-forge": "^1.4.0",
     "nodemailer": "8.0.9",
     "object-hash": "3.0.0",
-    "offline-geocoder": "git+https://github.com/Countly/offline-geocoder.git",
+    "offline-geocoder": "git+https://github.com/Userovo/offline-geocoder.git",
+    "otplib": "^13.4.1",
+    "parse-domain": "^8.3.0",
     "properties-parser": "0.6.0",
     "puppeteer": "^24.6.1",
     "rate-limiter-flexible": "^11.0.0",
@@ -101,6 +105,7 @@
     "sharp": "^0.34.2",
     "sqlite3": "^5.1.7",
     "tslib": "^2.6.3",
+    "ua-parser-js": "^2.0.10",
     "uglify-js": "3.19.3",
     "underscore": "1.13.8",
     "xlsx-write-stream": "^1.0.0"

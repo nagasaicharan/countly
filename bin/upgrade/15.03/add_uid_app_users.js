@@ -2,7 +2,7 @@ print("adding uid to app users " + new Date());
 print("This will take about 2 minutes for every 1 million user you have in the system so hang in there...");
 
 var currDBAddress = "IP_ADDRESS:PORT";
-var currDBName = "countly";
+var currDBName = "userovo";
 
 /*
     **************************************************

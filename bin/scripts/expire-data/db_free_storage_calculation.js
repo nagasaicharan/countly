@@ -1,7 +1,7 @@
 /**
  *  Shows how much storage can be freed with data retention per app
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/expire-data
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/expire-data
  *  Command: node db_free_storage_calculation.js
  */
 
@@ -17,7 +17,7 @@ var Promise = require("bluebird");
 var plugins = require("../../../plugins/pluginManager");
 var app_map = {};
 var result = {available_for_reuse: 0, total_will_be_free: 0, count: 0, apps: {}};
-Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_drill")]).spread(function(db, drill) {
+Promise.all([plugins.dbConnection("userovo"), plugins.dbConnection("userovo_drill")]).spread(function(db, drill) {
     db.collection("apps").find().toArray(function(err, apps) {
         if (err) {
             return close(err);

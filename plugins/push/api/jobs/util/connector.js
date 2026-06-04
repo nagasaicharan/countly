@@ -28,11 +28,11 @@ class Connector extends DoFinish {
      * Set app / creds / message errors to initial state
      */
     resetErrors() {
-        this.noApp = new SendError('NoApp', ERROR.DATA_COUNTLY);
-        this.noCreds = new SendError('NoCredentials', ERROR.DATA_COUNTLY);
+        this.noApp = new SendError('NoApp', ERROR.DATA_USEROVO);
+        this.noCreds = new SendError('NoCredentials', ERROR.DATA_USEROVO);
         this.noProxyConnection = new SendError('NoProxyConnection', ERROR.CONNECTION_PROXY);
         this.expiredCreds = new SendError('ExpiredCreds', ERROR.CONNECTION_PROVIDER);
-        this.tooLateToSend = new SendError('TooLateToSend', ERROR.DATA_COUNTLY);
+        this.tooLateToSend = new SendError('TooLateToSend', ERROR.DATA_USEROVO);
         this.noMessage = {}; // {mid: [push, push, push, ...]}
         this.noMessageBytes = 0;
     }

@@ -46,11 +46,11 @@ function convertToTimezone(props) {
     props.r_minute = minute;
 }
 
-plugins.dbConnection().then((countlyDb) => {
+plugins.dbConnection().then((userovoDb) => {
     //load configs
-    plugins.loadConfigs(countlyDb, function() {
+    plugins.loadConfigs(userovoDb, function() {
         var appCache = {};
-        countlyDb.collection("members").find().toArray(function(err, res) {
+        userovoDb.collection("members").find().toArray(function(err, res) {
             var arr = [];
             for (var i = 0; i < res.length; i++) {
                 if (!res[i].global_admin) {
@@ -64,7 +64,7 @@ plugins.dbConnection().then((countlyDb) => {
                 */
                 function insertReport() {
                     convertToTimezone(report);
-                    countlyDb.collection("reports").insert(report, function() {
+                    userovoDb.collection("reports").insert(report, function() {
                         console.log("created", report);
                         done(null, null);
                     });
@@ -76,7 +76,7 @@ plugins.dbConnection().then((countlyDb) => {
                         insertReport();
                     }
                     else {
-                        countlyDb.collection("apps").findOne({_id: countlyDb.ObjectID(app_id)}, function(err2, app) {
+                        userovoDb.collection("apps").findOne({_id: userovoDb.ObjectID(app_id)}, function(err2, app) {
                             if (err2) {
                                 console.log(err2);
                             }
@@ -91,14 +91,14 @@ plugins.dbConnection().then((countlyDb) => {
                 }
             }, function() {
                 console.log("all reports generated");
-                countlyDb.close();
+                userovoDb.close();
                 process.exit();
             });
         });
         /*//send report
-        reports.sendReport(countlyDb, myArgs[0], function(err, res){
+        reports.sendReport(userovoDb, myArgs[0], function(err, res){
             //close db to stop process
-            countlyDb.close();
+            userovoDb.close();
         });*/
     });
 });

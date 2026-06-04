@@ -33,7 +33,7 @@ appproc=0
 apiproc=0
 workers=0
 # shellcheck disable=SC2009
-paths=$(ps -ax | grep countly)
+paths=$(ps -ax | grep userovo)
 while read -r line; do
     if [[ "$line" = *"dashboard node"* ]]; then
         appproc=$((appproc+1))

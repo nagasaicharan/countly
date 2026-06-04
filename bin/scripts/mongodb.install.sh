@@ -249,7 +249,7 @@ function mongodb_check() {
                 FSTAB_ENTRY_UPDATED=$(echo "$FSTAB_ENTRY_UPDATED" | sed "s#${FSTAB_ENTRY_OPTIONS}#${FSTAB_ENTRY_OPTIONS},nodiratime#g")
             fi
 
-            cp /etc/fstab /etc/fstab.countly.bak
+            cp /etc/fstab /etc/fstab.userovo.bak
             sed -i "/${MONGODB_PATH//\//\\/}/d" /etc/fstab
             sed -i "\$a${FSTAB_ENTRY_UPDATED}" /etc/fstab
 

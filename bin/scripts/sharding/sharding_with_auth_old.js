@@ -1,20 +1,20 @@
 /*
-*  Sharding Countly collections when DB requires authentication, provide it to authDB.auth command in the code
+*  Sharding Userovo collections when DB requires authentication, provide it to authDB.auth command in the code
 *  Server: mongodb
 *  Path: any
 *  Command: mongosh < sharding_with_auth.js
 */
 
 /* global Mongo, print, printjson */
-var COUNTLY_DRILL = 'countly_drill',
-    COUNTLY = 'countly',
+var USEROVO_DRILL = 'userovo_drill',
+    USEROVO = 'userovo',
     COUNT_TO_SHARD = 100000;
 
 var EXCEPTIONS = [
     /^system\./,
 ];
 
-var COUNTLY_EXCEPTIONS = [
+var USEROVO_EXCEPTIONS = [
     "active_users",
     "app_crashusers",
     "app_crashgroups",
@@ -37,8 +37,8 @@ var conn = new Mongo(),
 // need to update this info
 authDB.auth('<username>', '<password>');
 
-var cly = conn.getDB(COUNTLY),
-    drill = conn.getDB(COUNTLY_DRILL);
+var cly = conn.getDB(USEROVO),
+    drill = conn.getDB(USEROVO_DRILL);
 
 var clyCollections = cly.getCollectionNames(), collections = clyCollections.concat(drill.getCollectionNames()), check = [];
 
@@ -63,12 +63,12 @@ printjson(check);
 check.forEach(function(c) {
     var exceptional = false;
     var db = clyCollections.indexOf(c) === -1 ? drill : cly,
-        dbName = clyCollections.indexOf(c) === -1 ? COUNTLY_DRILL : COUNTLY,
+        dbName = clyCollections.indexOf(c) === -1 ? USEROVO_DRILL : USEROVO,
         count = db[c].count(),
         capped = db[c].stats()['capped'],
         status = db[c].getShardVersion().ok;
 
-    COUNTLY_EXCEPTIONS.some((e) => {
+    USEROVO_EXCEPTIONS.some((e) => {
         if (c.indexOf(e) == 0) {
             exceptional = true;
             return false;

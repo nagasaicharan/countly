@@ -8,16 +8,16 @@ var common = require('../../../api/utils/common.js');
 var crypto = require('crypto');
 var db;
 
-function getApps(countlyDb, callback) {
+function getApps(userovoDb, callback) {
     var query = {};
     if (apps.length > 0) {
         var qq = [];
         for (var z = 0; z < apps.length; z++) {
-            qq.push(countlyDb.ObjectID(apps[z]));
+            qq.push(userovoDb.ObjectID(apps[z]));
         }
         query = {"_id": {"$in": qq}};
     }
-    countlyDb.collection("apps").find(query).toArray(callback);
+    userovoDb.collection("apps").find(query).toArray(callback);
 }
 
 var generate_events_scripts = function(data) {
@@ -112,8 +112,8 @@ var create_export_scripts = function(data) {
         var scripts = [];
         var dbargs = [];
         var dbargs0 = [];
-        var countly_db_name = "";
-        var db_params = plugins.getDbConnectionParams('countly');
+        var userovo_db_name = "";
+        var db_params = plugins.getDbConnectionParams('userovo');
         for (var p in db_params) {
             dbargs.push("--" + p);
             dbargs.push(db_params[p]);
@@ -122,19 +122,19 @@ var create_export_scripts = function(data) {
                 dbargs0.push(db_params[p]);
             }
             else {
-                countly_db_name = db_params[p];
+                userovo_db_name = db_params[p];
             }
         }
 
         var dbargs_drill = [];
-        db_params = plugins.getDbConnectionParams('countly_drill');
+        db_params = plugins.getDbConnectionParams('userovo_drill');
         for (var z in db_params) {
             dbargs_drill.push("--" + z);
             dbargs_drill.push(db_params[z]);
         }
 
         var dbargs_out = [];
-        db_params = plugins.getDbConnectionParams('countly_out');
+        db_params = plugins.getDbConnectionParams('userovo_out');
         for (var g in db_params) {
             dbargs_out.push("--" + g);
             dbargs_out.push(db_params[g]);
@@ -150,9 +150,9 @@ var create_export_scripts = function(data) {
                 }
                 else {
                     //remove redirect field and add it after dump.
-                    scripts.push({cmd: 'mongo', args: [countly_db_name, ...dbargs0, "--eval", 'db.apps.update({ "_id": ObjectId("' + appid + '")}, { "$unset": { "redirect_url": 1 } })']});
+                    scripts.push({cmd: 'mongo', args: [userovo_db_name, ...dbargs0, "--eval", 'db.apps.update({ "_id": ObjectId("' + appid + '")}, { "$unset": { "redirect_url": 1 } })']});
                     scripts.push({cmd: 'mongodump', args: [...dbargs, "--collection", "apps", "-q", '{ "_id": {"$oid":"' + appid + '"}}', "--out", my_folder, '--gzip']});
-                    scripts.push({cmd: 'mongo', args: [countly_db_name, ...dbargs0, "--eval", 'db.apps.update({ "_id": ObjectId("' + appid + '")}, { $set: { redirect_url: "' + res.redirect_url + '" } })']});
+                    scripts.push({cmd: 'mongo', args: [userovo_db_name, ...dbargs0, "--eval", 'db.apps.update({ "_id": ObjectId("' + appid + '")}, { $set: { redirect_url: "' + res.redirect_url + '" } })']});
                 }
 
                 var appDocs = ['app_users', 'metric_changes', 'app_crashes', 'app_crashgroups', 'app_crashusers', 'app_nxret', 'app_viewdata', 'app_views', 'app_userviews', 'app_viewsmeta', 'blocked_users', 'campaign_users', 'consent_history', 'crashes_jira', 'event_flows', 'timesofday', 'feedback', 'push_', 'apm', "nps", "survey", "completed_surveys"];
@@ -264,16 +264,16 @@ var create_export_scripts = function(data) {
     });
 };
 
-Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_drill")]).then(function([countlyDb, drillDb]) {
+Promise.all([plugins.dbConnection("userovo"), plugins.dbConnection("userovo_drill")]).then(function([userovoDb, drillDb]) {
     common.drillDb = drillDb;
-    common.db = countlyDb;
-    db = countlyDb;
-    plugins.loadConfigs(countlyDb, function() {
-        getApps(countlyDb, async function(err, apps) {
+    common.db = userovoDb;
+    db = userovoDb;
+    plugins.loadConfigs(userovoDb, function() {
+        getApps(userovoDb, async function(err, apps) {
             if (err) {
                 console.log(err);
                 console.log("exiting");
-                countlyDb.close();
+                userovoDb.close();
                 drillDb.close();
                 return;
             }
@@ -282,7 +282,7 @@ Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_dril
             if (apps.length === 0) {
                 console.log("0 apps found");
                 console.log("exiting");
-                countlyDb.close();
+                userovoDb.close();
                 drillDb.close();
                 return;
             }
@@ -307,12 +307,12 @@ Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_dril
 
                     }
                     console.log("# Completed generating export commands.");
-                    countlyDb.close();
+                    userovoDb.close();
                     drillDb.close();
                 }
                 catch (error) {
                     console.log(error);
-                    countlyDb.close();
+                    userovoDb.close();
                     drillDb.close();
                 }
             }

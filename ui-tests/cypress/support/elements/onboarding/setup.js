@@ -1,5 +1,5 @@
 export default {
-    LOGO: 'countly-logo',
+    LOGO: 'userovo-logo',
     SELECT_LANGUAGE: 'select-lang-button',
     ACTIVE_LANGUAGE: 'active-lang',
     HI_FIVE_IMAGE: 'hi-five-image',

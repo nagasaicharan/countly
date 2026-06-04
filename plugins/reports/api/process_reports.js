@@ -7,13 +7,13 @@ if(myArgs[0]){
     //start db connection
     var plugins = require('../../pluginManager.js'),
         reports = require("./reports");
-    plugins.dbConnection().then((countlyDb) => {
+    plugins.dbConnection().then((userovoDb) => {
     //load configs
-    plugins.loadConfigs(countlyDb, function(){
+    plugins.loadConfigs(userovoDb, function(){
         //send report
-        reports.sendReport(countlyDb, myArgs[0], function(err, res){
+        reports.sendReport(userovoDb, myArgs[0], function(err, res){
             //close db to stop process
-            countlyDb.close();
+            userovoDb.close();
             process.exit();
         });
     });

@@ -1,34 +1,34 @@
 /*
  *  Sends recalculate request for all ab testing experiment variant cohorts
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/fix-data
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/fix-data
  *  Command: node recalculate_ab_test_cohorts.js
  */
 
 // API key here with permission to update cohorts
 const API_KEY = '';
-// Countly app id, if not specified will do nothing
+// Userovo app id, if not specified will do nothing
 const APP_ID = '';
 // ab test experiment id, will do nothing if not specified
 const EXPERIMENT_ID = '';
-// countly instance public url, something like 'https://name.count.ly'
+// userovo instance public url, something like 'https://name.count.ly'
 const SERVER_URL = '';
 
 const pluginManager = require('../../../plugins/pluginManager.js');
-const request = require('countly-request')(pluginManager.getConfig('security'));
+const request = require('userovo-request')(pluginManager.getConfig('security'));
 
 if (API_KEY.length === 0) {
     console.warn('Please provide an API_KEY');
     process.exit(1);
 }
 
-pluginManager.dbConnection('countly_out').then(async(db) => {
+pluginManager.dbConnection('userovo_out').then(async(db) => {
     let urlObj = {};
     try {
         urlObj = new URL(SERVER_URL);
     }
     catch (err) {
-        urlObj = new URL((process.env.COUNTLY_CONFIG_PROTOCOL || "http") + "://" + (process.env.COUNTLY_CONFIG_HOSTNAME || "localhost"));
+        urlObj = new URL((process.env.USEROVO_CONFIG_PROTOCOL || "http") + "://" + (process.env.USEROVO_CONFIG_HOSTNAME || "localhost"));
     }
     urlObj.pathname = 'i/cohorts/recalculate';
     urlObj.searchParams.append('api_key', API_KEY);

@@ -1,19 +1,19 @@
 {
-  "name": "countly-web",
+  "name": "userovo-web",
   "title": "Web Analytics",
   "version": "1.0.0",
-  "description": "Plugin for adding website types to Countly",
+  "description": "Plugin for adding website types to Userovo",
   "author": "Count.ly",
   "homepage": "https://count.ly/plugins/web-analytics",
   "repository": {
     "type": "git",
-    "url": "http://github.com/Countly/countly-server.git"
+    "url": "http://github.com/Userovo/userovo-server.git"
   },
   "bugs": {
-    "url": "http://github.com/Countly/countly-server/issues"
+    "url": "http://github.com/Userovo/userovo-server/issues"
   },
   "keywords": [
-    "countly",
+    "userovo",
     "analytics",
     "web",
     "plugins",

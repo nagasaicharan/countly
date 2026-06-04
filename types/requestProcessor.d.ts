@@ -255,8 +255,8 @@ export interface VersionMark {
     [key: string]: any;
 }
 
-/** Countly API modules structure */
-export interface CountlyAPI {
+/** Userovo API modules structure */
+export interface UserovoAPI {
     data: {
         usage: any;
         fetch: any;

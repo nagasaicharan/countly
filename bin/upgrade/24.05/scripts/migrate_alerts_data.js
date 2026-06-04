@@ -252,10 +252,10 @@ async function migrateAlertCollection(collectionName, db) {
     );
 }
 
-pluginManager.dbConnection().then(async(countlyDb) => {
+pluginManager.dbConnection().then(async(userovoDb) => {
     try {
         let alertCollection = 'alerts';
-        await migrateAlertCollection(alertCollection, countlyDb);
+        await migrateAlertCollection(alertCollection, userovoDb);
         // const faileds = result.filter(x=>x.status === 'rejected');
         // if (faileds.length) {
         //     throw new Error(faileds.map(x=>x.reason).join('\n'));
@@ -266,6 +266,6 @@ pluginManager.dbConnection().then(async(countlyDb) => {
         console.log(`Error migrating alert data: ${error}`);
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
     }
 });

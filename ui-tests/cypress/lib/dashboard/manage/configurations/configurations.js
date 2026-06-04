@@ -369,7 +369,7 @@ const verifyPageElements = () => {
 
     cy.verifyElement({
         labelElement: configurationsListBoxElements({subFeature: SETTINGS.API.OTHER_API_SETTINGS.SEND_TEST_EMAIL}).SELECTED_SUBFEATURE_DESCRIPTION,
-        labelText: "This will send an email to your email address stored in Countly.",
+        labelText: "This will send an email to your email address stored in Userovo.",
     });
 
     cy.verifyElement({
@@ -432,7 +432,7 @@ const verifyPageElements = () => {
 
     cy.verifyElement({
         labelElement: configurationsListBoxElements({subFeature: SETTINGS.API.OTHER_API_SETTINGS.TOTAL_USERS}).SELECTED_SUBFEATURE_DESCRIPTION,
-        labelText: "If enabled, total users API will be enabled and used to override estimated total user counts in all reports. Enabling this will provide extra overhead, so consult Countly before enabling for highly loaded servers.",
+        labelText: "If enabled, total users API will be enabled and used to override estimated total user counts in all reports. Enabling this will provide extra overhead, so consult Userovo before enabling for highly loaded servers.",
     });
 
     cy.verifyElement({
@@ -506,7 +506,7 @@ const verifyPageElements = () => {
 
     cy.verifyElement({
         labelElement: configurationsListBoxElements({ subFeature: SETTINGS.FRONTED.CODE }).SELECTED_SUBFEATURE_DESCRIPTION,
-        labelText: "Display links for Countly Code generator under new app creation page.",
+        labelText: "Display links for Userovo Code generator under new app creation page.",
     });
 
     cy.verifyElement({
@@ -521,7 +521,7 @@ const verifyPageElements = () => {
 
     cy.verifyElement({
         labelElement: configurationsListBoxElements({ subFeature: SETTINGS.FRONTED.OFFLINE_MODE }).SELECTED_SUBFEATURE_DESCRIPTION,
-        labelText: "When enabled, Countly doesn’t connect to Intercom to enable in app chat, Google services to enable Google maps and Countly services to track anonymized service usage.",
+        labelText: "When enabled, Userovo doesn’t connect to Intercom to enable in app chat, Google services to enable Google maps and Userovo services to track anonymized service usage.",
     });
 
     cy.verifyElement({
@@ -709,7 +709,7 @@ const verifyPageElements = () => {
 
     cy.verifyElement({
         labelElement: configurationsListBoxElements({ subFeature: SETTINGS.SECURITY.API_ADDITIONAL_HEADERS }).SELECTED_SUBFEATURE_DESCRIPTION,
-        labelText: "Add headers for Countly to use on API responses by default (one header per new line)",
+        labelText: "Add headers for Userovo to use on API responses by default (one header per new line)",
     });
 
     cy.verifyElement({
@@ -724,7 +724,7 @@ const verifyPageElements = () => {
 
     cy.verifyElement({
         labelElement: configurationsListBoxElements({ subFeature: SETTINGS.SECURITY.DASHBOARD_ADDITIONAL_HEADERS }).SELECTED_SUBFEATURE_DESCRIPTION,
-        labelText: "Add headers for Countly to use on Dashboard responses by default (one header per new line)",
+        labelText: "Add headers for Userovo to use on Dashboard responses by default (one header per new line)",
     });
 
     cy.verifyElement({

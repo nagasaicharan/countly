@@ -4,21 +4,21 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-if [[ "$COUNTLY_CONFIG__SYMLINKED" == "true" ]]; then
+if [[ "$USEROVO_CONFIG__SYMLINKED" == "true" ]]; then
     NODE_CMD="nodejs --preserve-symlinks --preserve-symlinks-main"
 else
     NODE_CMD="nodejs"
 fi
 usage (){
     echo "";
-    echo "countly plugin usage:";
-    echo "    countly plugin list                   # list plugins";
-    echo "    countly plugin list states            # list plugins and their states";
-    echo "    countly plugin enable <pluginname>    # enables plugin";
-    echo "    countly plugin disable <pluginname>   # disables plugin";
-    echo "    countly plugin upgrade <pluginname>   # run plugin install script";
-    echo "    countly plugin status <pluginname>    # status of plugin";
-    echo "    countly plugin version <pluginname>   # version of plugin";
+    echo "userovo plugin usage:";
+    echo "    userovo plugin list                   # list plugins";
+    echo "    userovo plugin list states            # list plugins and their states";
+    echo "    userovo plugin enable <pluginname>    # enables plugin";
+    echo "    userovo plugin disable <pluginname>   # disables plugin";
+    echo "    userovo plugin upgrade <pluginname>   # run plugin install script";
+    echo "    userovo plugin status <pluginname>    # status of plugin";
+    echo "    userovo plugin version <pluginname>   # version of plugin";
 }
 
 if [ "$1" = "list" ]; then
@@ -47,7 +47,7 @@ elif [ "$1" = "new" ]; then
     else
         cp -rf "$DIR"/../../../plugins/empty/ "$DIR"/../../../plugins/"$2"
         plugin_dir=$(cd "$DIR"/../../../plugins/"$2"; pwd)
-        sed -i -e "s/countly-empty/countly-$2/g" "$plugin_dir"/package.json
+        sed -i -e "s/userovo-empty/userovo-$2/g" "$plugin_dir"/package.json
         rm -rf "$plugin_dir"/frontend/public/localization/empty.properties
         echo "#$2" > "$plugin_dir"/frontend/public/localization/"$2".properties
         echo "" >> "$plugin_dir"/frontend/public/localization/"$2".properties
@@ -79,7 +79,7 @@ elif [ -d "$DIR/../../../plugins/$2" ]; then
     elif [ "$1" = "version" ]; then
         grep -oP '"version":\s*"\K[0-9\.]*' "$DIR/../../../plugins/$2/package.json" ;
     elif [ "$1" = "test" ]; then
-        countly plugin lint "$2";
+        userovo plugin lint "$2";
         shift;
         $NODE_CMD "$DIR/plugin.js" test "$@" ;
     elif [ "$1" = "lint" ]; then

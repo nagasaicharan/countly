@@ -3,9 +3,9 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 usage (){
     echo "";
-    echo "countly api usage:";
-    echo "    countly api </request/path?plus=params> # makes api request and prints response";
-    echo "    countly api pretty </request/path?plus=params> # print pretty json response";
+    echo "userovo api usage:";
+    echo "    userovo api </request/path?plus=params> # makes api request and prints response";
+    echo "    userovo api pretty </request/path?plus=params> # print pretty json response";
 } 
 if [ -z "$1" ]
 then

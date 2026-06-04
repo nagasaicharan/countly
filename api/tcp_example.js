@@ -1,5 +1,5 @@
 const net = require('net');
-const countlyConfig = require('./config', 'dont-enclose');
+const userovoConfig = require('./config', 'dont-enclose');
 const plugins = require('../plugins/pluginManager.js');
 const log = require('./utils/log.js')('core:tcp');
 const common = require('./utils/common.js');
@@ -9,7 +9,7 @@ const {processRequest} = require('./utils/requestProcessor');
 /**
  * Create DB connection
  */
-plugins.dbConnection(countlyConfig).then(function(db) {
+plugins.dbConnection(userovoConfig).then(function(db) {
     common.db = db;
 
     /**

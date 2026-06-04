@@ -13,8 +13,8 @@ const plugins = require('../pluginManager.js');
  * @returns {Promise<string>} - Promise resolving to SVG string of the QR code
  */
 function generateQRCode(username, secret, warningLogger) {
-    var domain = versionInfo.company || versionInfo.title || "Countly";
-    if (domain === "Countly") {
+    var domain = versionInfo.company || versionInfo.title || "Userovo";
+    if (domain === "Userovo") {
         try {
             const apiURL = plugins.getConfig("api").domain;
             if (apiURL) {

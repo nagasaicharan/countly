@@ -1,19 +1,19 @@
 {
-  "name": "countly-errorlogs",
+  "name": "userovo-errorlogs",
   "title": "Error Logs",
   "version": "0.0.0",
-  "description": "Display Countly related error logs",
+  "description": "Display Userovo related error logs",
   "author": "Count.ly",
   "homepage": "https://count.ly/plugins/error-logs/",
   "repository": {
     "type": "git",
-    "url": "http://github.com/Countly/countly-server.git"
+    "url": "http://github.com/Userovo/userovo-server.git"
   },
   "bugs": {
-    "url": "http://github.com/Countly/countly-server/issues"
+    "url": "http://github.com/Userovo/userovo-server/issues"
   },
   "keywords": [
-    "countly",
+    "userovo",
     "analytics",
     "logs",
     "errors"

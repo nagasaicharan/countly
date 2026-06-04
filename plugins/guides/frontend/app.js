@@ -1,9 +1,9 @@
 var plugin = {};
-const countlyConfig = require('../../../frontend/express/config');
+const userovoConfig = require('../../../frontend/express/config');
 const common = require('../../../api/utils/common.js');
 
 plugin.init = function(app) {
-    app.post(countlyConfig.path + '/guides/viewed', function(req, res) {
+    app.post(userovoConfig.path + '/guides/viewed', function(req, res) {
         if (!req.session || !req.session.uid) {
             res.send(false);
             res.end();

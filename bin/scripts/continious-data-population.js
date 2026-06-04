@@ -1,7 +1,7 @@
 /**
  *  Set parameters for a specific application and template. This script continuously runs and iterates through all apps and generates some data continuously emulating real user behavior. 
- *  Server: countly
- *  Path: countly dir
+ *  Server: userovo
+ *  Path: userovo dir
  *  Command: node continious-data-population.js
  */
 
@@ -167,7 +167,7 @@ const ratingWidgetList = {}, npsWidgetList = {}, surveyWidgetList = {};
 
 
 const plugins = require('../../plugins/pluginManager.js'),
-    request = require('countly-request')(plugins.getConfig("security")),
+    request = require('userovo-request')(plugins.getConfig("security")),
     Chance = require('../../plugins/populator/frontend/public/javascripts/chance.js');
 
 function writeMsg(msg) {
@@ -179,7 +179,7 @@ function writeMsg(msg) {
  **/
 async function readDbParameters() {
     try {
-        const db = await plugins.dbConnection("countly");
+        const db = await plugins.dbConnection("userovo");
 
         for (let i = 0; i < Object.keys(inputs).length; i++) {
             pluginList[inputs[i].APP_ID] = [];
@@ -407,7 +407,7 @@ const props = {
     _locale: ["en_CA", "fr_FR", "de_DE", "it_IT", "ja_JP", "ko_KR", "en_US"],
     _browser: ["Opera", "Chrome", "Internet Explorer", "Safari", "Firefox"],
     _store: ["com.android.vending", "com.google.android.feedback", "com.google.vending", "com.amazon.venezia", "com.sec.android.app.samsungapps", "com.qihoo.appstore", "com.dragon.android.pandaspace", "me.onemobile.android", "com.tencent.android.qqdownloader", "com.android.browser", "com.bbk.appstore", "com.lenovo.leos.appstore", "com.lenovo.leos.appstore.pad", "com.moto.mobile.appstore", "com.aliyun.wireless.vos.appstore", "um.market.android"],
-    _source: ["https://www.google.lv/search?q=countly+analytics", "https://www.google.co.in/search?q=mobile+analytics", "https://www.google.ru/search?q=product+analytics", "http://stackoverflow.com/questions?search=what+is+mobile+analytics", "http://stackoverflow.com/unanswered?search=game+app+analytics", "http://stackoverflow.com/tags?search=product+dashboard", "http://r.search.yahoo.com/?query=analytics+product+manager"]
+    _source: ["https://www.google.lv/search?q=userovo+analytics", "https://www.google.co.in/search?q=mobile+analytics", "https://www.google.ru/search?q=product+analytics", "http://stackoverflow.com/questions?search=what+is+mobile+analytics", "http://stackoverflow.com/unanswered?search=game+app+analytics", "http://stackoverflow.com/tags?search=product+dashboard", "http://r.search.yahoo.com/?query=analytics+product+manager"]
 };
 const viewSegments = {
     name: ["Login", "Home", "Dashboard", "Main View", "Detail View Level 1", "Detail View Level 2", "Profile", "Settings", "About", "Privacy Policy", "Terms and Conditions"],
@@ -475,7 +475,7 @@ function getUserProperties(templateUp) {
 /**
  * Sends bulk request for populator
  **/
-async function countlyPopulatorSync(appKey) {
+async function userovoPopulatorSync(appKey) {
     try {
         const req = bulk.splice(0, bucket);
         await sendRequest({
@@ -654,8 +654,8 @@ function getUser(templateUp) {
             errors = ["CoreFoundation                  0x182e3adb0 __exceptionPreprocess + 124",
                 "libobjc.A.dylib                 0x18249ff80 objc_exception_throw + 56",
                 "CoreFoundation                  0x182d1b098 -[__NSArrayI objectAtIndex:] + 196",
-                "CountlyTestApp-iOS              0x100046988 0x100030000 + 92552",
-                "CountlyTestApp-iOS              0x100044340 0x100030000 + 82752",
+                "UserovoTestApp-iOS              0x100046988 0x100030000 + 92552",
+                "UserovoTestApp-iOS              0x100044340 0x100030000 + 82752",
                 "UIKit                           0x187fd0be8 -[UIApplication sendAction:to:from:forEvent:] + 100",
                 "UIKit                           0x187fd0b64 -[UIControl sendAction:to:forEvent:] + 80",
                 "UIKit                           0x187fb8870 -[UIControl _sendActionsForEvents:withEvent:] + 436",
@@ -671,7 +671,7 @@ function getUser(templateUp) {
                 "CoreFoundation                  0x182d18c50 CFRunLoopRunSpecific + 384",
                 "GraphicsServices                0x184600088 GSEventRunModal + 180",
                 "UIKit                           0x188002088 UIApplicationMain + 204",
-                "CountlyTestApp-iOS              0x10004342c 0x100030000 + 78892",
+                "UserovoTestApp-iOS              0x10004342c 0x100030000 + 78892",
                 "libdyld.dylib                   0x1828b68b8 start + 4"
             ];
             stacks = getRandomInt(9, 19);
@@ -1181,7 +1181,7 @@ function getUser(templateUp) {
         params.dow = getRandomInt(0, 6);
         params.populator = true;
         bulk.push(params);
-        countlyPopulatorSync(appKey);
+        userovoPopulatorSync(appKey);
     };
 }
 
@@ -1618,7 +1618,7 @@ function generateWidgets(appId, done) {
 
 function generateRetention(templateUp, callback) {
     const userAmount = 1000;
-    if (typeof countlyRetention === "undefined") {
+    if (typeof userovoRetention === "undefined") {
         callback();
         return;
     }
@@ -1861,7 +1861,7 @@ function processUsers(appId) {
         }, timeout);
     }
     else {
-        countlyPopulatorSync();
+        userovoPopulatorSync();
     }
 }
 

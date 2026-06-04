@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Script to clean unused localization keys from a Countly plugin's properties file
+# Script to clean unused localization keys from a Userovo plugin's properties file
 # and automatically apply the changes
 
 set -e # Exit on error
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-COUNTLY_ROOT="$(cd "$SCRIPT_DIR/../../.." &> /dev/null && pwd )" # Fix: Go up three levels from bin/scripts/localization
-PLUGINS_DIR="$COUNTLY_ROOT/plugins" # Fix: Use the plugins directory at the root level
+USEROVO_ROOT="$(cd "$SCRIPT_DIR/../../.." &> /dev/null && pwd )" # Fix: Go up three levels from bin/scripts/localization
+PLUGINS_DIR="$USEROVO_ROOT/plugins" # Fix: Use the plugins directory at the root level
 
 # Default values
 APPLY_CHANGES=false

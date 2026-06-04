@@ -1,10 +1,10 @@
 // Nodemailer SES support: https://nodemailer.com/transports/ses/
 // Important steps:
-//      1) run "npm install aws-sdk" in "echo $(countly dir)"
+//      1) run "npm install aws-sdk" in "echo $(userovo dir)"
 //      2) make sure you have an IAM policy to allow access to AWS SES
 //      3) update the email variable below with one of your email addresses that was added to SES Identity Management
 //      4) update region to one of the 3 valid AWS SES regions: eu-west-1, us-west-2 or us-east-1
-//      5) rename or copy this file to countly/extend/mail.js
+//      5) rename or copy this file to userovo/extend/mail.js
 // Optional: You are free to stop the sendmail process as it is no longer required.
 
 var nodemailer = require('nodemailer');

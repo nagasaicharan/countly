@@ -9,13 +9,13 @@ var pluginManager = require('../../../../plugins/pluginManager.js')
 const OPERATION_BATCH_SIZE = 200;
 
 console.log("Upgrading members/group permissions for data-manager");
-pluginManager.dbConnection().then(async (countlyDb) => {
+pluginManager.dbConnection().then(async (userovoDb) => {
     const types = ['c', 'r', 'u', 'd']; 
     function upgradePermission(collectionName) {
         return new Promise((resolve, reject) => {
             try {
                 let requests = [];
-                let cursor = countlyDb.collection(collectionName).find({}, { projection: { _id: 1, permission: 1 } });
+                let cursor = userovoDb.collection(collectionName).find({}, { projection: { _id: 1, permission: 1 } });
                 cursor.forEach(async function (group) {
                     let update = {};
                     if (!group.permission) {
@@ -60,7 +60,7 @@ pluginManager.dbConnection().then(async (countlyDb) => {
         
                     if (requests.length >= OPERATION_BATCH_SIZE) {
                         try {
-                            await countlyDb.collection(collectionName).bulkWrite(requests, { ordered: false })
+                            await userovoDb.collection(collectionName).bulkWrite(requests, { ordered: false })
                             requests = [];
                         }
                         catch (ex) {
@@ -70,7 +70,7 @@ pluginManager.dbConnection().then(async (countlyDb) => {
                 }, async function () {
                     if(requests.length > 0) {
                         try {
-                            await countlyDb.collection(collectionName).bulkWrite(requests, { ordered: false })
+                            await userovoDb.collection(collectionName).bulkWrite(requests, { ordered: false })
                         }
                         catch (ex) {
                             console.error(ex);
@@ -90,10 +90,10 @@ pluginManager.dbConnection().then(async (countlyDb) => {
         try {
             await upgradePermission('members');
             await upgradePermission('groups');
-            countlyDb.close();
+            userovoDb.close();
         } catch (error) {
             console.log(error)
-            countlyDb.close();
+            userovoDb.close();
         }
     }
     

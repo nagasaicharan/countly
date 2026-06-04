@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: countly-tls
+  name: userovo-tls
 data:
   tls.crt: YOUR_SSL_CERT_IN_BASE64      # cat cert.crt | base64
   tls.key: YOUR_SSL_KEY_IN_BASE64       # cat cert.key | base64
@@ -10,15 +10,15 @@ type: kubernetes.io/tls
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: countly-ingress
+  name: userovo-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
-    kubernetes.io/ingress.global-static-ip-name: "countly-static-ip"
+    kubernetes.io/ingress.global-static-ip-name: "userovo-static-ip"
 spec:
   tls:
   - hosts:
     - YOUR_HOSTNAME                     # example.count.ly
-    secretName: countly-tls
+    secretName: userovo-tls
   rules:
   - host: example.count.ly
     http:
@@ -27,41 +27,41 @@ spec:
         pathType: Exact
         backend:
           service:
-            name: countly-ingestion
+            name: userovo-ingestion
             port:
               number: 3001
       - path: /i/bulk
         pathType: Exact
         backend:
           service:
-            name: countly-ingestion
+            name: userovo-ingestion
             port:
               number: 3001
       - path: /i/*
         pathType: ImplementationSpecific
         backend:
           service:
-            name: countly-api
+            name: userovo-api
             port:
               number: 3001
       - path: /o
         pathType: Prefix
         backend:
           service:
-            name: countly-api
+            name: userovo-api
             port:
               number: 3001
       - path: /o/*
         pathType: ImplementationSpecific
         backend:
           service:
-            name: countly-api
+            name: userovo-api
             port:
               number: 3001
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: countly-frontend
+            name: userovo-frontend
             port:
               number: 6001

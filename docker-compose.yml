@@ -4,7 +4,7 @@ volumes:
   mongodb_data:
 
 networks:
-  countly:
+  userovo:
 
 services:
   mongodb:
@@ -12,17 +12,17 @@ services:
     volumes:
       - 'mongodb_data:/bitnami'
     networks:
-      countly:
+      userovo:
 
-  countly-api:
-    image: 'countly/api:latest'
-    # Countly Enterprise: image: 'gcr.io/countly-01/api:24.12'
+  userovo-api:
+    image: 'userovo/api:latest'
+    # Userovo Enterprise: image: 'gcr.io/userovo-01/api:24.12'
     environment:
-      - COUNTLY_PLUGINS=mobile,web,desktop,plugins,density,locale,browser,sources,views,logger,systemlogs,populator,reports,crashes,push,star-rating,slipping-away-users,compare,server-stats,dbviewer,times-of-day,compliance-hub,alerts,onboarding,consolidate,remote-config,hooks,dashboards,sdk,data-manager
-      # Countly Enterprise: - COUNTLY_PLUGINS=mobile,web,desktop,plugins,density,locale,browser,sources,views,license,drill,funnels,retention_segments,flows,cohorts,surveys,remote-config,ab-testing,formulas,activity-map,concurrent_users,revenue,logger,systemlogs,populator,reports,crashes,push,geo,block,users,star-rating,slipping-away-users,compare,server-stats,dbviewer,crash_symbolication,crashes-jira,groups,white-labeling,alerts,times-of-day,compliance-hub,onboarding,active_users,performance-monitoring,config-transfer,consolidate,data-manager,hooks,dashboards,sdk
-      - COUNTLY_CONFIG__MONGODB_HOST=mongodb
-      - COUNTLY_CONFIG_API_API_WORKERS=4 # CPU core count
-      - COUNTLY_CONFIG__FILESTORAGE="gridfs"
+      - USEROVO_PLUGINS=mobile,web,desktop,plugins,density,locale,browser,sources,views,logger,systemlogs,populator,reports,crashes,push,star-rating,slipping-away-users,compare,server-stats,dbviewer,times-of-day,compliance-hub,alerts,onboarding,consolidate,remote-config,hooks,dashboards,sdk,data-manager
+      # Userovo Enterprise: - USEROVO_PLUGINS=mobile,web,desktop,plugins,density,locale,browser,sources,views,license,drill,funnels,retention_segments,flows,cohorts,surveys,remote-config,ab-testing,formulas,activity-map,concurrent_users,revenue,logger,systemlogs,populator,reports,crashes,push,geo,block,users,star-rating,slipping-away-users,compare,server-stats,dbviewer,crash_symbolication,crashes-jira,groups,white-labeling,alerts,times-of-day,compliance-hub,onboarding,active_users,performance-monitoring,config-transfer,consolidate,data-manager,hooks,dashboards,sdk
+      - USEROVO_CONFIG__MONGODB_HOST=mongodb
+      - USEROVO_CONFIG_API_API_WORKERS=4 # CPU core count
+      - USEROVO_CONFIG__FILESTORAGE="gridfs"
       - NODE_OPTIONS="--max-old-space-size=2048"
     deploy:
       restart_policy:
@@ -31,20 +31,20 @@ services:
         max_attempts: 3
         window: 400s
     networks:
-      countly:
+      userovo:
     depends_on:
       - mongodb
 
-  countly-frontend:
-    image: 'countly/frontend:latest'
-    # Countly Enterprise: image: 'gcr.io/countly-01/frontend:24.12'
+  userovo-frontend:
+    image: 'userovo/frontend:latest'
+    # Userovo Enterprise: image: 'gcr.io/userovo-01/frontend:24.12'
     environment:
-      - COUNTLY_PLUGINS=mobile,web,desktop,plugins,density,locale,browser,sources,views,logger,systemlogs,populator,reports,crashes,push,star-rating,slipping-away-users,compare,server-stats,dbviewer,times-of-day,compliance-hub,alerts,onboarding,consolidate,remote-config,hooks,dashboards,sdk,data-manager
-      # Countly Enterprise: - COUNTLY_PLUGINS=mobile,web,desktop,plugins,density,locale,browser,sources,views,license,drill,funnels,retention_segments,flows,cohorts,surveys,remote-config,ab-testing,formulas,activity-map,concurrent_users,revenue,logger,systemlogs,populator,reports,crashes,push,geo,block,users,star-rating,slipping-away-users,compare,server-stats,dbviewer,crash_symbolication,crashes-jira,groups,white-labeling,alerts,times-of-day,compliance-hub,onboarding,active_users,performance-monitoring,config-transfer,consolidate,data-manager,hooks,dashboards,sdk
-      - COUNTLY_CONFIG__MONGODB_HOST=mongodb
+      - USEROVO_PLUGINS=mobile,web,desktop,plugins,density,locale,browser,sources,views,logger,systemlogs,populator,reports,crashes,push,star-rating,slipping-away-users,compare,server-stats,dbviewer,times-of-day,compliance-hub,alerts,onboarding,consolidate,remote-config,hooks,dashboards,sdk,data-manager
+      # Userovo Enterprise: - USEROVO_PLUGINS=mobile,web,desktop,plugins,density,locale,browser,sources,views,license,drill,funnels,retention_segments,flows,cohorts,surveys,remote-config,ab-testing,formulas,activity-map,concurrent_users,revenue,logger,systemlogs,populator,reports,crashes,push,geo,block,users,star-rating,slipping-away-users,compare,server-stats,dbviewer,crash_symbolication,crashes-jira,groups,white-labeling,alerts,times-of-day,compliance-hub,onboarding,active_users,performance-monitoring,config-transfer,consolidate,data-manager,hooks,dashboards,sdk
+      - USEROVO_CONFIG__MONGODB_HOST=mongodb
       - NODE_OPTIONS="--max-old-space-size=2048"
     networks:
-      countly:
+      userovo:
     depends_on:
       - mongodb
     deploy:
@@ -64,9 +64,9 @@ services:
     ports:
       - '80:8080'
     volumes:
-      - './bin/docker/nginx.server.conf:/opt/bitnami/nginx/conf/server_blocks/countly.conf:ro'
+      - './bin/docker/nginx.server.conf:/opt/bitnami/nginx/conf/server_blocks/userovo.conf:ro'
     networks:
-      countly:
+      userovo:
     depends_on:
-      - countly-api
-      - countly-frontend
+      - userovo-api
+      - userovo-frontend

@@ -1,0 +1,250 @@
+body.userovo-dashboard-page {
+    color: #172554;
+    background: #F6FAFC;
+}
+
+.userovo-dashboard-page #main-views-container,
+.userovo-dashboard-page #main-views-container .main-view,
+.userovo-dashboard-page .cly-vue-theme-clydef {
+    background: transparent;
+}
+
+.userovo-dashboard-page #top-bar {
+    height: 64px;
+    background: rgba(255, 255, 255, 0.94);
+    border-bottom: 1px solid rgba(203, 213, 225, 0.78);
+    box-shadow: 0 16px 40px rgba(23, 37, 84, 0.08);
+    backdrop-filter: blur(18px);
+}
+
+.userovo-dashboard-page #top-bar .logo-container {
+    padding: 14px 34px 13px 34px;
+}
+
+.userovo-dashboard-page #top-bar .logo {
+    width: 158px;
+    height: 36px;
+    background-image: url("../images/dashboard/countly_logo.svg");
+    background-size: contain;
+    background-position: left center;
+}
+
+.userovo-dashboard-page #top-bar .dropdown {
+    color: #475569;
+    border-color: #E2E8F0;
+}
+
+.userovo-dashboard-page #top-bar .dropdown.active,
+.userovo-dashboard-page #top-bar .dropdown.clicked,
+.userovo-dashboard-page #top-bar .dropdown.force-clicked {
+    box-shadow: inset 0 3px 0 0 #2563EB;
+}
+
+.userovo-dashboard-page #top-bar .dropdown.icon.clicked .selected,
+.userovo-dashboard-page #top-bar .dropdown.icon.clicked .empty-state,
+.userovo-dashboard-page #top-bar .dropdown.icon.force-clicked .selected,
+.userovo-dashboard-page #top-bar .dropdown.icon.force-clicked .empty-state,
+.userovo-dashboard-page #top-bar .dropdown.large.clicked .selected:after,
+.userovo-dashboard-page #top-bar .dropdown.large.clicked .empty-state:after,
+.userovo-dashboard-page #top-bar .dropdown.large.force-clicked .selected:after,
+.userovo-dashboard-page #top-bar .dropdown.large.force-clicked .empty-state:after {
+    color: #2563EB;
+}
+
+.userovo-dashboard-page #top-bar .dropdown .menu {
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    box-shadow: 0 24px 58px rgba(23, 37, 84, 0.16);
+}
+
+.userovo-dashboard-page #cly-vue-sidebar {
+    background: #0F1F4B;
+    box-shadow: 16px 0 42px rgba(15, 31, 75, 0.16);
+}
+
+.userovo-dashboard-page #sidebar,
+.userovo-dashboard-page #sidebar-menu,
+.userovo-dashboard-page .sidebar-menu {
+    background: #0F1F4B;
+}
+
+.userovo-dashboard-page #sidebar-menu .sidebar-menu .item,
+.userovo-dashboard-page #sidebar-menu .sidebar-menu .menu-category>.item {
+    color: #BFD7FF;
+    border-radius: 8px;
+}
+
+.userovo-dashboard-page #sidebar-menu .sidebar-menu .item:hover,
+.userovo-dashboard-page #sidebar-menu .sidebar-menu .item.active,
+.userovo-dashboard-page #sidebar-menu .sidebar-menu .menu-category>.item:hover,
+.userovo-dashboard-page #sidebar-menu .sidebar-menu .menu-category>.item.active {
+    background: rgba(37, 99, 235, 0.22);
+    color: #FFFFFF;
+}
+
+.userovo-dashboard-page #sidebar-menu .sidebar-menu .item.active {
+    box-shadow: inset 3px 0 0 #06B6D4;
+}
+
+.userovo-dashboard-page #sidebar-menu .sidebar-menu .item .text,
+.userovo-dashboard-page #sidebar-menu .sidebar-menu .menu-category-title {
+    color: inherit;
+}
+
+.userovo-dashboard-page .cly-vue-main {
+    padding: 24px;
+}
+
+.userovo-dashboard-page .cly-vue-header {
+    margin: 0 0 24px;
+    padding: 24px 0 18px;
+    border-bottom: 1px solid rgba(203, 213, 225, 0.72);
+}
+
+.userovo-dashboard-page .cly-vue-header h1,
+.userovo-dashboard-page h1,
+.userovo-dashboard-page h2,
+.userovo-dashboard-page h3,
+.userovo-dashboard-page h4,
+.userovo-dashboard-page h5 {
+    color: #172554;
+    letter-spacing: 0;
+}
+
+.userovo-dashboard-page .cly-vue-section--has-configurator-skin .cly-vue-section__content,
+.userovo-dashboard-page .cly-vue-section__content,
+.userovo-dashboard-page .cly-vue-card,
+.userovo-dashboard-page .widget,
+.userovo-dashboard-page .widget-content,
+.userovo-dashboard-page .dashboard-widget,
+.userovo-dashboard-page .panel,
+.userovo-dashboard-page .white-card {
+    background: rgba(255, 255, 255, 0.96);
+    border-color: #CBD5E1;
+    border-radius: 8px;
+    box-shadow: 0 16px 44px rgba(23, 37, 84, 0.08);
+}
+
+.userovo-dashboard-page .cly-vue-section:not(:last-child) {
+    margin-bottom: 24px;
+}
+
+.userovo-dashboard-page .cly-vue-section--has-default-skin .cly-vue-section__content,
+.userovo-dashboard-page .cly-vue-header+div>.cly-vue-tabs,
+.userovo-dashboard-page .el-table th.is-leaf,
+.userovo-dashboard-page .el-table td,
+.userovo-dashboard-page .el-table--border,
+.userovo-dashboard-page .el-table--group {
+    border-color: #E2E8F0;
+}
+
+.userovo-dashboard-page .el-table,
+.userovo-dashboard-page .el-table__expanded-cell {
+    color: #172554;
+    background: #FFFFFF;
+}
+
+.userovo-dashboard-page .el-table th {
+    color: #475569;
+    background: #F6FAFC;
+    font-weight: 800;
+}
+
+.userovo-dashboard-page .el-table tr:hover > td,
+.userovo-dashboard-page .el-table--enable-row-hover .el-table__body tr:hover>td {
+    background: #EEF6FF;
+}
+
+.userovo-dashboard-page .el-button--primary,
+.userovo-dashboard-page .icon-button.green,
+.userovo-dashboard-page .cly-vue-button--primary,
+.userovo-dashboard-page .el-button.is-light-blue:not(.is-disabled):hover {
+    color: #FFFFFF;
+    background: #2563EB;
+    border-color: #2563EB;
+}
+
+.userovo-dashboard-page .el-button--primary:hover,
+.userovo-dashboard-page .icon-button.green:hover,
+.userovo-dashboard-page .cly-vue-button--primary:hover {
+    background: #1D4ED8;
+    border-color: #1D4ED8;
+}
+
+.userovo-dashboard-page .el-button.is-light-blue:not(.is-disabled),
+.userovo-dashboard-page .el-button--text,
+.userovo-dashboard-page a {
+    color: #2563EB;
+}
+
+.userovo-dashboard-page .el-tabs__active-bar,
+.userovo-dashboard-page .el-tabs--card>.el-tabs__header .el-tabs__item.is-active {
+    border-bottom-color: #2563EB;
+}
+
+.userovo-dashboard-page .el-tabs__item.is-active,
+.userovo-dashboard-page .el-tabs__item:hover {
+    color: #2563EB;
+}
+
+.userovo-dashboard-page .el-input__inner,
+.userovo-dashboard-page .el-textarea__inner,
+.userovo-dashboard-page input[type=text],
+.userovo-dashboard-page input[type=password],
+.userovo-dashboard-page input[type=email],
+.userovo-dashboard-page textarea {
+    color: #172554;
+    background: #FBFEFF;
+    border-color: #CBD5E1;
+    border-radius: 8px;
+}
+
+.userovo-dashboard-page .el-input__inner:focus,
+.userovo-dashboard-page .el-textarea__inner:focus,
+.userovo-dashboard-page input[type=text]:focus,
+.userovo-dashboard-page input[type=password]:focus,
+.userovo-dashboard-page input[type=email]:focus,
+.userovo-dashboard-page textarea:focus {
+    border-color: #2563EB;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.userovo-dashboard-page .el-radio.is-bordered.is-checked,
+.userovo-dashboard-page .el-checkbox__input.is-checked .el-checkbox__inner,
+.userovo-dashboard-page .el-switch.is-checked .el-switch__core {
+    border-color: #2563EB;
+    background: #2563EB;
+}
+
+.userovo-dashboard-page .el-dialog,
+.userovo-dashboard-page .cly-drawer,
+.userovo-dashboard-page .dialog {
+    border-radius: 8px;
+    border-color: #CBD5E1;
+    box-shadow: 0 28px 80px rgba(23, 37, 84, 0.18);
+}
+
+.userovo-dashboard-page .cly-drawer .title,
+.userovo-dashboard-page .dialog .title,
+.userovo-dashboard-page .el-dialog__header {
+    color: #172554;
+    border-color: #E2E8F0;
+}
+
+.userovo-dashboard-page .bu-tag.is-curved,
+.userovo-dashboard-page .cly-vue-badge,
+.userovo-dashboard-page .badge {
+    border-radius: 999px;
+}
+
+.userovo-dashboard-page .cly-vue-listbox .cly-vue-listbox__item.selected,
+.userovo-dashboard-page .el-select-dropdown__item.selected,
+.userovo-dashboard-page .el-dropdown-menu__item:hover {
+    color: #2563EB;
+    background: #EEF6FF;
+}
+
+.userovo-dashboard-page .loading-bars,
+.userovo-dashboard-page .pace .pace-progress {
+    background: #2563EB;
+}

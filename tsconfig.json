@@ -29,7 +29,7 @@
         "moduleResolution": "Node",            // Specify how TypeScript looks up a file from a given module specifier
         "baseUrl": ".",                        // Specify the base directory to resolve non-relative module names
         "paths": {                             // Specify a set of entries that re-map imports to additional lookup locations
-            "@countly/*": ["./api/*"],         // Map @countly imports to api directory
+            "@userovo/*": ["./api/*"],         // Map @userovo imports to api directory
             "@plugins/*": ["./plugins/*"],     // Map @plugins imports to plugins directory
             "@frontend/*": ["./frontend/*"]    // Map @frontend imports to frontend directory
         },

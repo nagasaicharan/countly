@@ -5,10 +5,10 @@ const { mergePermissions } = require('../../../../frontend/express/libs/members.
 
 console.log('Rebuilding member permission');
 
-pluginManager.dbConnection().then(async (countlyDb) => {
+pluginManager.dbConnection().then(async (userovoDb) => {
     const BATCH_SIZE = 200;
     // Get all members that belong to one or more group
-    const membersToUpdate = await countlyDb.collection('members')
+    const membersToUpdate = await userovoDb.collection('members')
         .find({ group_id: { $exists: true, $type: 'array', $ne: [] } }) // find member that has 'group_id' property that is an array and not empty
         .project({ _id: 1, group_id: 1, global_admin: 1 })
         .toArray();
@@ -17,12 +17,12 @@ pluginManager.dbConnection().then(async (countlyDb) => {
     for (let idx = 0; idx < membersToUpdate.length; idx += 1) {
         // Get object ids of the groups that this member belongs to
         const userGroupObjectIds = membersToUpdate[idx].group_id.reduce((groupIds, g_id) => {
-            groupIds.push(countlyDb.ObjectID(g_id));
+            groupIds.push(userovoDb.ObjectID(g_id));
 
             return groupIds;
         }, []);
         // Get all the groups that this member belongs to
-        const userGroups = await countlyDb.collection('groups')
+        const userGroups = await userovoDb.collection('groups')
             .find({ _id: { $in: userGroupObjectIds } })
             .toArray();
 
@@ -46,7 +46,7 @@ pluginManager.dbConnection().then(async (countlyDb) => {
         // Collect the updates for each member in an array
         memberUpdates.push({
             updateOne: {
-                filter: { _id: countlyDb.ObjectID(membersToUpdate[idx]._id) },
+                filter: { _id: userovoDb.ObjectID(membersToUpdate[idx]._id) },
                 update: {
                     $set: {
                         global_admin: newUserData.global_admin,
@@ -60,7 +60,7 @@ pluginManager.dbConnection().then(async (countlyDb) => {
         // Update member permissions in bulk
         if (memberUpdates.length === BATCH_SIZE || idx === membersToUpdate.length - 1) {
             try {
-                await countlyDb.collection('members').bulkWrite(memberUpdates, { ordered: false });
+                await userovoDb.collection('members').bulkWrite(memberUpdates, { ordered: false });
             }
             catch (err) {
                 console.error('Failed updating members collection', err);
@@ -71,7 +71,7 @@ pluginManager.dbConnection().then(async (countlyDb) => {
         }
     }
 
-    countlyDb.close();
+    userovoDb.close();
     console.log('Member permission rebuild done');
     process.exit(0);
 });

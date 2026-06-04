@@ -1,7 +1,7 @@
 /**
  *  Description: Creates CSV file of document counts per month from drill data
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/export-data
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/export-data
  *  Command: node export_monthly_doc_count.js
  */
 
@@ -12,7 +12,7 @@ const fs = require('fs');
 
 const pluginManager = require('../../../plugins/pluginManager.js');
 const drillCommon = require('../../../plugins/drill/api/common.js');
-const countlyCommon = require('../../../api/lib/countly.common.js');
+const userovoCommon = require('../../../api/lib/userovo.common.js');
 
 const app_list = []; //valid app_ids here. If empty array passed, script will process all apps.
 const internalDrillEvents = ["[CLY]_session", "[CLY]_crash", "[CLY]_view", "[CLY]_action", "[CLY]_push_action", "[CLY]_push_sent", "[CLY]_star_rating", "[CLY]_nps", "[CLY]_survey", "[CLY]_apm_network", "[CLY]_apm_device", "[CLY]_consent"];
@@ -26,10 +26,10 @@ const headerMap = {
 };
 const MAX_RETRIES = 5;
 
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
     console.log("Connected to databases...");
     try {
-        const apps = await getAppList({db: countlyDb});
+        const apps = await getAppList({db: userovoDb});
         if (!apps || !apps.length) {
             return close();
         }
@@ -44,8 +44,8 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                 var app = apps[i];
                 console.log(i + 1, ") Processing app:", app.name);
                 try {
-                    // GET EVENTS FOR CURRENT APP INCLUDING COUNTLY INTERNAL EVENTS
-                    var events = await countlyDb.collection("events").findOne({"_id": ObjectId(app._id)});
+                    // GET EVENTS FOR CURRENT APP INCLUDING USEROVO INTERNAL EVENTS
+                    var events = await userovoDb.collection("events").findOne({"_id": ObjectId(app._id)});
                     events = events && events.list || [];
                     if (internalDrillEvents && internalDrillEvents.length) {
                         events.push(...internalDrillEvents);
@@ -58,7 +58,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                         // SET PERIOD AND QUERY
                         let query = {};
                         if (period !== 'all') {
-                            var periodObj = countlyCommon.periodObj;
+                            var periodObj = userovoCommon.periodObj;
                             let cd = {};
 
                             let tmpArr = periodObj.currentPeriodArr[0].split(".");
@@ -94,7 +94,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
                                 catch (error) {
                                     console.log("Closing and reestablishing database connection");
                                     await drillDb.close();
-                                    drillDb = await pluginManager.dbConnection("countly_drill");
+                                    drillDb = await pluginManager.dbConnection("userovo_drill");
                                 }
                             }
 
@@ -187,7 +187,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
         if (err) {
             console.log("Error: ", err);
         }
-        countlyDb.close();
+        userovoDb.close();
         drillDb.close();
         console.log("Done.");
     }

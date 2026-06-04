@@ -20,7 +20,7 @@ class Handle {
             manager.reloadEnabledPluginList(db, function() {
                 self.db = db;
                 self.classes = {}; // {'job name': Constructor}
-                self.files = {}; // {'ping': '/usr/local/countly/api/jobs/ping.js'}
+                self.files = {}; // {'ping': '/usr/local/userovo/api/jobs/ping.js'}
                 scan(self.db, self.files, self.classes);
             });
         });

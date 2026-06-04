@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #upgrade drill meta if needed
-if [ "$(countly plugin status drill)" != "Plugin drill does not exist" ] 
+if [ "$(userovo plugin status drill)" != "Plugin drill does not exist" ] 
 then
     #upgrade drill meta
     echo "Backing up drill meta before converting to new format"

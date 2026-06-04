@@ -1,6 +1,6 @@
 # Security Guidelines
 
-This document outlines security requirements and best practices for Countly Server development. All contributors must follow these guidelines to ensure the security of the platform.
+This document outlines security requirements and best practices for Userovo Server development. All contributors must follow these guidelines to ensure the security of the platform.
 
 ## Table of Contents
 - [API Endpoint Security](#api-endpoint-security)
@@ -171,7 +171,7 @@ var safeString = common.escape_html(unsafeString);
 
 ```javascript
 // Frontend sanitization
-var sanitized = countlyCommon.encodeHtml(userInput);
+var sanitized = userovoCommon.encodeHtml(userInput);
 
 // Test inputs to verify XSS protection
 var testString = "<script>'&&&'</script>";

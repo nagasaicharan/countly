@@ -1,4 +1,4 @@
-/*global store, jQuery, $, document, countlyGlobal, filterXSS */
+/*global store, jQuery, $, document, userovoGlobal, filterXSS */
 /*exported showMessage, addLocalization */
 
 /**
@@ -64,11 +64,11 @@ function encodeSomeHtml(html, options) {
 * @param {function} callback - callback executed when localization file is loaded
 * @memberof Pre Login
 * @example
-* addLocalization('enterpriseinfo', countlyGlobal["cdn"]+'enterpriseinfo/localization/');
+* addLocalization('enterpriseinfo', userovoGlobal["cdn"]+'enterpriseinfo/localization/');
 */
 function addLocalization(name, path, callback) {
     var langs = jQuery.i18n.map;
-    var lang = store.get("countly_lang") || "en";
+    var lang = store.get("userovo_lang") || "en";
     jQuery.i18n.properties({
         name: name,
         path: [path],
@@ -76,8 +76,8 @@ function addLocalization(name, path, callback) {
         language: lang,
         callback: function() {
             $.each(jQuery.i18n.map, function(key, value) {
-                if (countlyGlobal.company) {
-                    langs[key] = value.replace(new RegExp("Countly", 'ig'), countlyGlobal.company);
+                if (userovoGlobal.company) {
+                    langs[key] = value.replace(new RegExp("Userovo", 'ig'), userovoGlobal.company);
                 }
                 langs[key] = encodeSomeHtml(value);
             });
@@ -111,21 +111,21 @@ function addLocalization(name, path, callback) {
 $(document).ready(function() {
 
     var lang = "en";
-    if (store.get("countly_lang")) {
-        lang = store.get("countly_lang");
+    if (store.get("userovo_lang")) {
+        lang = store.get("userovo_lang");
         $("#active-lang").text(lang.toUpperCase());
         $("#form-lang").val(lang);
     }
 
     jQuery.i18n.properties({
         name: 'pre-login',
-        path: [countlyGlobal["cdn"] + 'localization/pre-login/'],
+        path: [userovoGlobal["cdn"] + 'localization/pre-login/'],
         mode: 'map',
         language: lang,
         callback: function() {
             $.each(jQuery.i18n.map, function(key, value) {
-                if (countlyGlobal.company) {
-                    jQuery.i18n.map[key] = value.replace(new RegExp("Countly", 'ig'), countlyGlobal.company);
+                if (userovoGlobal.company) {
+                    jQuery.i18n.map[key] = value.replace(new RegExp("Userovo", 'ig'), userovoGlobal.company);
                 }
                 jQuery.i18n.map[key] = encodeSomeHtml(value);
             });
@@ -161,13 +161,13 @@ $(document).ready(function() {
         var langCode = $(this).data("language-code"),
             langCodeUpper = langCode.toUpperCase();
 
-        store.set("countly_lang", langCode);
+        store.set("userovo_lang", langCode);
         $("#active-lang").text(langCodeUpper);
         $("#form-lang").val(langCode);
 
         jQuery.i18n.properties({
             name: 'pre-login',
-            path: [countlyGlobal["cdn"] + 'localization/pre-login/'],
+            path: [userovoGlobal["cdn"] + 'localization/pre-login/'],
             mode: 'map',
             language: langCode,
             callback: function() {

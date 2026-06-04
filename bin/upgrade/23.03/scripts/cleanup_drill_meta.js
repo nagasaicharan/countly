@@ -15,12 +15,12 @@ catch (e) {
 if (drill) {
     console.log("Cleaning up unnesesary values from drill meta.");
 
-    Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_drill")]).spread(function(countlyDb, drillDb) {
+    Promise.all([plugins.dbConnection("userovo"), plugins.dbConnection("userovo_drill")]).spread(function(userovoDb, drillDb) {
         common.drillDb = drillDb;
-        countlyDb.collection("apps").find({}, {"_id": 1}).toArray(function(err, apps) {
+        userovoDb.collection("apps").find({}, {"_id": 1}).toArray(function(err, apps) {
             if (err) {
                 console.log("Error in fetching apps");
-                countlyDb.close();
+                userovoDb.close();
                 drillDb.close();
             }
             else {
@@ -39,12 +39,12 @@ if (drill) {
                     });
                 }).then(function() {
                     console.log("Done");
-                    countlyDb.close();
+                    userovoDb.close();
                     drillDb.close();
                 }).catch(function(error) {
                     console.log("Done with error");
                     console.log(error);
-                    countlyDb.close();
+                    userovoDb.close();
                     drillDb.close();
                 });
             }

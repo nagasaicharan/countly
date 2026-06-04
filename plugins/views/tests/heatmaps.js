@@ -89,7 +89,7 @@ describe('Heatmap', async() => {
     });
 
     it('gets heatmap data from old drill_events collection if union_with is true', async() => {
-        const db = await pluginManager.dbConnection('countly_drill');
+        const db = await pluginManager.dbConnection('userovo_drill');
         const oldCollectionName = 'drill_events' + crypto.createHash('sha1').update('[CLY]_action' + APP_ID).digest('hex');
 
         const resp = await request.get('/o/apps/plugins?api_key=' + API_KEY_ADMIN + '&app_id=' + APP_ID);
@@ -137,7 +137,7 @@ describe('Heatmap', async() => {
     });
 
     it('does not get heatmap data from old drill_events collection if union_with is false', async() => {
-        const db = await pluginManager.dbConnection('countly_drill');
+        const db = await pluginManager.dbConnection('userovo_drill');
         const oldCollectionName = 'drill_events' + crypto.createHash('sha1').update('[CLY]_action' + APP_ID).digest('hex');
 
         const resp = await request.get('/o/apps/plugins?api_key=' + API_KEY_ADMIN + '&app_id=' + APP_ID);
@@ -193,7 +193,7 @@ describe('Heatmap', async() => {
     });
 
     after(async() => {
-        const db = await pluginManager.dbConnection('countly_drill');
+        const db = await pluginManager.dbConnection('userovo_drill');
 
         await db.collection('drill_events').remove({ did: 'heatmap_test' });
 

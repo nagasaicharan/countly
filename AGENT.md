@@ -1,8 +1,8 @@
 
 
-# Countly Server – AI Agent Hub
+# Userovo Server – AI Agent Hub
 
-**Project:** Countly is a product analytics platform (Node.js 22+, MongoDB, Vue 2, plugin-based).
+**Project:** Userovo is a product analytics platform (Node.js 22+, MongoDB, Vue 2, plugin-based).
 
 ## Agent Guides
 

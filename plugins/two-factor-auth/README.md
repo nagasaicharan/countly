@@ -1,6 +1,6 @@
 # Two Factor Authentication
 
-The Two-Factor Authentication (2FA) Plugin for Countly enhances account security by adding an additional layer of authentication. It allows users to enable or disable 2FA for their accounts and provides administrative controls for managing 2FA settings for other users.
+The Two-Factor Authentication (2FA) Plugin for Userovo enhances account security by adding an additional layer of authentication. It allows users to enable or disable 2FA for their accounts and provides administrative controls for managing 2FA settings for other users.
 
 ## Configuration View:
 
@@ -14,8 +14,8 @@ Sends requests to enable or disable 2FA and handles success and error responses.
 
 ## Registering the Component:
 
-Registers the TwoFAUser component in the Countly Vue container under the account settings page.
-This plugin provides a comprehensive solution for managing 2FA settings within the Countly application, enhancing the security of user accounts by requiring an additional authentication step.
+Registers the TwoFAUser component in the Userovo Vue container under the account settings page.
+This plugin provides a comprehensive solution for managing 2FA settings within the Userovo application, enhancing the security of user accounts by requiring an additional authentication step.
 
 
 ## Installation
@@ -34,14 +34,14 @@ cd two-factor-auth
 npm install
 ```
 
-3. Enable the plugin in Countly
+3. Enable the plugin in Userovo
 
 ```bash
-countly plugin enable two-factor-auth
+userovo plugin enable two-factor-auth
 ```
 
-4. Restart Countly to apply changes
+4. Restart Userovo to apply changes
 
 ```bash
-countly restart
+userovo restart
 ```

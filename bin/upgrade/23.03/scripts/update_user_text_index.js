@@ -3,11 +3,11 @@
 const pluginManager = require('../../../../plugins/pluginManager.js'),
     asyncjs = require('async');
 
-pluginManager.dbConnection().then((countlyDb) => {
-    countlyDb.collection('apps').find({}).toArray(function(err, apps) {
+pluginManager.dbConnection().then((userovoDb) => {
+    userovoDb.collection('apps').find({}).toArray(function(err, apps) {
         function upgrade(app, done) {
-            countlyDb.collection('app_users' + app._id).dropIndex("name_text_email_text", function(err) {
-                countlyDb.collection('app_users' + app._id).createIndex(
+            userovoDb.collection('app_users' + app._id).dropIndex("name_text_email_text", function(err) {
+                userovoDb.collection('app_users' + app._id).createIndex(
                     { "name": "text", "email": "text", "did": "text", "uid": "text", "username": "text" },
                     { background: true, default_language: "none" },
                     function(err, result) {
@@ -23,7 +23,7 @@ pluginManager.dbConnection().then((countlyDb) => {
 
         asyncjs.eachSeries(apps, upgrade, function() {
             console.log("Updating index finished");
-            countlyDb.close();
+            userovoDb.close();
         });
 
     });

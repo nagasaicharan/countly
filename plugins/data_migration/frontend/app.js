@@ -1,5 +1,5 @@
 var pluginOb = {},
-    countlyConfig = require("../../../frontend/express/config");
+    userovoConfig = require("../../../frontend/express/config");
 const fs = require('fs');
 const path = require('path');
 const common = require('../../../api/utils/common.js');
@@ -18,8 +18,8 @@ function safeFilename(filename) {
 }
 
 (function(plugin) {
-    plugin.init = function(app, countlyDb) {
-        app.get(countlyConfig.path + '/data-migration/download', function(req, res) {
+    plugin.init = function(app, userovoDb) {
+        app.get(userovoConfig.path + '/data-migration/download', function(req, res) {
             if (req.session && req.session.gadm) {
                 //asked by query id
                 if (req.query && req.query.id) {
@@ -28,7 +28,7 @@ function safeFilename(filename) {
                         res.status(400).send('Invalid export file');
                         return;
                     }
-                    countlyDb.collection("data_migrations").findOne({_id: exportid}, function(err, data) {
+                    userovoDb.collection("data_migrations").findOne({_id: exportid}, function(err, data) {
                         if (!err && data) {
                             var myfile = common.resolvePathInBase(path.resolve(__dirname, './../export'), exportid + '.tar.gz');
                             if (data.export_path && data.export_path !== '') {

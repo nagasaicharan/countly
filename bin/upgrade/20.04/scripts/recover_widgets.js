@@ -1,5 +1,5 @@
 var pluginManager = require('../../../../plugins/pluginManager.js');
-pluginManager.dbConnection().then((countlyDb) => {
+pluginManager.dbConnection().then((userovoDb) => {
     /**
     * @name recoverWidget
     * @description helper method for creating feedback widget with provided _id and app_id values
@@ -10,7 +10,7 @@ pluginManager.dbConnection().then((countlyDb) => {
     const recoverWidget = (appId, widgetId) => {
         return new Promise((resolve, reject) => {
             var widget = {};
-            widget._id = countlyDb.ObjectID(widgetId);
+            widget._id = userovoDb.ObjectID(widgetId);
             widget.app_id = appId;
             widget.popup_header_text = "What's your opinion about this page?";
             widget.popup_comment_callout = "Add comment";
@@ -29,7 +29,7 @@ pluginManager.dbConnection().then((countlyDb) => {
             widget.hide_sticker = false;
             widget.type = "rating";
     
-            countlyDb.collection("feedback_widgets").insert(widget, function(err) {
+            userovoDb.collection("feedback_widgets").insert(widget, function(err) {
                 if (!err) {
                     resolve(true);
                 }
@@ -46,12 +46,12 @@ pluginManager.dbConnection().then((countlyDb) => {
     
     /**
     * @name getFeedbackCollectionList
-    * @description helper method for returns list of feedback collections in countly db
+    * @description helper method for returns list of feedback collections in userovo db
     * @return {Promise} mongo db query promise
     */
     const getFeedbackCollectionList = () => {
         return new Promise((resolve, reject) => {
-            countlyDb.collections(function(err, collectionList) {
+            userovoDb.collections(function(err, collectionList) {
                 if (!err) {
                     let feedbackCollections = [];
                     collectionList.forEach(function(col) {
@@ -78,7 +78,7 @@ pluginManager.dbConnection().then((countlyDb) => {
     const extractWidgetIds = (collectionName) => {
         return new Promise((resolve, reject) => {
             let widgets = [];
-            countlyDb.collection(collectionName).find({}).toArray(function(err, feedbacks) {
+            userovoDb.collection(collectionName).find({}).toArray(function(err, feedbacks) {
                 if (!err) {
                     feedbacks.forEach(function(feedback) {
                         if (widgets.indexOf(feedback.widget_id) === -1) {
@@ -128,7 +128,7 @@ pluginManager.dbConnection().then((countlyDb) => {
     */
     const fixWidgetDisappear = async() => {
         try {
-            // get collection list from countly db
+            // get collection list from userovo db
             let feedbackCollections = await getFeedbackCollectionList();
             let widgets = [];
             // extract widget id's from current feedback data

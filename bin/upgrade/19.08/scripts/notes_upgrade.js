@@ -1,8 +1,8 @@
 var pluginManager = require("../../../../plugins/pluginManager.js");
 
 console.log("Upgrading notes data");
-pluginManager.dbConnection().then((countlyDb) => {
-    countlyDb
+pluginManager.dbConnection().then((userovoDb) => {
+    userovoDb
         .collection("graph_notes")
         .find({})
         .toArray(function(err, notesData) {
@@ -34,31 +34,31 @@ pluginManager.dbConnection().then((countlyDb) => {
                 }
             });
             if (notes.length > 0) {
-                countlyDb.collection("notes").insert(notes, function(insertErr, result) {
+                userovoDb.collection("notes").insert(notes, function(insertErr, result) {
                     if (insertErr) {
-                        countlyDb.close();
+                        userovoDb.close();
                         return console.log(
                             "got error while createing new notes",
                             err
                         );
                     }
-                    countlyDb.collection("graph_notes").drop();
+                    userovoDb.collection("graph_notes").drop();
                     setTimeout(()=>{
-                    countlyDb.close();
+                    userovoDb.close();
                     }, 2000)
                     console.log("notes data upgrade finished");
                 });
             }
             else {
                 console.log("no old notes need upgrade");
-                // countlyDb.collection("notes").drop();
-                countlyDb.close();
+                // userovoDb.collection("notes").drop();
+                userovoDb.close();
             }
             // asyncjs.eachSeries(notes, upgrade, function() {
             //
             //     console.log(notes);
     
-            //     countlyDb.close();
+            //     userovoDb.close();
             // });
         });
 });

@@ -20,7 +20,7 @@ var Promise = require("bluebird");
 
 var authorize = require('../../../api/utils/authorizer.js'); //for token
 
-const request = require('countly-request')(plugins.getConfig("security"));
+const request = require('userovo-request')(plugins.getConfig("security"));
 const FEATURE_NAME = 'data_migration';
 
 /**
@@ -867,7 +867,7 @@ function trim_ending_slashes(address) {
                         if (typeof result === "string") {
                             result = Buffer.from(result, 'utf8');
                         }
-                        common.returnRaw(params, 200, result, {'Content-Type': 'text/plain; charset=utf-8', 'Content-disposition': 'attachment; filename=countly-export-commands.log'});
+                        common.returnRaw(params, 200, result, {'Content-Type': 'text/plain; charset=utf-8', 'Content-disposition': 'attachment; filename=userovo-export-commands.log'});
                     },
                     function(error) {
                         common.returnMessage(params, 404, error.message);

@@ -5,7 +5,7 @@ const job = require('../../../../api/parts/jobs/job.js'),
 
 /**
  * @class
- * @classdesc Class MonitorJob is Hooks Monitor Job extend from Countly Job
+ * @classdesc Class MonitorJob is Hooks Monitor Job extend from Userovo Job
  * @extends Job
  */
 class ScheduleJob extends job.Job {

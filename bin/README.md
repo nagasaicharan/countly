@@ -1,2 +1,2 @@
 
-Use `bash countly.install.sh` to install Countly.
+Use `bash userovo.install.sh` to install Userovo.

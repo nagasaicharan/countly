@@ -6,8 +6,8 @@
 /** @lends module:api/utils/taskmanager */
 var taskmanager = {};
 var common = require("./common.js");
-var countlyConfig = require("../../frontend/express/config.js");
-var countlyFs = require("./countlyFs.js");
+var userovoConfig = require("../../frontend/express/config.js");
+var userovoFs = require("./userovoFs.js");
 var crypto = require("crypto");
 var plugins = require('../../plugins/pluginManager.js');
 
@@ -154,7 +154,7 @@ taskmanager.longtask = function(options) {
             delete json.api_key;
 
             options.request = {
-                uri: (process.env.COUNTLY_CONFIG_PROTOCOL || "http") + "://" + (process.env.COUNTLY_CONFIG_HOSTNAME || "localhost") + (countlyConfig.path || "") + options.params.fullPath,
+                uri: (process.env.USEROVO_CONFIG_PROTOCOL || "http") + "://" + (process.env.USEROVO_CONFIG_HOSTNAME || "localhost") + (userovoConfig.path || "") + options.params.fullPath,
                 method: 'POST',
                 json: json
             };
@@ -489,7 +489,7 @@ taskmanager.saveResult = function(options, data, callback) {
                         options.db.collection("long_tasks").update({_id: options.subtask}, updateObj, {'upsert': false}, function() {});
                     }
                     data = JSON.stringify(data || {});
-                    countlyFs.gridfs.saveData("task_results", options.id, data, {id: options.id}, function(err2, res2) {
+                    userovoFs.gridfs.saveData("task_results", options.id, data, {id: options.id}, function(err2, res2) {
                         if (callback) {
                             callback(err2, res2);
                         }
@@ -500,7 +500,7 @@ taskmanager.saveResult = function(options, data, callback) {
             else {
                 if (!options.binary) {
                     data = JSON.stringify(data || {});
-                    countlyFs.gridfs.saveData("task_results", options.id, data, {id: options.id}, function(err2, res2) {
+                    userovoFs.gridfs.saveData("task_results", options.id, data, {id: options.id}, function(err2, res2) {
                         options.db.collection("long_tasks").update({_id: options.id}, {$set: update}, function(err) {
                             if (options.subtask && !err) {
                                 updateSubtasks();
@@ -512,7 +512,7 @@ taskmanager.saveResult = function(options, data, callback) {
                     });
                 }
                 else {
-                    countlyFs.gridfs.saveStream("task_results", options.id, data, {id: options.id}, function(err2, res2) {
+                    userovoFs.gridfs.saveStream("task_results", options.id, data, {id: options.id}, function(err2, res2) {
                         options.db.collection("long_tasks").update({_id: options.id}, {$set: update}, function(err) {
                             if (options.subtask && !err) {
                                 updateSubtasks();
@@ -716,7 +716,7 @@ taskmanager.checkIfRunning = function(options, callback) {
         //delete jquery param to prevent caching
         delete json._;
         query.request = {
-            uri: (process.env.COUNTLY_CONFIG_PROTOCOL || "http") + "://" + (process.env.COUNTLY_CONFIG_HOSTNAME || "localhost") + (countlyConfig.path || "") + options.params.fullPath,
+            uri: (process.env.USEROVO_CONFIG_PROTOCOL || "http") + "://" + (process.env.USEROVO_CONFIG_HOSTNAME || "localhost") + (userovoConfig.path || "") + options.params.fullPath,
             method: 'POST',
             json: json
         };
@@ -916,7 +916,7 @@ taskmanager.deleteResult = function(options, callback) {
             return callback(err);
         }
         if (task.gridfs) {
-            countlyFs.gridfs.deleteFile("task_results", options.id, {id: options.id}, function() {});
+            userovoFs.gridfs.deleteFile("task_results", options.id, {id: options.id}, function() {});
         }
 
         // Delete additional results specific to task type
@@ -1181,7 +1181,7 @@ function getResult(callback, options) {
                 }));
             }
             else if (data && data.gridfs) {
-                countlyFs.gridfs.getData("task_results", data._id + "", {id: data._id}, function(err2, largeData) {
+                userovoFs.gridfs.getData("task_results", data._id + "", {id: data._id}, function(err2, largeData) {
                     if (!err2) {
                         data.data = largeData;
                         callback(null, data);

@@ -63,7 +63,7 @@ class EmailEffect {
             }
             var msg = {
                 to: address,
-                subject: "Countly Hooks",
+                subject: "Userovo Hooks",
                 html: formatedEmailContent,
             };
             sendTasks.push(promisifyEMailSending(msg));

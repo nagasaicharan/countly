@@ -1,10 +1,10 @@
 var countlyModel = require('./countly.model.js'),
-    countlyCommon = require('./countly.common.js');
+    userovoCommon = require('./userovo.common.js');
 
 /**
 * This module defines default model to handle event data
-* @module "api/lib/countly.event"
-* @extends module:api/lib/countly.model~countlyMetric
+* @module "api/lib/userovo.event"
+* @extends module:api/lib/userovo.model~userovoMetric
 */
 
 /**
@@ -12,19 +12,19 @@ var countlyModel = require('./countly.model.js'),
 * @returns {object} new model
 */
 function create() {
-    /** @lends module:api/lib/countly.event */
-    var countlyEvent = countlyModel.create(function(val) {
+    /** @lends module:api/lib/userovo.event */
+    var userovoEvent = countlyModel.create(function(val) {
         return val.replace(/:/g, ".").replace(/\[CLY\]/g, "").replace(/.\/\//g, "://");
     });
-    countlyEvent.setMetrics(["c", "s", "dur"]);
-    countlyEvent.setUniqueMetrics([]);
+    userovoEvent.setMetrics(["c", "s", "dur"]);
+    userovoEvent.setUniqueMetrics([]);
 
     /**
     * Get event data by periods
     * @param {object} options - options object
     * @returns {array} with event data objects
     */
-    countlyEvent.getSubperiodData = function(options) {
+    userovoEvent.getSubperiodData = function(options) {
 
         var dataProps = [
             { name: "c" },
@@ -32,7 +32,7 @@ function create() {
             { name: "dur" }
         ];
         options = options || {};
-        return countlyCommon.extractData(countlyEvent.getDb(), countlyEvent.clearObject, dataProps, countlyCommon.calculatePeriodObject(null, options.bucket));
+        return userovoCommon.extractData(userovoEvent.getDb(), userovoEvent.clearObject, dataProps, userovoCommon.calculatePeriodObject(null, options.bucket));
     };
 
     /**
@@ -40,8 +40,8 @@ function create() {
     * @param {string} segment - segment for which to get data
     * @returns {array} with event data objects
     */
-    countlyEvent.getSegmentedData = function(segment) {
-        return countlyCommon.extractMetric(countlyEvent.getDb(), countlyEvent.getMeta(segment), countlyEvent.clearObject, [
+    userovoEvent.getSegmentedData = function(segment) {
+        return userovoCommon.extractMetric(userovoEvent.getDb(), userovoEvent.getMeta(segment), userovoEvent.clearObject, [
             {
                 name: segment,
                 func: function(rangeArr) {
@@ -54,6 +54,6 @@ function create() {
         ]);
     };
 
-    return countlyEvent;
+    return userovoEvent;
 }
 module.exports = create;

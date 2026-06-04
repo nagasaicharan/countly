@@ -1,5 +1,5 @@
 {
-  "name": "countly-slipping-away-users",
+  "name": "userovo-slipping-away-users",
   "title": "Slipping Away Users",
   "version": "1.0.0",
   "description": "See how many of your application users didn't have any sessions for 7, 14, 30, 60 and 90 days",
@@ -7,13 +7,13 @@
   "homepage": "https://count.ly/plugins/slipping-away-users/",
   "repository": {
     "type": "git",
-    "url": "http://github.com/Countly/countly-server.git"
+    "url": "http://github.com/Userovo/userovo-server.git"
   },
   "bugs": {
-    "url": "http://github.com/Countly/countly-server/issues"
+    "url": "http://github.com/Userovo/userovo-server/issues"
   },
   "keywords": [
-    "countly",
+    "userovo",
     "analytics",
     "churn",
     "slipping-away"

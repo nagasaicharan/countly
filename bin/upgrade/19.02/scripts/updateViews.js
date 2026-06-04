@@ -19,23 +19,23 @@ for (var i = 0; i < 24; i++) {
     hours.push((i) + "");
 }
 var bufferSize = 5000;
-pluginManager.dbConnection().then((countlyDb) => {
+pluginManager.dbConnection().then((userovoDb) => {
     async function flushData(viewsMap,count1, count2, appID, newObj, newObj2, summedZero, monthObject, msplit, force) {
         var flush_zero = false;
         var colName = "";
         if (count1 >= bufferSize || force) {
             colName = "app_viewdata" + crypto.createHash('sha1').update(appID).digest('hex');
-            var bulk = countlyDb.collection(colName).initializeUnorderedBulkOp();
+            var bulk = userovoDb.collection(colName).initializeUnorderedBulkOp();
             for (var d in newObj['no-segment']) {
                 if (viewsMap[d]) {
                     var iid = viewsMap[d] + "";
-                    bulk.find({'_id': iid + '_' + monthObject._id}).upsert().update({$set: {'_id': iid + '_' + monthObject._id, 'vw': countlyDb.ObjectID(iid), 's': 'no-segment', 'm': monthObject._id}, $inc: newObj['no-segment'][d] });
+                    bulk.find({'_id': iid + '_' + monthObject._id}).upsert().update({$set: {'_id': iid + '_' + monthObject._id, 'vw': userovoDb.ObjectID(iid), 's': 'no-segment', 'm': monthObject._id}, $inc: newObj['no-segment'][d] });
                 }
             }
             for (var d in newObj2['no-segment']) {
                 if (viewsMap[d]) {
                     var iid = viewsMap[d] + "";
-                    bulk.find({'_id': iid + '_' + monthObject._id + "_m"}).upsert().update({$set: {'_id': iid + '_' + monthObject._id + "_m", 'vw': countlyDb.ObjectID(iid), 's': 'no-segment', 'm': monthObject._id}, $inc: newObj2['no-segment'][d] });
+                    bulk.find({'_id': iid + '_' + monthObject._id + "_m"}).upsert().update({$set: {'_id': iid + '_' + monthObject._id + "_m", 'vw': userovoDb.ObjectID(iid), 's': 'no-segment', 'm': monthObject._id}, $inc: newObj2['no-segment'][d] });
                 }
             }
             if ( bulk.length > 0 ) {
@@ -51,18 +51,18 @@ pluginManager.dbConnection().then((countlyDb) => {
         }
         if (count2 >= bufferSize || force) {
             colName = "app_viewdata" + crypto.createHash('sha1').update("platform" + appID).digest('hex');
-            var bulk = countlyDb.collection(colName).initializeUnorderedBulkOp();
+            var bulk = userovoDb.collection(colName).initializeUnorderedBulkOp();
             for (var d in newObj.platform) {
                 if (viewsMap[d]) {
                     let iid = viewsMap[d] + "";
-                    bulk.find({'_id': iid + '_' + monthObject._id}).upsert().updateOne({ $inc: newObj.platform[d], $set: {'_id': iid + '_' + monthObject._id, 'vw': countlyDb.ObjectID(iid), 's': 'platform', 'm': monthObject._id} });
+                    bulk.find({'_id': iid + '_' + monthObject._id}).upsert().updateOne({ $inc: newObj.platform[d], $set: {'_id': iid + '_' + monthObject._id, 'vw': userovoDb.ObjectID(iid), 's': 'platform', 'm': monthObject._id} });
                 }
             }
     
             for (var d in newObj2.platform) {
                 if (viewsMap[d]) {
                     let iid = viewsMap[d] + "";
-                    bulk.find({'_id': iid + '_' + monthObject._id + "_m"}).upsert().updateOne({ $inc: newObj2.platform[d], $set: {'_id': iid + '_' + monthObject._id + "_m", 'vw': countlyDb.ObjectID(iid), 's': 'platform', 'm': monthObject._id} });
+                    bulk.find({'_id': iid + '_' + monthObject._id + "_m"}).upsert().updateOne({ $inc: newObj2.platform[d], $set: {'_id': iid + '_' + monthObject._id + "_m", 'vw': userovoDb.ObjectID(iid), 's': 'platform', 'm': monthObject._id} });
                 }
             }
             if ( bulk.length > 0 ) {
@@ -80,11 +80,11 @@ pluginManager.dbConnection().then((countlyDb) => {
         }
         if (flush_zero === true) {
             colName = "app_viewdata" + crypto.createHash('sha1').update(appID).digest('hex');
-            var bulk = countlyDb.collection(colName).initializeUnorderedBulkOp();
+            var bulk = userovoDb.collection(colName).initializeUnorderedBulkOp();
             for (var d in summedZero['no-segment']) {
                 if (viewsMap[d]) {
                     let iid = viewsMap[d] + "";
-                    bulk.find({'_id': iid + '_' + msplit[0] + ":0"}).upsert().updateOne({ $inc: summedZero['no-segment'][d], $set: {'_id': iid + '_' + msplit[0] + ":0", 'vw': countlyDb.ObjectID(iid), 's': 'no-segment', 'm': msplit[0] + ":0"} });
+                    bulk.find({'_id': iid + '_' + msplit[0] + ":0"}).upsert().updateOne({ $inc: summedZero['no-segment'][d], $set: {'_id': iid + '_' + msplit[0] + ":0", 'vw': userovoDb.ObjectID(iid), 's': 'no-segment', 'm': msplit[0] + ":0"} });
                 }
             }
             if ( bulk.length > 0 ) {
@@ -92,11 +92,11 @@ pluginManager.dbConnection().then((countlyDb) => {
             }
     
             colName = "app_viewdata" + crypto.createHash('sha1').update("platform" + appID).digest('hex');
-            bulk = countlyDb.collection(colName).initializeUnorderedBulkOp();
+            bulk = userovoDb.collection(colName).initializeUnorderedBulkOp();
             for (var d in summedZero.platform) {
                 if (viewsMap[d]) {
                 let iid = viewsMap[d] + "";
-                bulk.find({'_id': iid + '_' + msplit[0] + ":0"}).upsert().updateOne({ $inc: summedZero.platform[d], $set: {'_id': iid + '_' + msplit[0] + ":0", 'vw': countlyDb.ObjectID(iid), 's': 'platform', 'm': msplit[0] + ":0"} });
+                bulk.find({'_id': iid + '_' + msplit[0] + ":0"}).upsert().updateOne({ $inc: summedZero.platform[d], $set: {'_id': iid + '_' + msplit[0] + ":0", 'vw': userovoDb.ObjectID(iid), 's': 'platform', 'm': msplit[0] + ":0"} });
                 }
             }
             if ( bulk.length > 0 ) {
@@ -117,7 +117,7 @@ pluginManager.dbConnection().then((countlyDb) => {
         console.log("Transforming views info");
         var segments = {};
     
-        countlyDb.collection('app_viewdata' + appID).aggregate([{$group: {_id: "$m", "cc": {$sum: 1}}}], {allowDiskUse: true}, function(err1, res) {
+        userovoDb.collection('app_viewdata' + appID).aggregate([{$group: {_id: "$m", "cc": {$sum: 1}}}], {allowDiskUse: true}, function(err1, res) {
             var month_docs = [];
             var year_docs = [];
     
@@ -146,7 +146,7 @@ pluginManager.dbConnection().then((countlyDb) => {
                     if (!monthObject._id) {
                         resolve();
                     }
-                    var cursor2 = countlyDb.collection('app_viewdata' + appID).find({"m": monthObject._id, 'dataMoved': {$ne: true}});
+                    var cursor2 = userovoDb.collection('app_viewdata' + appID).find({"m": monthObject._id, 'dataMoved': {$ne: true}});
     
                     cursor2.forEach(function(dataObj) {
     
@@ -212,11 +212,11 @@ pluginManager.dbConnection().then((countlyDb) => {
                                 if (ss !== 'no-segment') {
                                     colName = "app_viewdata" + crypto.createHash('sha1').update(ss + appID).digest('hex');
                                 }
-                                var bulk = countlyDb.collection(colName).initializeUnorderedBulkOp();
+                                var bulk = userovoDb.collection(colName).initializeUnorderedBulkOp();
                                 for (var d in newObj[ss]) {
                                     if( viewsMap[d] ) {
                                         var iid = viewsMap[d] + "";
-                                        bulk.find({'_id': iid + '_' + monthObject._id}).upsert().updateOne({$set: {'_id': iid + '_' + monthObject._id, 'vw': countlyDb.ObjectID(iid), 's': ss, 'm': monthObject._id, 'd': newObj[ss][d] }});
+                                        bulk.find({'_id': iid + '_' + monthObject._id}).upsert().updateOne({$set: {'_id': iid + '_' + monthObject._id, 'vw': userovoDb.ObjectID(iid), 's': ss, 'm': monthObject._id, 'd': newObj[ss][d] }});
                                     }
                                 }
                                 if (bulk.length > 0) {
@@ -230,7 +230,7 @@ pluginManager.dbConnection().then((countlyDb) => {
                                 resolve1();
                             });
                         }).then(function() {
-                            countlyDb.collection('app_viewdata' + appID).update({"m": monthObject._id}, {$set: {'dataMoved': true}}, {"multi": true}, function(err, res) {
+                            userovoDb.collection('app_viewdata' + appID).update({"m": monthObject._id}, {$set: {'dataMoved': true}}, {"multi": true}, function(err, res) {
                                 resolve();
                             });
                         });
@@ -256,7 +256,7 @@ pluginManager.dbConnection().then((countlyDb) => {
                         summedZero['no-segment'] = {};
                         summedZero.platform = {};
     
-                        var cursor = countlyDb.collection('app_viewdata' + appID).find({"m": monthObject._id, 'dataMoved': {$ne: true}});
+                        var cursor = userovoDb.collection('app_viewdata' + appID).find({"m": monthObject._id, 'dataMoved': {$ne: true}});
                         for (let dataObj = await cursor.next(); dataObj !== null; dataObj = await cursor.next()) {
                             if (dataObj.d) {
                                 var segment = dataObj._id.split('_');
@@ -378,7 +378,7 @@ pluginManager.dbConnection().then((countlyDb) => {
                             }
                         }
                         await flushData(viewsMap,count1, count2, appID, newObj, newObj2, summedZero, monthObject, msplit, true);
-                        countlyDb.collection('app_viewdata' + appID).update({"m": monthObject._id}, {$set: {'dataMoved': true}}, {"multi": true}, function(err, res) {
+                        userovoDb.collection('app_viewdata' + appID).update({"m": monthObject._id}, {$set: {'dataMoved': true}}, {"multi": true}, function(err, res) {
                             resolve();
                         });
                     });
@@ -396,7 +396,7 @@ pluginManager.dbConnection().then((countlyDb) => {
                         delete viewsMap[i];
                     }
                     if (updateSegments) {
-                        countlyDb.collection('views').update({_id: countlyDb.ObjectID(appID)}, {$set: segmUpdate}, {'upsert': true}, function(err, res) {
+                        userovoDb.collection('views').update({_id: userovoDb.ObjectID(appID)}, {$set: segmUpdate}, {'upsert': true}, function(err, res) {
                             done();
                         });
                     }
@@ -412,7 +412,7 @@ pluginManager.dbConnection().then((countlyDb) => {
         var batch = 50000;
         var rightNow = Date.now();
         var ids = [];
-        countlyDb.collection('app_views' + appID).count({dataMoved: {$ne: true}}, async function(err, total) {
+        userovoDb.collection('app_views' + appID).count({dataMoved: {$ne: true}}, async function(err, total) {
             if (total === 0) {
                 console.log("Users processed in " + (Date.now() - rightNow) / 1000 + " seconds");
                 done();
@@ -422,8 +422,8 @@ pluginManager.dbConnection().then((countlyDb) => {
                 var runval = 0;
                 var batchFilled = 0;
                 var query = [{$project: {"_idO": "$_id" + "", 'uid': true}}, {$lookup: {from: "app_views" + appID, localField: "_idO", foreignField: "_id", as: "uinfo"}}, {$match: {"uinfo": {$ne: []}}}];
-                var cursor = countlyDb.collection('app_users' + appID).aggregate(query).batchSize(batch);
-                var bulk = countlyDb.collection('app_userviews' + appID).initializeUnorderedBulkOp();
+                var cursor = userovoDb.collection('app_users' + appID).aggregate(query).batchSize(batch);
+                var bulk = userovoDb.collection('app_userviews' + appID).initializeUnorderedBulkOp();
                 for (let doc = await cursor.next(); doc !== null; doc = await cursor.next()) {
                     if (doc.uinfo && doc.uinfo[0] && doc.uinfo[0].dataMoved !== true) {
                         let data = doc.uinfo[0];
@@ -443,17 +443,17 @@ pluginManager.dbConnection().then((countlyDb) => {
                     if (batchFilled === batch) {
                         runval++;
                         await bulk.execute().catch(function(err){});
-                        await countlyDb.collection("app_views" + appID).updateOne({_id: {$in: ids}}, {$set: {"dataMoved": true}}, {multi: true});
+                        await userovoDb.collection("app_views" + appID).updateOne({_id: {$in: ids}}, {$set: {"dataMoved": true}}, {multi: true});
     
                         ids.splice(0, ids.length);
-                        bulk = countlyDb.collection('app_userviews' + appID).initializeUnorderedBulkOp();
+                        bulk = userovoDb.collection('app_userviews' + appID).initializeUnorderedBulkOp();
                         console.log("Processed :" + runval + "/" + wraps);
                         batchFilled = 0;
                     }
                 }
                 if( batchFilled>0 ) {
                     await bulk.execute();
-                    await countlyDb.collection("app_views" + appID).updateMany({_id: {$in: ids}}, {$set: {"dataMoved": true}}, {multi: true}).catch(function(err){ console.log(err);});
+                    await userovoDb.collection("app_views" + appID).updateMany({_id: {$in: ids}}, {$set: {"dataMoved": true}}, {multi: true}).catch(function(err){ console.log(err);});
                 }
                 
                 console.log("Users processed in " + (Date.now() - rightNow) / 1000 + " seconds");
@@ -467,7 +467,7 @@ pluginManager.dbConnection().then((countlyDb) => {
         var viewsMap = {};
         console.log("Updating for  view: " + appID);
         console.log("Getting all view names");
-        countlyDb.collection('app_viewdata' + appID).aggregate([{$group: {_id: false, views: {$mergeObjects: "$meta_v2.views"}}}], function(err, res) {
+        userovoDb.collection('app_viewdata' + appID).aggregate([{$group: {_id: false, views: {$mergeObjects: "$meta_v2.views"}}}], function(err, res) {
             if (err) {
                 console.log(err);
             }
@@ -481,11 +481,11 @@ pluginManager.dbConnection().then((countlyDb) => {
                 insertObj.push({'view': keys[p], 'url': keys[p]});
             }
             console.log("View names fetched");
-            countlyDb.collection('app_viewsmeta' + appID).ensureIndex({"view": 1}, {'unique': 1}, function() {
+            userovoDb.collection('app_viewsmeta' + appID).ensureIndex({"view": 1}, {'unique': 1}, function() {
                 if (insertObj.length > 0) {
-                    countlyDb.collection('app_viewsmeta' + appID).insertMany(insertObj, {"ordered": false, ignore_errors: [11000]}, function(err1, ress) {
+                    userovoDb.collection('app_viewsmeta' + appID).insertMany(insertObj, {"ordered": false, ignore_errors: [11000]}, function(err1, ress) {
                         console.log("View names inserted");
-                        countlyDb.collection('app_viewsmeta' + appID).find({}).toArray(function(err2, views) {
+                        userovoDb.collection('app_viewsmeta' + appID).find({}).toArray(function(err2, views) {
                             for (var k = 0; k < views.length; k++) {
                                 viewsMap[views[k].view] = views[k]._id;
                             }
@@ -503,7 +503,7 @@ pluginManager.dbConnection().then((countlyDb) => {
         });
     }
     
-    countlyDb.collection('apps').find({}).toArray(function(err, apps) {
+    userovoDb.collection('apps').find({}).toArray(function(err, apps) {
         var appIds = [];
         for (var z = 0; z < apps.length; z++) {
             appIds.push(apps[z]._id + "");
@@ -516,7 +516,7 @@ pluginManager.dbConnection().then((countlyDb) => {
             });
         }).then(function() {
             console.log("Finished transforming data");
-            countlyDb.close();
+            userovoDb.close();
         });
     
     });

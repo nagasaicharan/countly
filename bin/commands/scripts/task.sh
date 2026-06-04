@@ -2,7 +2,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 usage (){
     echo "";
-    echo "countly task <taskname>";
+    echo "userovo task <taskname>";
 } 
 
 if [ -z "$1" ]

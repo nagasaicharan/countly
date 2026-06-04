@@ -1153,7 +1153,7 @@ const createRatingWithApi = (username, password, appName, widgetName) => {
 
     let apiKey;
     let appId;
-    let countlyToken;
+    let userovoToken;
 
     getApiKey.request(username, password)
         .then((response) => {
@@ -1169,8 +1169,8 @@ const createRatingWithApi = (username, password, appName, widgetName) => {
             return getToken.request(apiKey);
         })
         .then((response) => {
-            countlyToken = response.result;
-            return createRating.request(countlyToken, appId, widgetName);
+            userovoToken = response.result;
+            return createRating.request(userovoToken, appId, widgetName);
         });
 };
 

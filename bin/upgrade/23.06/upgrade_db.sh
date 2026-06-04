@@ -2,7 +2,7 @@
 
 VER="23.06"
 
-CONTINUE="$(countly check before upgrade db "$VER")"
+CONTINUE="$(userovo check before upgrade db "$VER")"
 
 if [ "$CONTINUE" != "1" ] && [ "$1" != "combined" ]
 then
@@ -22,8 +22,8 @@ then
 
     if [ "$1" != "combined" ]; then
         #upgrade plugins
-        countly plugin enable license;
-        countly plugin enable sdk;
+        userovo plugin enable license;
+        userovo plugin enable sdk;
         nodejs "$DIR/scripts/install_plugins.js"
     fi
     
@@ -38,11 +38,11 @@ then
     nodejs "$SCRIPTS/scripts/cleanup_crashgroup_custom_field.js"
 
     if [ "$1" != "combined" ]; then
-        countly upgrade;
+        userovo upgrade;
     fi
 
     #call after check
-    countly check after upgrade db "$VER"
+    userovo check after upgrade db "$VER"
 elif [ "$CONTINUE" == "0" ]
 then
     echo "Database is already upgraded to $VER"

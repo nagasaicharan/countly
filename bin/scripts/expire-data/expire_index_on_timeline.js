@@ -1,7 +1,7 @@
 /**
  *  Setup TTL indexes to delete older data for one or many apps in user timeline.
- *  Server: countly
- *  Path: countly dir/bin/scripts/expire_index_on_timeline
+ *  Server: userovo
+ *  Path: userovo dir/bin/scripts/expire_index_on_timeline
  *  Command: node expire_index_on_timeline.js
  */
 
@@ -12,12 +12,12 @@ var async = require('async'),
     Promise = require("bluebird"),
     plugins = require('../../../plugins/pluginManager.js');
 
-//var db = plugins.dbConnection("countly");
-//var db_drill = plugins.dbConnection("countly_drill");
+//var db = plugins.dbConnection("userovo");
+//var db_drill = plugins.dbConnection("userovo_drill");
 
 var apps = [];//leave empty to set to all apps or put in some apps
 
-Promise.all([plugins.dbConnection("countly"), plugins.dbConnection("countly_drill")]).spread(function(db, db_drill) {
+Promise.all([plugins.dbConnection("userovo"), plugins.dbConnection("userovo_drill")]).spread(function(db, db_drill) {
     db.collections(function(err, collections) {
         if (err) {
             console.log(err);

@@ -25,8 +25,8 @@ fi
 bash "$DIR/scripts/detect.init.sh"
 
 #upgrade config
-mv "$DIR/../frontend/express/public/javascripts/countly/countly.config.js" "$DIR/../frontend/express/public/javascripts/countly/countly.config.backup.18.08.js"
-cp -n "$DIR/../frontend/express/public/javascripts/countly/countly.config.sample.js" "$DIR/../frontend/express/public/javascripts/countly/countly.config.js"
+mv "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.js" "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.backup.18.08.js"
+cp -n "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.sample.js" "$DIR/../frontend/express/public/javascripts/userovo/userovo.config.js"
 
 #remove previous dependencies, as they need to be rebuild for new nodejs version
 rm -rf "$DIR/../node_modules"
@@ -35,30 +35,30 @@ rm -rf "$DIR/../node_modules"
 rm -rf "$DIR/../frontend/express/public/localization/min/locale_en.properties"
 
 
-countly upgrade
+userovo upgrade
 
 #upgrade plugins
-countly plugin upgrade push
+userovo plugin upgrade push
 cd "$DIR/../plugins/push/api/parts/apn" && npm install --unsafe-perm
-countly plugin upgrade revenue
-countly plugin upgrade attribution
-countly plugin upgrade crashes
-countly plugin upgrade errorlogs
-countly plugin upgrade star-rating
-countly plugin upgrade logger
-countly plugin upgrade populator
-countly plugin upgrade funnels
-countly plugin upgrade data_migration
-countly plugin upgrade retention_segments
-countly plugin enable onboarding
+userovo plugin upgrade revenue
+userovo plugin upgrade attribution
+userovo plugin upgrade crashes
+userovo plugin upgrade errorlogs
+userovo plugin upgrade star-rating
+userovo plugin upgrade logger
+userovo plugin upgrade populator
+userovo plugin upgrade funnels
+userovo plugin upgrade data_migration
+userovo plugin upgrade retention_segments
+userovo plugin enable onboarding
 
 # close google services for China area
 if ping -c 1 google.com >> /dev/null 2>&1; then
     echo "Pinging Google successful. Enabling Google services."
 else
     echo "Cannot reach Google. Enabling EChartMap."
-    countly plugin enable EChartMap
+    userovo plugin enable EChartMap
 fi
 
-#install dependencies, process files and restart countly
-countly upgrade
+#install dependencies, process files and restart userovo
+userovo upgrade

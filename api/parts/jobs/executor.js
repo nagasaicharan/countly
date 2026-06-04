@@ -1,6 +1,6 @@
 'use strict';
 
-process.title = "countly: executor " + process.pid + " node " + process.argv[1];
+process.title = "userovo: executor " + process.pid + " node " + process.argv[1];
 
 process.on('uncaughtException', (err) => {
     console.log('Caught exception: %j', err, err.stack);

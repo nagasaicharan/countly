@@ -6,9 +6,9 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
 bash "$DIR/scripts/detect.init.sh"
 
 #upgrade existing plugins
-countly plugin upgrade crashes
-countly plugin upgrade views
-countly plugin upgrade users
+userovo plugin upgrade crashes
+userovo plugin upgrade views
+userovo plugin upgrade users
 
-#install dependencies, process files and restart countly
-countly upgrade
+#install dependencies, process files and restart userovo
+userovo upgrade

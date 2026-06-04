@@ -2,9 +2,9 @@
 
 const pluginManager = require('../../../plugins/pluginManager.js');
 
-pluginManager.dbConnection().then(async(countlyDb) => {
+pluginManager.dbConnection().then(async(userovoDb) => {
     try {
-        await countlyDb.collection('alerts').updateMany(
+        await userovoDb.collection('alerts').updateMany(
             { createdAt: { $exists: false } },
             [
                 {
@@ -20,6 +20,6 @@ pluginManager.dbConnection().then(async(countlyDb) => {
         console.log(`Error adding creation date for existing alerts: ${error}`);
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
     }
 });

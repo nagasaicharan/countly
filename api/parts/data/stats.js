@@ -9,14 +9,14 @@ var stats = {},
     common = require("../../utils/common.js"),
     { getUserApps } = require('../../utils/rights.js');
 
-var countlyDb;
+var userovoDb;
 /**
 * Get overal server data
 * @param {object} db - database connection
 * @param {function} callback - function to call when done
 **/
 stats.getOverall = function(db, callback) {
-    countlyDb = db;
+    userovoDb = db;
     getTotalUsers(function(totalUsers, totalApps) {
         getTotalEvents(function(totalEvents) {
             getTotalMsgUsers(function(totalMsgUsers) {
@@ -43,7 +43,7 @@ stats.getOverall = function(db, callback) {
 * @param {function} callback - function to call when done
 **/
 stats.getServer = function(db, callback) {
-    countlyDb = db;
+    userovoDb = db;
     getTotalUsers(function(totalAppUsers, totalApps) {
         getDashboardUsers(function(totalUsers) {
             callback({
@@ -62,7 +62,7 @@ stats.getServer = function(db, callback) {
 * @param {function} callback - function to call when done
 **/
 stats.getUser = function(db, user, callback) {
-    countlyDb = db;
+    userovoDb = db;
     var apps;
 
     if (!user.global_admin) {
@@ -141,7 +141,7 @@ function getTotalUsers(callback, apps) {
             common.readBatcher.getMany("apps", {}, {_id: 1}, processApps);
         }
         else {
-            countlyDb.collection("apps").find({}, {_id: 1}).toArray(processApps);
+            userovoDb.collection("apps").find({}, {_id: 1}).toArray(processApps);
         }
     }
 }
@@ -157,12 +157,12 @@ function getTotalEvents(callback, apps) {
         var inarray = [];
         for (let i = 0; i < apps.length; i++) {
             if (apps[i] && apps[i].length) {
-                inarray.push(countlyDb.ObjectID(apps[i]));
+                inarray.push(userovoDb.ObjectID(apps[i]));
             }
         }
         query._id = {$in: inarray};
     }
-    countlyDb.collection("events").aggregate([{$match: query}, {$project: {len: {$size: '$list'}}}, {$group: {_id: 'count', len: {$sum: '$len'}}}], function(err, count) {
+    userovoDb.collection("events").aggregate([{$match: query}, {$project: {len: {$size: '$list'}}}, {$group: {_id: 'count', len: {$sum: '$len'}}}], function(err, count) {
         callback(count && count[0] && count[0].len || 0);
     });
 }
@@ -172,7 +172,7 @@ function getTotalEvents(callback, apps) {
 * @param {function} callback - function to call when done
 **/
 function getTotalMsgUsers(callback) {
-    countlyDb.collection("users").find({_id: {"$regex": ".*:0.*"}}, {"d.m": 1}).toArray(function(err, msgUsers) {
+    userovoDb.collection("users").find({_id: {"$regex": ".*:0.*"}}, {"d.m": 1}).toArray(function(err, msgUsers) {
         if (err || !msgUsers) {
             callback(0);
         }
@@ -195,7 +195,7 @@ function getTotalMsgUsers(callback) {
 * @param {function} callback - function to call when done
 **/
 function getTotalMsgCreated(callback) {
-    countlyDb.collection("messages").estimatedDocumentCount(function(err, msgCreated) {
+    userovoDb.collection("messages").estimatedDocumentCount(function(err, msgCreated) {
         if (err || !msgCreated) {
             callback(0);
         }
@@ -216,12 +216,12 @@ function getTotalMsgSent(callback, apps) {
         var inarray = [];
         for (let i = 0; i < apps.length; i++) {
             if (apps[i] && apps[i].length) {
-                inarray.push(countlyDb.ObjectID(apps[i]));
+                inarray.push(userovoDb.ObjectID(apps[i]));
             }
         }
         query.apps = {$in: inarray};
     }
-    countlyDb.collection("messages").aggregate([{$match: query}, {$group: {_id: 'count', sent: {$sum: '$result.sent'}}}], function(err, count) {
+    userovoDb.collection("messages").aggregate([{$match: query}, {$group: {_id: 'count', sent: {$sum: '$result.sent'}}}], function(err, count) {
         callback(count && count[0] && count[0].sent || 0);
     });
 }
@@ -232,7 +232,7 @@ function getTotalMsgSent(callback, apps) {
 * @param {function} callback - function to call when done
 **/
 function getUserCountForApp(app, callback) {
-    countlyDb.collection("app_users" + app._id).estimatedDocumentCount(function(err, count) {
+    userovoDb.collection("app_users" + app._id).estimatedDocumentCount(function(err, count) {
         if (err || !count) {
             callback(null, 0);
         }
@@ -247,7 +247,7 @@ function getUserCountForApp(app, callback) {
 * @param {function} callback - function to call when done
 **/
 function getDashboardUsers(callback) {
-    countlyDb.collection("members").estimatedDocumentCount(function(err, count) {
+    userovoDb.collection("members").estimatedDocumentCount(function(err, count) {
         if (err || !count) {
             callback(0);
         }
@@ -263,7 +263,7 @@ function getDashboardUsers(callback) {
 * @param {function} callback - function to call when done
 **/
 function getCrashGroupsForApp(app, callback) {
-    countlyDb.collection("app_crashgroups" + app).estimatedDocumentCount(function(err, count) {
+    userovoDb.collection("app_crashgroups" + app).estimatedDocumentCount(function(err, count) {
         if (err || !count) {
             callback(null, 0);
         }
@@ -295,7 +295,7 @@ function getCrashGroups(callback, apps) {
         });
     }
     else {
-        countlyDb.collection("apps").find({}, {_id: 1}).toArray(function(err, allApps) {
+        userovoDb.collection("apps").find({}, {_id: 1}).toArray(function(err, allApps) {
             if (err || !allApps) {
                 callback(0, 0);
             }
@@ -324,7 +324,7 @@ function getCrashGroups(callback, apps) {
 * @param {array=} apps - provide array of apps to fetch data for, else will fetch data for all apps
 **/
 function getAllPlatforms(callback, apps) {
-    countlyDb.collection("device_details").find({_id: {"$regex": ".*:0.*"}}, {
+    userovoDb.collection("device_details").find({_id: {"$regex": ".*:0.*"}}, {
         "a": 1,
         "meta": 1
     }).toArray(function(err, arr) {

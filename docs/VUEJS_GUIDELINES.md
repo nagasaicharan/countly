@@ -1,6 +1,6 @@
 # Vue.js Development Guidelines
 
-This document provides Vue.js specific guidelines for developing Countly Server frontend components.
+This document provides Vue.js specific guidelines for developing Userovo Server frontend components.
 
 ## Table of Contents
 - [Component Architecture](#component-architecture)
@@ -19,14 +19,14 @@ This document provides Vue.js specific guidelines for developing Countly Server 
 
 ### Creating Components
 
-Use `countlyVue.views.create()` for new components:
+Use `userovoVue.views.create()` for new components:
 
 ```javascript
-var MyComponent = countlyVue.views.create({
-    template: countlyVue.T("/myplugin/templates/mycomponent.html"),
+var MyComponent = userovoVue.views.create({
+    template: userovoVue.T("/myplugin/templates/mycomponent.html"),
     mixins: [
-        countlyVue.mixins.auth(FEATURE_NAME),  // Authorization mixin
-        countlyVue.mixins.hasDrawers("main")    // If using drawers
+        userovoVue.mixins.auth(FEATURE_NAME),  // Authorization mixin
+        userovoVue.mixins.hasDrawers("main")    // If using drawers
     ],
     props: {
         itemId: { type: String, required: true }
@@ -58,7 +58,7 @@ var MyComponent = countlyVue.views.create({
 
 ```javascript
 app.route('/dashboard/myfeature', 'myfeature', function() {
-    var view = new countlyVue.views.BackboneWrapper({
+    var view = new userovoVue.views.BackboneWrapper({
         component: MyComponent
     });
     view.render();
@@ -66,7 +66,7 @@ app.route('/dashboard/myfeature', 'myfeature', function() {
 
 // With parameters
 app.route('/dashboard/myfeature/:id', 'myfeature-detail', function(id) {
-    var view = new countlyVue.views.BackboneWrapper({
+    var view = new userovoVue.views.BackboneWrapper({
         component: MyDetailComponent,
         vuex: { itemId: id }
     });
@@ -79,7 +79,7 @@ app.route('/dashboard/myfeature/:id', 'myfeature-detail', function(id) {
 Implement these methods for proper data management:
 
 ```javascript
-var MyView = countlyVue.views.create({
+var MyView = userovoVue.views.create({
     methods: {
         // Called on initial load
         initialize: function() {
@@ -192,7 +192,7 @@ var MyView = countlyVue.views.create({
 
 ## Template System
 
-Countly uses a custom template loading system since we don't use Single File Components.
+Userovo uses a custom template loading system since we don't use Single File Components.
 
 ### Template Methods
 
@@ -211,7 +211,7 @@ Templates are mounted to DOM and referenced by ID:
 ```
 
 ```javascript
-var DrawerComponent = countlyVue.views.create({
+var DrawerComponent = userovoVue.views.create({
     template: '#drawer-template',
     // ...
 });
@@ -222,7 +222,7 @@ var DrawerComponent = countlyVue.views.create({
 Templates are automatically loaded and wrapped:
 
 ```javascript
-var exampleView = new countlyVue.views.BackboneWrapper({
+var exampleView = new userovoVue.views.BackboneWrapper({
     component: MainView,
     templates: [
         // Load all templates in a file
@@ -341,13 +341,13 @@ var ChildComponent = {
 
 ## Vuex Modules
 
-Each Countly plugin maps to a single namespaced Vuex module via `countly{PluginName}.getVuexModule()`.
+Each Userovo plugin maps to a single namespaced Vuex module via `userovo{PluginName}.getVuexModule()`.
 
 ### Defining a Vuex Module
 
 ```javascript
-// countly.models.js
-countlyVueExample.getVuexModule = function() {
+// userovo.models.js
+userovoVueExample.getVuexModule = function() {
     var getEmptyState = function() {
         return {
             graphPoints: [],
@@ -383,7 +383,7 @@ countlyVueExample.getVuexModule = function() {
         }
     };
 
-    return countlyVue.vuex.Module("countlyVueExample", {
+    return userovoVue.vuex.Module("userovoVueExample", {
         state: getEmptyState,
         getters: getters,
         mutations: mutations,
@@ -395,18 +395,18 @@ countlyVueExample.getVuexModule = function() {
 ### Using in Views
 
 ```javascript
-var MainView = countlyVue.views.BaseView.extend({
+var MainView = userovoVue.views.BaseView.extend({
     methods: {
         refresh: function() {
-            this.$store.dispatch("countlyVueExample/refresh");
+            this.$store.dispatch("userovoVueExample/refresh");
         }
     },
     beforeCreate: function() {
-        this.$store.dispatch("countlyVueExample/initialize");
+        this.$store.dispatch("userovoVueExample/initialize");
     },
     computed: {
         graphPoints: function() {
-            return this.$store.getters["countlyVueExample/graphPoints"];
+            return this.$store.getters["userovoVueExample/graphPoints"];
         }
     }
 });
@@ -416,10 +416,10 @@ var MainView = countlyVue.views.BaseView.extend({
 
 ```javascript
 var vuex = [{
-    clyModel: countlyVueExample
+    clyModel: userovoVueExample
 }];
 
-var exampleView = new countlyVue.views.BackboneWrapper({
+var exampleView = new userovoVue.views.BackboneWrapper({
     component: MainView,
     vuex: vuex,
     templates: [...]
@@ -430,14 +430,14 @@ var exampleView = new countlyVue.views.BackboneWrapper({
 
 ## Backbone Integration
 
-Vue views are integrated with Backbone router via `countlyVue.views.BackboneWrapper`.
+Vue views are integrated with Backbone router via `userovoVue.views.BackboneWrapper`.
 
 ### Basic Routing
 
 ```javascript
-var exampleView = new countlyVue.views.BackboneWrapper({
+var exampleView = new userovoVue.views.BackboneWrapper({
     component: MainView,
-    vuex: [{clyModel: countlyVueExample}],
+    vuex: [{clyModel: userovoVueExample}],
     templates: ["/vue-example/templates/main.html"]
 });
 
@@ -450,18 +450,18 @@ app.route("/vue/example", 'vue-example', function() {
 
 ### BaseView vs BaseComponent
 
-All Vue views should extend **countlyVue.views.BaseView**:
+All Vue views should extend **userovoVue.views.BaseView**:
 - Includes i18n mixin automatically
 - Has refresh method support for auto-refresh
-- Integrates with Countly's permission system
+- Integrates with Userovo's permission system
 
-All custom components should extend **countlyVue.components.BaseComponent**:
+All custom components should extend **userovoVue.components.BaseComponent**:
 - Provides access to common utilities
 - Allows consistent component patterns
 
 ```javascript
 // View (entry point, routable)
-var MainView = countlyVue.views.BaseView.extend({
+var MainView = userovoVue.views.BaseView.extend({
     template: '#main-template',
     methods: {
         refresh: function() { ... }
@@ -469,8 +469,8 @@ var MainView = countlyVue.views.BaseView.extend({
 });
 
 // Component (reusable, not routed)
-var BackLinkComponent = countlyVue.components.BaseComponent.extend({
-    mixins: [countlyVue.mixins.i18n],
+var BackLinkComponent = userovoVue.components.BaseComponent.extend({
+    mixins: [userovoVue.mixins.i18n],
     props: {
         title: {type: String, required: false}
     }
@@ -510,7 +510,7 @@ The i18n mixin is automatically included in views:
 // When you must render HTML
 methods: {
     getSafeHtml: function(rawInput) {
-        return countlyCommon.encodeHtml(rawInput);
+        return userovoCommon.encodeHtml(rawInput);
     }
 }
 ```
@@ -557,7 +557,7 @@ Add `data-test-id` attributes to all interactive elements:
 When creating reusable components, accept test ID as a prop:
 
 ```javascript
-var MySelect = countlyVue.views.create({
+var MySelect = userovoVue.views.create({
     props: {
         testId: {
             type: String,
@@ -654,15 +654,15 @@ methods: {
         
         CV.$.ajax({
             type: "GET",
-            url: countlyCommon.API_PARTS.data.r + '/myfeature',
+            url: userovoCommon.API_PARTS.data.r + '/myfeature',
             data: {
-                app_id: countlyCommon.ACTIVE_APP_ID
+                app_id: userovoCommon.ACTIVE_APP_ID
             },
             success: function(result) {
                 self.items = result.data || [];
             },
             error: function(xhr, status, error) {
-                CountlyHelpers.notify({
+                UserovoHelpers.notify({
                     type: 'error',
                     message: jQuery.i18n.map['common.error']
                 });
@@ -713,7 +713,7 @@ methods: {
 methods: {
     confirmDelete: function(item) {
         var self = this;
-        CountlyHelpers.confirm(
+        UserovoHelpers.confirm(
             jQuery.i18n.map['common.confirm-delete'],
             'popStyleGreen',
             function(result) {
@@ -758,5 +758,5 @@ console.log(this.$store.state);
 | Component not updating | Check if data is reactive (defined in `data()`) |
 | Props not working | Verify prop name uses kebab-case in template |
 | Events not firing | Check `$emit` name matches `@handler` |
-| Template not found | Verify path in `countlyVue.T()` is correct |
+| Template not found | Verify path in `userovoVue.T()` is correct |
 | Styles not applied | Run `npx grunt sass` after CSS changes |

@@ -1,7 +1,7 @@
 var pluginManager = require('../../../../plugins/pluginManager.js'),
     async = require('async');
 
-pluginManager.dbConnection().then((countlyDb) => {
+pluginManager.dbConnection().then((userovoDb) => {
 
     var dataTransferStatus = false,
         liveDisabledStatus = false,
@@ -24,7 +24,7 @@ pluginManager.dbConnection().then((countlyDb) => {
 
     function execute(){
         printMessage("Copying maximum values...");
-        countlyDb.collection('max_online_counts').find({}).toArray(function(err, docs){
+        userovoDb.collection('max_online_counts').find({}).toArray(function(err, docs){
             var outputDocs = [];
             if (err) {
                 dataTransferStatus = err;
@@ -72,7 +72,7 @@ pluginManager.dbConnection().then((countlyDb) => {
             callback(null);
             return;
         }
-        var bulk = countlyDb.collection('concurrent_users_max').initializeUnorderedBulkOp();
+        var bulk = userovoDb.collection('concurrent_users_max').initializeUnorderedBulkOp();
     
         docs.forEach(function(doc){
             bulk.find({
@@ -113,7 +113,7 @@ pluginManager.dbConnection().then((countlyDb) => {
     }
     
     function ensureNewIndexes(callback) {
-        countlyDb.collection('apps').find({}).toArray(function (err, apps) {
+        userovoDb.collection('apps').find({}).toArray(function (err, apps) {
             if (err) {
                 printMessage(err);
                 callback(err);
@@ -121,7 +121,7 @@ pluginManager.dbConnection().then((countlyDb) => {
             }
             function upgrade(app, done){
                 printMessage("Creating indexes for concurrent new users " + app.name);
-                countlyDb.collection('concurrent_users_new' + app._id).ensureIndex({la: 1}, {expireAfterSeconds: 180}, function(err, resp){
+                userovoDb.collection('concurrent_users_new' + app._id).ensureIndex({la: 1}, {expireAfterSeconds: 180}, function(err, resp){
                     done(err);
                 });
             }
@@ -138,7 +138,7 @@ pluginManager.dbConnection().then((countlyDb) => {
     }
     
     function dropLiveCollections() {
-        countlyDb.collection('apps').find({}).toArray(function (err, apps) {
+        userovoDb.collection('apps').find({}).toArray(function (err, apps) {
             if (err) {
                 liveDataDeletedStatus = err;
                 finalize();
@@ -149,7 +149,7 @@ pluginManager.dbConnection().then((countlyDb) => {
                 collectionsToBeRemoved.push('live_data' + app._id);
             });
             function dropCol(collection, done){
-                countlyDb.collection(collection).drop(function(err, resp){
+                userovoDb.collection(collection).drop(function(err, resp){
                     if (resp === true){
                         printMessage("Removed collection '" + collection + "'.");
                     }
@@ -191,7 +191,7 @@ pluginManager.dbConnection().then((countlyDb) => {
         else {
             printMessage("Transfer completed with errors/warnings.");
         }
-        countlyDb.close();
+        userovoDb.close();
     }
     
     execute();

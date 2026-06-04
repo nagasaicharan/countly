@@ -1,7 +1,7 @@
 /**
  *  Merges all app-specific flowSchemaAPPID and flowDataAPPID collections into a single flow_schemas and flow_data collection
- *  Server: countly
- *  Path: countly dir/bin/upgrade/DEV/scripts/merge_flow_collections
+ *  Server: userovo
+ *  Path: userovo dir/bin/upgrade/DEV/scripts/merge_flow_collections
  *  Command: node merge_flow_collections.js
  */
 
@@ -50,15 +50,15 @@ async function mergeFlowsCollections(type, collections, db) {
     }
 }
 
-pluginManager.dbConnection().then(async(countlyDb) => {
+pluginManager.dbConnection().then(async(userovoDb) => {
     try {
-        let allCollections = await countlyDb.listCollections().toArray();
+        let allCollections = await userovoDb.listCollections().toArray();
         let collectionNames = allCollections.map(o => o.name);
         const flowSchemaCollections = collectionNames.filter(x => x.startsWith('flowSchema'));
         const flowDataCollections = collectionNames.filter(x => x.startsWith('flowData'));
 
         try {
-            await mergeFlowsCollections('flowSchema', flowSchemaCollections, countlyDb);
+            await mergeFlowsCollections('flowSchema', flowSchemaCollections, userovoDb);
             console.log('Finished merging flowSchema collections.');
         }
         catch (error) {
@@ -66,7 +66,7 @@ pluginManager.dbConnection().then(async(countlyDb) => {
         }
 
         try {
-            await mergeFlowsCollections('flowData', flowDataCollections, countlyDb);
+            await mergeFlowsCollections('flowData', flowDataCollections, userovoDb);
             console.log('Finished merging flowData collections.');
         }
         catch (error) {
@@ -77,6 +77,6 @@ pluginManager.dbConnection().then(async(countlyDb) => {
         console.log(`Error merging flow collections: ${error}`);
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
     }
 });

@@ -2,7 +2,7 @@ const { getUserApps } = require('../../../api/utils/rights.js');
 
 var plugins = require('../../pluginManager.js'),
     common = require('../../../api/utils/common.js'),
-    countlyCommon = require('../../../api/lib/countly.common.js'),
+    userovoCommon = require('../../../api/lib/userovo.common.js'),
     { validateUser } = require('../../../api/utils/rights.js'),
     stats = require('./parts/stats.js');
 
@@ -190,8 +190,8 @@ const internalEventsSkipped = ["[CLY]_orientation"];
             }
 
             if (dateObjPrev) {
-                countlyCommon.setPeriod([periodObj.start - (periodObj.end - periodObj.start), periodObj.start - 1]);
-                periodObj = countlyCommon.periodObj;
+                userovoCommon.setPeriod([periodObj.start - (periodObj.end - periodObj.start), periodObj.start - 1]);
+                periodObj = userovoCommon.periodObj;
 
                 periodObj.currentPeriodArr = periodObj.currentPeriodArr || [];
                 periodObj.currentPeriodArr[0] = periodObj.currentPeriodArr[0] || "";
@@ -216,7 +216,7 @@ const internalEventsSkipped = ["[CLY]_orientation"];
      * @apiGroup DataPoints
      *
      * @apiDescription Returns last three month session, event and data point count for all and individual apps
-     * @apiQuery {String} period array that contains start and end date as a timestamp. It also can be Countly period values which are:
+     * @apiQuery {String} period array that contains start and end date as a timestamp. It also can be Userovo period values which are:
      * {String} "yesterday" for yesterday's value,
      * {String} "hour" for today's value,
      * {String} "7days" for the last 7 days value,
@@ -262,8 +262,8 @@ const internalEventsSkipped = ["[CLY]_orientation"];
         var params = ob.params;
         var periodsToFetch = [];
         params.qstring.period = params.qstring.period || "30days";
-        countlyCommon.setPeriod(params.qstring.period);
-        var periodObj = countlyCommon.periodObj;
+        userovoCommon.setPeriod(params.qstring.period);
+        var periodObj = userovoCommon.periodObj;
         var dateObj = {};
         var dateObjPrev = {};
         createDateObject(periodObj, periodsToFetch, dateObj, dateObjPrev, params.qstring.period);
@@ -363,7 +363,7 @@ const internalEventsSkipped = ["[CLY]_orientation"];
      * @apiGroup DataPoints
      *
      * @apiDescription Returns punch card data as a boolean, always true
-     * @apiQuery {String} period array that contains start and end date as a timestamp. It also can be Countly period values which are:
+     * @apiQuery {String} period array that contains start and end date as a timestamp. It also can be Userovo period values which are:
      * {String} "yesterday" for yesterday's value,
      * {String} "hour" for today's value,
      * {String} "7days" for the last 7 days value,
@@ -425,8 +425,8 @@ const internalEventsSkipped = ["[CLY]_orientation"];
         validateUser(params, async() => {
             var periodsToFetch = [];
             params.qstring.period = params.qstring.period || "30days";
-            countlyCommon.setPeriod(params.qstring.period);
-            var periodObj = countlyCommon.periodObj;
+            userovoCommon.setPeriod(params.qstring.period);
+            var periodObj = userovoCommon.periodObj;
             var dateObj = {};
 
             createDateObject(periodObj, periodsToFetch, dateObj, null, params.qstring.period);

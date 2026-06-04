@@ -1,5 +1,5 @@
 var countlyModel = require('./countly.model.js'),
-    countlyCommon = require('./countly.common.js'),
+    userovoCommon = require('./userovo.common.js'),
     underscore = require('underscore');
 
 var _countryMap = {
@@ -287,8 +287,8 @@ function getCountryName(cc) {
 
 /**
 * This module defines default model to handle event data
-* @module "api/lib/countly.countries"
-* @extends module:api/lib/countly.model~countlyMetric
+* @module "api/lib/userovo.countries"
+* @extends module:api/lib/userovo.model~userovoMetric
 */
 
 /**
@@ -296,8 +296,8 @@ function getCountryName(cc) {
 * @returns {object} new model
 */
 function create() {
-    /** @lends module:api/lib/countly.countries */
-    var countlyLocation = countlyModel.create(getCountryName);
+    /** @lends module:api/lib/userovo.countries */
+    var userovoLocation = userovoModel.create(getCountryName);
 
     /**
     * Get location data for the map
@@ -306,8 +306,8 @@ function create() {
     * @param {string} options.sort - by which property to sort
     * @returns {array} array with retrieved data about countries
     */
-    countlyLocation.getLocationData = function(options) {
-        var locationData = countlyCommon.extractTwoLevelData(countlyLocation.getDb(), countlyLocation.getMeta("countries"), countlyLocation.clearObject, [
+    userovoLocation.getLocationData = function(options) {
+        var locationData = userovoCommon.extractTwoLevelData(userovoLocation.getDb(), userovoLocation.getMeta("countries"), userovoLocation.clearObject, [
             {
                 "name": "country",
                 "func": function(rangeArr) {
@@ -323,7 +323,7 @@ function create() {
             { "name": "t" },
             { "name": "u" },
             { "name": "n" }
-        ], countlyLocation.getTotalUsersObj());
+        ], userovoLocation.getTotalUsersObj());
 
         if (options && options.maxCountries && locationData.chartData) {
             if (locationData.chartData.length > options.maxCountries) {
@@ -341,6 +341,6 @@ function create() {
 
         return locationData.chartData;
     };
-    return countlyLocation;
+    return userovoLocation;
 }
 module.exports = create;

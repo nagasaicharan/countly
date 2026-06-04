@@ -1,7 +1,7 @@
 /**
  *  Description: This script is used to anonymize drill collection
- *  Server: countly
- *  Path: $(countly dir)/bin/scripts/export-data
+ *  Server: userovo
+ *  Path: $(userovo dir)/bin/scripts/export-data
  *  Command: node drill_collections_anonymized.js
  */
 
@@ -17,11 +17,11 @@ const APPS = []; //leave array empty to process all apps;
 const PATH = './'; //path to save anonymized data.
 const FIELDS_TO_ANONYMIZE = {"did": 1, "up": {"name": 1, "username": 1, "email": 1, "organization": 1, "phone": 1, "picture": 1}, "custom": 1};
 
-Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("countly_drill")]).then(async function([countlyDb, drillDb]) {
+Promise.all([pluginManager.dbConnection("userovo"), pluginManager.dbConnection("userovo_drill")]).then(async function([userovoDb, drillDb]) {
     console.log("Connected to databases...");
 
     //SET COMMON DBs
-    common.db = countlyDb;
+    common.db = userovoDb;
     common.drillDb = drillDb;
 
     var query = {};
@@ -33,7 +33,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
     }
     try {
         //FETCH APPS
-        var apps = await countlyDb.collection('apps').find(query, {_id: 1, name: 1}).toArray();
+        var apps = await userovoDb.collection('apps').find(query, {_id: 1, name: 1}).toArray();
         //PROCESS COLLECTIONS FOR EACH APP
         for (let i = 0; i < apps.length; i++) {
             console.log("Processing app: " + apps[i].name);
@@ -65,7 +65,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
         console.log(err);
     }
     finally {
-        countlyDb.close();
+        userovoDb.close();
         drillDb.close();
         console.log("Done.");
     }
@@ -73,7 +73,7 @@ Promise.all([pluginManager.dbConnection("countly"), pluginManager.dbConnection("
     async function getDrillCollections(appId) {
         var collections = [];
         try {
-            var events = await countlyDb.collection("events").findOne({_id: common.db.ObjectID(appId)});
+            var events = await userovoDb.collection("events").findOne({_id: common.db.ObjectID(appId)});
             var list = ["[CLY]_session", "[CLY]_crash", "[CLY]_view", "[CLY]_action", "[CLY]_push_action", "[CLY]_push_sent", "[CLY]_star_rating", "[CLY]_nps", "[CLY]_survey", "[CLY]_apm_network", "[CLY]_apm_device", "[CLY]_consent"];
 
             if (events && events.list) {

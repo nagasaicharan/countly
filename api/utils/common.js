@@ -19,7 +19,7 @@ const crypto = require('crypto');
 const logger = require('./log.js');
 const mcc_mnc_list = require('mcc-mnc-list');
 const plugins = require('../../plugins/pluginManager.js');
-const countlyConfig = require('./../config', 'dont-enclose');
+const userovoConfig = require('./../config', 'dont-enclose');
 const argon2 = require('argon2');
 const mongodb = require('mongodb');
 const getRandomValues = require('get-random-values');
@@ -238,7 +238,7 @@ common.dbEventMap = {
     'previous_events': 'pe'
 };
 
-common.config = countlyConfig;
+common.config = userovoConfig;
 
 common.moment = moment;
 
@@ -1312,7 +1312,7 @@ common.returnRaw = function(params, returnCode, body, heads) {
     const defaultHeaders = {
         'Accept-CH': 'Sec-CH-UA, Sec-CH-UA-Mobile, Sec-CH-UA-Platform, Sec-CH-UA-Platform-Version, Sec-CH-UA-Full-Version, Sec-CH-UA-Model',
         'Critical-CH': 'Sec-CH-UA-Mobile, Sec-CH-UA-Platform, Sec-CH-UA-Platform-Version',
-        'X-Countly': 'api'
+        'X-Userovo': 'api'
     };
     //set provided in configuration headers
     let headers = { ...defaultHeaders };
@@ -1364,7 +1364,7 @@ common.returnMessage = function(params, returnCode, message, heads, noResult = f
         'Content-Type': 'application/json; charset=utf-8',
         'Accept-CH': 'Sec-CH-UA, Sec-CH-UA-Mobile, Sec-CH-UA-Platform, Sec-CH-UA-Platform-Version, Sec-CH-UA-Full-Version, Sec-CH-UA-Model',
         'Critical-CH': 'Sec-CH-UA-Mobile, Sec-CH-UA-Platform, Sec-CH-UA-Platform-Version',
-        'X-Countly': 'api'
+        'X-Userovo': 'api'
     };
     let headers = { ...defaultHeaders };
     var add_headers = (plugins.getConfig("security").api_additional_headers || "").replace(/\r\n|\r|\n/g, "\n").split("\n");
@@ -1448,7 +1448,7 @@ common.returnOutput = function(params, output, noescape, heads) {
         'Content-Type': 'application/json; charset=utf-8',
         'Accept-CH': 'Sec-CH-UA, Sec-CH-UA-Mobile, Sec-CH-UA-Platform, Sec-CH-UA-Platform-Version, Sec-CH-UA-Full-Version, Sec-CH-UA-Model',
         'Critical-CH': 'Sec-CH-UA-Mobile, Sec-CH-UA-Platform, Sec-CH-UA-Platform-Version',
-        'X-Countly': 'api'
+        'X-Userovo': 'api'
     };
     let headers = { ...defaultHeaders };
     var add_headers = (plugins.getConfig("security").api_additional_headers || "").replace(/\r\n|\r|\n/g, "\n").split("\n");
@@ -1523,7 +1523,7 @@ common.getIpAddress = function(req) {
     }
 
     //if ignoreProxies not setup, use outmost left ip address
-    if (!countlyConfig.ignoreProxies || !countlyConfig.ignoreProxies.length) {
+    if (!userovoConfig.ignoreProxies || !userovoConfig.ignoreProxies.length) {
         ipLogger.d("From %s found ip %s", ipAddress, ips[0]);
         return stripPort(ips[0]);
     }
@@ -1532,12 +1532,12 @@ common.getIpAddress = function(req) {
     for (var i = ips.length - 1; i >= 0; i--) {
         ips[i] = stripPort(ips[i]);
         var masks = false;
-        if (countlyConfig.ignoreProxies && countlyConfig.ignoreProxies.length) {
-            masks = countlyConfig.ignoreProxies.some(function(elem) {
+        if (userovoConfig.ignoreProxies && userovoConfig.ignoreProxies.length) {
+            masks = userovoConfig.ignoreProxies.some(function(elem) {
                 return ips[i].startsWith(elem);
             });
         }
-        if (ips[i] !== "127.0.0.1" && (!countlyConfig.ignoreProxies || !masks)) {
+        if (ips[i] !== "127.0.0.1" && (!userovoConfig.ignoreProxies || !masks)) {
             ip = ips[i];
             break;
         }

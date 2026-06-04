@@ -1,6 +1,6 @@
 # Plugins Agent Guide
 
-This guide is for AI agents and developers working in the `plugins/` folder of Countly Server.
+This guide is for AI agents and developers working in the `plugins/` folder of Userovo Server.
 
 ## Plugin Structure
 ```
@@ -15,8 +15,8 @@ plugins/<name>/
 
 ## Testing
 - **Single plugin:** `npm run test:plugin -- <name>`
-- **Lint plugin:** `countly plugin lint <name>`
-- **Auto-fix lint:** `countly plugin lintfix <name>`
+- **Lint plugin:** `userovo plugin lint <name>`
+- **Auto-fix lint:** `userovo plugin lintfix <name>`
 
 ## More
 - [Plugin lifecycle & events](../.github/copilot-instructions.md)
