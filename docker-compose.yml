@@ -16,6 +16,9 @@ services:
 
   userovo-api:
     image: 'userovo/api:latest'
+    build:
+      context: .
+      dockerfile: Dockerfile-api
     # Userovo Enterprise: image: 'gcr.io/userovo-01/api:24.12'
     environment:
       - USEROVO_PLUGINS=mobile,web,desktop,plugins,density,locale,browser,sources,views,logger,systemlogs,populator,reports,crashes,push,star-rating,slipping-away-users,compare,server-stats,dbviewer,times-of-day,compliance-hub,alerts,onboarding,consolidate,remote-config,hooks,dashboards,sdk,data-manager
@@ -37,6 +40,9 @@ services:
 
   userovo-frontend:
     image: 'userovo/frontend:latest'
+    build:
+      context: .
+      dockerfile: Dockerfile-frontend
     # Userovo Enterprise: image: 'gcr.io/userovo-01/frontend:24.12'
     environment:
       - USEROVO_PLUGINS=mobile,web,desktop,plugins,density,locale,browser,sources,views,logger,systemlogs,populator,reports,crashes,push,star-rating,slipping-away-users,compare,server-stats,dbviewer,times-of-day,compliance-hub,alerts,onboarding,consolidate,remote-config,hooks,dashboards,sdk,data-manager
