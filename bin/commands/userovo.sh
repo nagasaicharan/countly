@@ -1,4 +1,12 @@
 #!/bin/bash
 
-DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Resolve this wrapper through symlinks, because Docker links it as /usr/bin/userovo.
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ "$SOURCE" != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
 exec "$DIR/countly.sh" "$@"
