@@ -1,0 +1,9 @@
+have userovo &&
+_userovo()
+{
+        COMPREPLY=()
+        words=$(IFS=, ; echo "${COMP_WORDS[*]}")
+        COMPREPLY=($( userovo autocomplete $words ))
+}
+complete -F _userovo userovo
+
