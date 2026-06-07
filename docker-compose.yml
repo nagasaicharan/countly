@@ -24,6 +24,7 @@ services:
       - USEROVO_PLUGINS=mobile,web,desktop,plugins,density,locale,browser,sources,views,logger,systemlogs,populator,reports,crashes,push,star-rating,slipping-away-users,compare,server-stats,dbviewer,times-of-day,compliance-hub,alerts,onboarding,consolidate,remote-config,hooks,dashboards,sdk,data-manager
       # Userovo Enterprise: - USEROVO_PLUGINS=mobile,web,desktop,plugins,density,locale,browser,sources,views,license,drill,funnels,retention_segments,flows,cohorts,surveys,remote-config,ab-testing,formulas,activity-map,concurrent_users,revenue,logger,systemlogs,populator,reports,crashes,push,geo,block,users,star-rating,slipping-away-users,compare,server-stats,dbviewer,crash_symbolication,crashes-jira,groups,white-labeling,alerts,times-of-day,compliance-hub,onboarding,active_users,performance-monitoring,config-transfer,consolidate,data-manager,hooks,dashboards,sdk
       - USEROVO_CONFIG__MONGODB_HOST=mongodb
+      - USEROVO_CONFIG_HOSTNAME=userovo.scalegridintelligence.tech
       - USEROVO_CONFIG_API_API_WORKERS=4 # CPU core count
       - USEROVO_CONFIG__FILESTORAGE="gridfs"
       - NODE_OPTIONS="--max-old-space-size=2048"
@@ -48,6 +49,7 @@ services:
       - USEROVO_PLUGINS=mobile,web,desktop,plugins,density,locale,browser,sources,views,logger,systemlogs,populator,reports,crashes,push,star-rating,slipping-away-users,compare,server-stats,dbviewer,times-of-day,compliance-hub,alerts,onboarding,consolidate,remote-config,hooks,dashboards,sdk,data-manager
       # Userovo Enterprise: - USEROVO_PLUGINS=mobile,web,desktop,plugins,density,locale,browser,sources,views,license,drill,funnels,retention_segments,flows,cohorts,surveys,remote-config,ab-testing,formulas,activity-map,concurrent_users,revenue,logger,systemlogs,populator,reports,crashes,push,geo,block,users,star-rating,slipping-away-users,compare,server-stats,dbviewer,crash_symbolication,crashes-jira,groups,white-labeling,alerts,times-of-day,compliance-hub,onboarding,active_users,performance-monitoring,config-transfer,consolidate,data-manager,hooks,dashboards,sdk
       - USEROVO_CONFIG__MONGODB_HOST=mongodb
+      - USEROVO_CONFIG_HOSTNAME=userovo.scalegridintelligence.tech
       - NODE_OPTIONS="--max-old-space-size=2048"
     networks:
       userovo:
