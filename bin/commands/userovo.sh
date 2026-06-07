@@ -9,4 +9,8 @@ while [ -h "$SOURCE" ]; do
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-exec "$DIR/countly.sh" "$@"
+if [ -f "$DIR/countly.sh" ]; then
+  exec "$DIR/countly.sh" "$@"
+fi
+
+exec "$DIR/../countly.sh" "$@"
