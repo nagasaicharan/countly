@@ -36,8 +36,8 @@ RUN apt-get update && \
 	tar -xf Python-3.8.20.tar.xz && \
 	apt-get install -y build-essential sudo zlib1g-dev libssl3 libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev curl libbz2-dev && \
 	cd Python-3.8.20 && \
-	./configure --enable-optimizations --enable-shared && \
-	make && \
+	./configure --enable-shared && \
+	make -j"$(nproc)" && \
 	make altinstall && \
 	ldconfig /usr/src/Python-3.8.20 && \
 	ln -sf /usr/local/bin/python3.8 /usr/bin/python3
