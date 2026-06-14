@@ -5,6 +5,8 @@ volumes:
 
 networks:
   userovo:
+  dokploy-network:
+    external: true
 
 services:
   mongodb:
@@ -69,12 +71,11 @@ services:
 
   nginx:
     image: 'bitnami/nginx'
-    ports:
-      - '80:8080'
     volumes:
       - './bin/docker/nginx.server.conf:/opt/bitnami/nginx/conf/server_blocks/userovo.conf:ro'
     networks:
       userovo:
+      dokploy-network:
     depends_on:
       - userovo-api
       - userovo-frontend
